@@ -1,4 +1,7 @@
 import AuthenticatedLayout from "~/components/layouts/authenticated-layout";
+import ColoredBadge from "~/components/colored-badge";
+import ExtendedAvatar from "~/components/user-avatar-extended";
+import DateLabelAgo from "~/components/date-label-ago";
 import {
   Dialog,
   DialogContent,
@@ -215,23 +218,7 @@ export default function IssueIndex({ issues }) {
         handleStatusChange(issueId, status, assigned_to, newPriority);
       },
       cellRenderer: (props) => {
-        const priority = props.value;
-        let badgeColor = "bg-gray-500"; // Default to grey if no match
-
-        if (priority === "high") {
-          badgeColor = "bg-red-500"; // Green for resolved
-        } else if (priority === "medium") {
-          badgeColor = "bg-yellow-500 text-black"; // Yellow for working on it
-        } else if (priority === "low") {
-          badgeColor = "bg-gray-500"; // Grey for pending
-        }
-
-        return (
-          <Badge className={`text-white ${badgeColor}`}>
-            {priority.charAt(0).toUpperCase() + priority.slice(1)}{" "}
-            {/* Capitalize first letter */}
-          </Badge>
-        );
+        return <ColoredBadge value={props.value} />; // Pass the status value
       },
     },
     {
@@ -245,7 +232,7 @@ export default function IssueIndex({ issues }) {
       singleClickEdit: true,
 
       cellEditorParams: {
-        values: ["working on it", "resolved", "pending"],
+        values: ["active", "resolved", "pending"],
       },
       onCellValueChanged: (event) => {
         const issueId = event.data.id; // Get the issue ID
@@ -254,23 +241,7 @@ export default function IssueIndex({ issues }) {
         handleStatusChange(issueId, newStatus);
       },
       cellRenderer: (props) => {
-        const status = props.value;
-        let badgeColor = "bg-gray-500"; // Default to grey if no match
-
-        if (status === "resolved") {
-          badgeColor = "bg-green-500"; // Green for resolved
-        } else if (status === "working on it") {
-          badgeColor = "bg-yellow-500"; // Yellow for working on it
-        } else if (status === "pending") {
-          badgeColor = "bg-gray-500"; // Grey for pending
-        }
-
-        return (
-          <Badge className={`text-white ${badgeColor}`}>
-            {status.charAt(0).toUpperCase() + status.slice(1)}{" "}
-            {/* Capitalize first letter */}
-          </Badge>
-        );
+        return <ColoredBadge value={props.value} />; // Pass the status value
       },
     },
     {
@@ -290,25 +261,7 @@ export default function IssueIndex({ issues }) {
         handleStatusChange(issueId, newStatus, newAssignee);
       },
       cellRenderer: (props) => {
-        const assignedUser = props.value;
-        const initial = assignedUser
-          .split(" ")
-          .map((n) => n[0])
-          .join("")
-          .toUpperCase(); // Ensure initials are uppercase
-
-        return (
-          <div className="flex items-center">
-            <Avatar className="w-8 h-8">
-              {assignedUser.avatar ? (
-                <img src={assignedUser.avatar} alt="User Avatar" />
-              ) : (
-                <AvatarFallback>{initial}</AvatarFallback>
-              )}
-            </Avatar>
-            <span className="ml-2">{assignedUser || "Unassigned"}</span>
-          </div>
-        );
+        return <ExtendedAvatar userFullName={props.value} />;
       },
     },
     { headerName: "Updated By", field: "updated_by", sortable: true },
@@ -333,8 +286,8 @@ export default function IssueIndex({ issues }) {
     assigned_to:
       issue.assignee && issue.assignee.name ? issue.assignee.name : "N/A",
     updated_by: issue.updater.name || "N/A",
-    created_at: new Date(issue.created_at).toLocaleString(), // Format date
-    updated_at: new Date(issue.updated_at).toLocaleString(),
+    created_at: issue.created_at, // Format date
+    updated_at: issue.updated_at,
   }));
 
   return (
@@ -371,30 +324,50 @@ export default function IssueIndex({ issues }) {
                 <TabsContent value="details">
                   {selectedRow ? (
                     <div className=" pb-2 pr-20 sm:pr-2 sm:w-full">
-                      <Card className="p-2 mr-10 my-2 space-y-2">
-                        <div className="font-bold">Title:</div>
-                        <div> {selectedRow.title}</div>
-                        <div className="font-bold">Description:</div>
-                        <div> {selectedRow.description}</div>
-                        <div className="font-bold">Priority:</div>
-                        <div>
-                          {" "}
-                          <Badge variant="outline">
-                            {selectedRow.priority}
-                          </Badge>
-                        </div>
-                        <div className="font-bold">Status:</div>
-                        <div>
-                          {" "}
-                          <Badge variant="outline">{selectedRow.status}</Badge>
-                        </div>
-                        <div className="font-bold">Assigned To:</div>
-                        <div> {selectedRow.assigned_to}</div>
+                      <Card className="p-2 mr-10 my-2 ">
+                        <CardContent className="my-4 space-y-2">
+                          <div className="font-bold">Title:</div>
+                          <div className="text-md text-muted-foreground">
+                            {" "}
+                            {selectedRow.title}
+                          </div>
+                          <div className="font-bold">Description:</div>
+                          <div className="text-md text-muted-foreground">
+                            {" "}
+                            {selectedRow.description}
+                          </div>
+                          <div className="font-bold">Priority:</div>
+                          <div>
+                            {" "}
+                            <ColoredBadge value={selectedRow.priority} />
+                          </div>
+                          <div className="font-bold">Status:</div>
+                          <div>
+                            {" "}
+                            <ColoredBadge value={selectedRow.status} />
+                          </div>
+                          <div className="font-bold">Assigned To:</div>
+                          <ExtendedAvatar
+                            userFullName={selectedRow.assigned_to}
+                          />
+                          <div className="font-bold">Created At:</div>
+                          <div>
+                            {" "}
+                            <DateLabelAgo date={selectedRow.created_at} />
+                          </div>
+                          <div className="font-bold">Last Updated At:</div>
+                          <div>
+                            {" "}
+                            <DateLabelAgo date={selectedRow.updated_at} />
+                          </div>
+                        </CardContent>
                       </Card>
                     </div>
                   ) : (
                     <p className="mt-4 text-center text-sm text-gray-500">
-                      Select a row to view details
+                      <Card className="p-2 mr-10 my-2 ">
+                        Select a row to view details{" "}
+                      </Card>
                     </p>
                   )}
                 </TabsContent>
@@ -409,9 +382,6 @@ export default function IssueIndex({ issues }) {
               </Tabs>
             </SheetContent>
           </Sheet>
-          {/* <p className="mb-4">
-            This table displays all the issues submitted by users.
-          </p> */}
         </CardContent>
       </Card>
       <div

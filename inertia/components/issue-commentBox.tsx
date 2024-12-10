@@ -3,11 +3,14 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Card } from "~/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { FilePreview } from "~/components/comment-file-preview";
+import ExtendedAvatar from "~/components/user-avatar-extended";
 // You can use this for a small upload icon
 import { Paperclip } from "lucide-react";
 import { useForm } from "@inertiajs/react";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { useEffect } from "react";
+import DateLabelAgo from "~/components/date-label-ago";
 const IssueCommentBox = ({ issueId, existingComments }) => {
   // console.log("Issue ID:", issueId);
   const [comments, setComments] = useState(existingComments);
@@ -169,7 +172,7 @@ const IssueCommentBox = ({ issueId, existingComments }) => {
       </div>
       {/* Comments List */}
       <div className="flex-1 h-3/4 ">
-        <ScrollArea className="h-[600px] sm:h-[900px]  w-full rounded-md ">
+        <ScrollArea className="h-[600px] sm:h-[700px] xlg:h-[900px]  w-full rounded-md ">
           {comments.length > 0 ? (
             comments
               .slice()
@@ -177,43 +180,26 @@ const IssueCommentBox = ({ issueId, existingComments }) => {
               .map((comment, index) => (
                 <div className="">
                   <Card className="space-y-2 p-2 mb-2 ">
+                    <ExtendedAvatar userFullName={comment.creator.name} />
                     <div className="flex items-start gap-2 pb-2">
-                      <Avatar>
-                        <AvatarFallback>
-                          {getInitials(comment.creator.name)}
-                        </AvatarFallback>
-                      </Avatar>
-
-                      <div className="flex-1">
-                        <div className="font-semibold">
-                          {comment.creator.name}
-                        </div>
-                        <p>{comment.text}</p>
+                      <div className="flex-1 ml-10 ">
+                        <p className="text-sm">{comment.text}</p>
                         {comment.file && (
                           <div className="mt-2">
-                            {renderFilePreview(comment.file)}
+                            <FilePreview file={comment.file} />
                           </div>
                         )}
-                        <p className="text-xs text-gray-400 hover:underline">
-                          {new Date(comment.created_at).toLocaleString(
-                            "en-AU",
-                            {
-                              // weekday: "long",
-                              year: "numeric",
-                              month: "short",
-                              day: "numeric",
-                            },
-                          )}
-                        </p>
+                        <DateLabelAgo date={comment.created_at} />
                       </div>
                     </div>
                   </Card>
                 </div>
               ))
           ) : (
-            <p className="text-gray-500">
-              No comments yet. Be the first to comment!
-            </p>
+            <Card className="p-20 ">
+              No comments yet. <br />
+              Be the first to comment!{" "}
+            </Card>
           )}
         </ScrollArea>
       </div>

@@ -1,10 +1,9 @@
-// user-select-cell-editor.tsx
-
 import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
-
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { cn } from "../lib/utils";
 import { Button } from "./ui/button";
+import ExtendedAvatar from "~/components/user-avatar-extended";
 import {
   Command,
   CommandEmpty,
@@ -14,16 +13,19 @@ import {
   CommandList,
 } from "./ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+// import { Avatar } from "./ui/avatar";
 
-// This could be your options array for a select-like combobox
+// Updated users array with avatars
 const users = [
   {
-    value: "1",
+    value: "2",
     label: "Talha Baig",
+    avatar: "https://randomuser.me/api/portraits/men/1.jpg", // Avatar URL
   },
   {
-    value: "2",
+    value: "3",
     label: "Kim Flynn",
+    avatar: "https://randomuser.me/api/portraits/women/2.jpg", // Avatar URL
   },
 ];
 
@@ -47,7 +49,7 @@ export function ComboboxEditor({ value, onValueChange }) {
           className="w-full justify-between"
         >
           {value
-            ? users.find((users) => users.value === value)?.label
+            ? users.find((user) => user.value === value)?.label
             : "Select user..."}
           <ChevronsUpDown className="opacity-50" />
         </Button>
@@ -63,8 +65,11 @@ export function ComboboxEditor({ value, onValueChange }) {
                   key={user.value}
                   value={user.label}
                   onSelect={() => handleSelect(user.value)}
+                  className="flex items-center space-x-2 " // Added spacing for avatar and label
                 >
-                  {user.label}
+                  {/* Avatar */}
+                  <ExtendedAvatar userFullName={user.label} />
+
                   <Check
                     className={cn(
                       "ml-auto",
