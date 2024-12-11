@@ -9,27 +9,13 @@ function Layout({ children }: { children: React.ReactNode }) {
     () => localStorage.getItem("sidebar:state") === "true",
   );
 
-  useEffect(() => {
-    // Manage dark mode state and persist in localStorage
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") {
-      setIsDarkMode(true);
-      document.body.classList.add("dark");
-    } else {
-      document.body.classList.remove("dark");
-    }
-  }, []);
-
   const handleSidebarStateChange = (state: boolean) => {
     setSidebarOpen(state);
     localStorage.setItem("sidebar:state", String(state));
   };
 
   return (
-    <SidebarProvider
-      defaultOpen={sidebarOpen}
-      onOpenChange={handleSidebarStateChange}
-    >
+    <SidebarProvider onOpenChange={handleSidebarStateChange} open={sidebarOpen}>
       <AppSidebar />
       <main className="p-2 w-full">
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">

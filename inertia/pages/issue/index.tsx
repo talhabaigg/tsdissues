@@ -8,6 +8,7 @@ import IssueCommentBox from "~/components/issue-commentBox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { Card, CardContent } from "~/components/ui/card";
 import { KanbanBoard } from "~/components/KanbanBoard";
+import IssueForm from "~/components/issue-form";
 import {
   Sheet,
   SheetContent,
@@ -17,6 +18,7 @@ import {
 import { Head } from "@inertiajs/react";
 import React from "react";
 import { useEffect, useState } from "react";
+import { Tab } from "@headlessui/react";
 
 export default function IssueIndex({ issues }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -58,6 +60,7 @@ export default function IssueIndex({ issues }) {
             <TabsList className="dark:bg-transparent">
               <TabsTrigger value="details">Details</TabsTrigger>
               <TabsTrigger value="comments">Comments</TabsTrigger>
+              <TabsTrigger value="edit">Edit</TabsTrigger>
             </TabsList>
             <TabsContent value="details">
               {selectedRow ? (
@@ -116,6 +119,11 @@ export default function IssueIndex({ issues }) {
                   existingComments={selectedRow ? selectedRow.comments : []}
                 />
               </div>
+            </TabsContent>
+            <TabsContent value="edit">
+              <Card className="md:w-80 w-72 p-4">
+                <IssueForm issue={selectedRow} />
+              </Card>
             </TabsContent>
           </Tabs>
         </SheetContent>

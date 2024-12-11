@@ -17,7 +17,7 @@ class IssueController extends Controller
         $issues = Issue::with('user', 'assignee', 'creator', 'updater', 'comments.creator') // Load related user if there's a relationship
             ->orderBy('created_at', 'desc')
             ->paginate(1000); // Adjust pagination as needed
-        
+
         // Pass data to the Inertia view
         return Inertia::render('issue/index', [
             'issues' => $issues,
@@ -43,21 +43,31 @@ class IssueController extends Controller
             'name' => 'required|string',
             'priority' => 'required',
             'description' => 'required|string',
-           
-        ]);
-    //    dd($validated);
-        $issue = Issue::create([
-            'type' => $request->type,
-            'title' => $request->name,
-            'priority' => $request->priority,
-            'status' => 'open',
-            'description' => $request->description,
-           
-          
-        ]);
-        return redirect()->route('issue.index')->with('success', 'Issue created successfully');
-    }
 
+        ]);
+        // dd($request->all());
+        if ($request->id) {
+            $issue = Issue::findOrFail($request->id);  // Find the issue by ID
+            $issue->update([  // Update the issue with new data
+                'type' => $request->type,
+                'title' => $request->name,
+                'priority' => $request->priority,
+                'description' => $request->description,
+            ]);
+            return redirect()->route('issue.index')->with('success', 'Issue updated successfully');
+        } else {
+            // If no ID, create a new issue
+            $issue = Issue::create([
+                'type' => $request->type,
+                'title' => $request->name,
+                'priority' => $request->priority,
+                'status' => 'open',  // Default status
+                'description' => $request->description,
+            ]);
+            return redirect()->route('issue.index')->with('success', 'Issue created successfully');
+        }
+
+    }
     /**
      * Display the specified resource.
      */
@@ -91,25 +101,25 @@ class IssueController extends Controller
     }
 
     public function updateStatus(Request $request, $id): void
-{
-    $validated = $request->validate([
-        'status' => 'nullable|string', // Validate status options
-        'assigned_to' => 'nullable', // Validate if user exists
-        'priority' => 'nullable',
-        'title' => 'nullable',
-    ]);
-    
-//    dd($validated);
-    $issue = Issue::findOrFail($id);
-   $issue->update($validated);
-    // $issue = Issue::findOrFail($id);
-    // $issue->status = $validated['status'];
-    // if ($validated['assigned_to']) {
-    //     $issue->assigned_to = $validated['assigned_to'];
-    // }
-   
-    // $issue->save();
+    {
+        $validated = $request->validate([
+            'status' => 'nullable|string', // Validate status options
+            'assigned_to' => 'nullable', // Validate if user exists
+            'priority' => 'nullable',
+            'title' => 'nullable',
+        ]);
 
-    return;
-}
+        //    dd($validated);
+        $issue = Issue::findOrFail($id);
+        $issue->update($validated);
+        // $issue = Issue::findOrFail($id);
+        // $issue->status = $validated['status'];
+        // if ($validated['assigned_to']) {
+        //     $issue->assigned_to = $validated['assigned_to'];
+        // }
+
+        // $issue->save();
+
+        return;
+    }
 }

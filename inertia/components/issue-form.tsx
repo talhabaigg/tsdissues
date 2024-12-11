@@ -12,16 +12,21 @@ import {
 } from "./ui/select"; // Import from ShadCN
 import { Textarea } from "./ui/textarea";
 import { Checkbox } from "./ui/checkbox"; // Assuming Checkbox is from ShadCN
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-const IssueForm = () => {
-  const { data, setData, post, processing, errors } = useForm({
-    type: "",
-    name: "",
-    priority: "",
-    description: "",
-    attachments: [],
+const IssueForm = ({ issue }) => {
+  // Determine if the form is in "edit" or "create" mode
+  const isEditing = !!issue;
+
+  const { data, setData, post, put, processing, errors } = useForm({
+    id: isEditing ? issue.id : null,
+    type: isEditing ? issue.type : "", // Pre-fill with issue data if editing
+    name: isEditing ? issue.title : "",
+    priority: isEditing ? issue.priority : "",
+    description: isEditing ? issue.description : "",
+    attachments: [], // No pre-filled attachments for editing (can handle as needed)
   });
+
   const issueTypes = [
     { value: "product_quality", label: "Product Quality" },
     { value: "it_hardware", label: "IT Hardware" },
@@ -33,6 +38,7 @@ const IssueForm = () => {
     { value: "medium", label: "Medium" },
     { value: "low", label: "Low" },
   ];
+
   // State to track whether the checkbox is checked
   const [isChecked, setIsChecked] = useState(false);
 
@@ -46,8 +52,8 @@ const IssueForm = () => {
       alert("You must confirm the checkbox before submitting.");
       return;
     }
-    console.log(data);
     post(route("issue.store"));
+    // Use PUT for editing, POST for creating
   };
 
   const handleCheckboxChange = (e) => {
@@ -68,7 +74,6 @@ const IssueForm = () => {
             <SelectValue placeholder="Select an issue type" />
           </SelectTrigger>
           <SelectContent>
-            {/* Render options using the issueTypes array */}
             {issueTypes.map((type) => (
               <SelectItem key={type.value} value={type.value}>
                 {type.label}
@@ -105,7 +110,6 @@ const IssueForm = () => {
             <SelectValue placeholder="Select priority" />
           </SelectTrigger>
           <SelectContent>
-            {/* Render options using the priorityOptions array */}
             {priorityOptions.map((priority) => (
               <SelectItem key={priority.value} value={priority.value}>
                 {priority.label}
@@ -145,12 +149,11 @@ const IssueForm = () => {
 
       {/* Checkbox for confirmation */}
       <div className="flex items-center space-x-2">
-        {/* Use a standard checkbox here */}
         <input
           type="checkbox"
           id="terms"
           checked={isChecked}
-          onChange={handleCheckboxChange} // Handle the change
+          onChange={handleCheckboxChange}
         />
         <Label htmlFor="terms">
           I confirm, this is not part of an individual customer credit request.
@@ -160,7 +163,7 @@ const IssueForm = () => {
       {/* Submit Button */}
       <div>
         <Button type="submit" disabled={processing || !isChecked}>
-          {processing ? "Submitting..." : "Submit"}
+          {processing ? "Submitting..." : isEditing ? "Update Issue" : "Submit"}
         </Button>
       </div>
     </form>
