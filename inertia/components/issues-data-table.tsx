@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS
 import "ag-grid-community/styles/ag-theme-alpine.css"; // Optional Theme
+import "ag-grid-community/styles/ag-theme-quartz.css";
 import { Button } from "~/components/ui/button";
 import { ComboboxEditor } from "~/components/user-select-cell-editor";
 import { Badge } from "~/components/ui/badge";
+import { themeQuartz } from "@ag-grid-community/theming";
 import {
   Tooltip,
   TooltipContent,
@@ -176,7 +178,22 @@ const IssueTable = ({ issues, onOpenRow, mode }) => {
       cellRenderer: (props) => <ExtendedAvatar userFullName={props.value} />,
     },
     { headerName: "Updated By", field: "updated_by", sortable: true },
-    { headerName: "Created At", field: "created_at", sortable: true },
+    {
+      headerName: "Created At",
+      field: "created_at",
+      sortable: true,
+      cellRenderer: (props) => {
+        const date = new Date(props.value);
+        const options = { day: "2-digit", month: "short", year: "numeric" };
+        const formattedDate = new Intl.DateTimeFormat("en-AU", options).format(
+          date,
+        );
+
+        // Replacing the default separator with a hyphen and converting month to uppercase
+        const [day, month, year] = formattedDate.split(" ");
+        return `${day}-${month.toUpperCase()}-${year}`;
+      },
+    },
     {
       headerName: "Updated At",
       field: "updated_at",
@@ -194,6 +211,7 @@ const IssueTable = ({ issues, onOpenRow, mode }) => {
     description: issue.description,
     comments: issue.comments,
     assigned_to: issue.assignee?.name || "N/A",
+    created_by: issue.creator.name || "N/A",
     updated_by: issue.updater.name || "N/A",
     created_at: issue.created_at,
     updated_at: issue.updated_at,
@@ -201,7 +219,7 @@ const IssueTable = ({ issues, onOpenRow, mode }) => {
 
   return (
     <div
-      className={`${mode ? "ag-theme-alpine-dark" : "ag-theme-alpine"}`}
+      className={`${mode ? "ag-theme-quartz-dark" : "ag-theme-quartz"}`}
       style={{ height: 750, width: "100%" }}
     >
       <AgGridReact

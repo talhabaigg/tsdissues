@@ -7,6 +7,7 @@ import IssueFormModal from "~/components/issue-form-modal";
 import IssueCommentBox from "~/components/issue-commentBox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { Card, CardContent } from "~/components/ui/card";
+import { KanbanBoard } from "~/components/KanbanBoard";
 import {
   Sheet,
   SheetContent,
@@ -14,7 +15,6 @@ import {
   SheetTitle,
 } from "~/components/ui/sheet";
 import { Head } from "@inertiajs/react";
-
 import React from "react";
 import { useEffect, useState } from "react";
 
@@ -36,14 +36,17 @@ export default function IssueIndex({ issues }) {
 
   const onOpenRow = (rowData) => {
     setSelectedRow(rowData);
-
+    console.log(rowData);
     setOpen(true);
+  };
+
+  const handleTaskOpen = (id) => {
+    console.log("Task Opened", id);
   };
 
   return (
     <AuthenticatedLayout>
       <Head title="View Submitted Issues" />
-
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent className="max-w-md mx-auto shadow-lg rounded-lg p-6">
           <SheetHeader>
@@ -83,10 +86,12 @@ export default function IssueIndex({ issues }) {
                       </div>
                       <div className="font-bold">Assigned To:</div>
                       <ExtendedAvatar userFullName={selectedRow.assigned_to} />
+                      <div className="font-bold">Submitted by:</div>
+                      <ExtendedAvatar userFullName={selectedRow.created_by} />
                       <div className="font-bold">Created At:</div>
                       <div>
                         {" "}
-                        <DateLabelAgo date={selectedRow.created_at} />
+                        <DateLabelAgo date={selectedRow.creator} />
                       </div>
                       <div className="font-bold">Last Updated At:</div>
                       <div>
@@ -115,8 +120,7 @@ export default function IssueIndex({ issues }) {
           </Tabs>
         </SheetContent>
       </Sheet>
-
-      <Tabs defaultValue="table" className="w-full">
+      <Tabs defaultValue="kanban" className="w-full">
         <div className="flex justify-between">
           <div>
             <TabsList className="w-full">
@@ -128,7 +132,6 @@ export default function IssueIndex({ issues }) {
             <IssueFormModal />
           </div>
         </div>
-
         <TabsContent value="table" className="w-full">
           <IssueTable
             issues={issues.data}
@@ -136,7 +139,16 @@ export default function IssueIndex({ issues }) {
             mode={isDarkMode}
           />
         </TabsContent>
-        <TabsContent value="kanban">Display kanban board here</TabsContent>
+        <TabsContent value="kanban" className="mt-10">
+          <KanbanBoard issues={issues.data ? issues.data : []} />
+          {/* <KanbanBoard
+            issues={issues.data.map(({ id, title, priority, status }) => ({
+              id,
+              status: status,
+              title: title, // Rename title to content
+            }))}
+          /> */}
+        </TabsContent>
       </Tabs>
     </AuthenticatedLayout>
   );
