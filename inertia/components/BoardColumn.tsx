@@ -28,12 +28,7 @@ interface BoardColumnProps {
   isOverlay?: boolean;
 }
 
-export function BoardColumn({
-  column,
-  tasks,
-  isOverlay,
-  handleTaskOpen,
-}: BoardColumnProps) {
+export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
   const tasksIds = useMemo(() => {
     return tasks.map((task) => task.id);
   }, [tasks]);
@@ -82,7 +77,7 @@ export function BoardColumn({
         dragging: isOverlay ? "overlay" : isDragging ? "over" : undefined,
       })}
     >
-      <CardHeader className="p-4 font-semibold border-b-2 text-left flex flex-row space-between items-center">
+      <CardHeader className="p-2 font-semibold border-b-2 text-left flex flex-row space-between items-center">
         <Button
           variant={"ghost"}
           {...attributes}

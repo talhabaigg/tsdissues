@@ -6,7 +6,7 @@ import "ag-grid-community/styles/ag-theme-quartz.css";
 import { Button } from "~/components/ui/button";
 import { ComboboxEditor } from "~/components/user-select-cell-editor";
 import { Badge } from "~/components/ui/badge";
-import { themeQuartz } from "@ag-grid-community/theming";
+
 import {
   Tooltip,
   TooltipContent,
@@ -230,7 +230,7 @@ const IssueTable = ({ issues, onOpenRow, mode }) => {
         defaultColDef={{
           flex: 1,
           minWidth: 100,
-          resizable: true, // Allow resizing columns
+          resizable: false, // Allow resizing columns
         }}
       />
     </div>

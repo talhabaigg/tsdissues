@@ -8,6 +8,7 @@ import { GripVertical } from "lucide-react";
 import { Badge } from "./ui/badge";
 import { ColumnId } from "./KanbanBoard";
 import SmallAvatar from "./user-avatar-small";
+import ColoredBadge from "./colored-badge";
 
 export interface Task {
   id: UniqueIdentifier;
@@ -69,15 +70,21 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
         dragging: isOverlay ? "overlay" : isDragging ? "over" : undefined,
       })}
     >
-      <CardHeader className="px-2 text-wrap py-3 space-between flex flex-row border-b-2 border-secondary relative">
-        <p className="break-words w-52">{task.content}</p>{" "}
-        <span className="ml-auto mr-2">
+      <CardHeader className="px-2 text-wrap py-3  items-center space-between flex flex-row border-b-2 border-secondary relative justify-between">
+        <div className="flex items-center">
+          <p className="break-words w-64 text-sm truncate" title={task.content}>
+            {task.content}
+          </p>
+        </div>{" "}
+        <div className="flex items-center">
           <SmallAvatar userFullName={task.assignee.name}></SmallAvatar>
-        </span>
+        </div>
       </CardHeader>
       <CardContent className="px-3 pt-3 pb-6 text-left whitespace-pre-wrap">
         <div className="flex justify-between">
-          <p className="break-words text-xs font-light">{task.description}</p>
+          <p className="break-words flex-wrap text-xs font-light">
+            {task.description}
+          </p>
 
           <Button
             variant={"ghost"}
@@ -89,13 +96,12 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
             <GripVertical />
           </Button>
         </div>
-        <div className="mt-2 space-x-2">
-          <div>
-            <Badge>{task.priority}</Badge>
-            <Badge variant={"outline"} className="ml-auto font-semibold">
-              #{task.type}
-            </Badge>
-          </div>
+        <div className="mt-2 space-x-1">
+          <ColoredBadge value={task.priority}></ColoredBadge>
+
+          <Badge variant={"outline"} className="ml-auto font-semibold">
+            #{task.type}
+          </Badge>
         </div>
       </CardContent>
     </Card>

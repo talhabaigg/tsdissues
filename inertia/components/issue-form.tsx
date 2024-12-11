@@ -22,7 +22,17 @@ const IssueForm = () => {
     description: "",
     attachments: [],
   });
+  const issueTypes = [
+    { value: "product_quality", label: "Product Quality" },
+    { value: "it_hardware", label: "IT Hardware" },
+    { value: "system", label: "System" },
+  ];
 
+  const priorityOptions = [
+    { value: "high", label: "High" },
+    { value: "medium", label: "Medium" },
+    { value: "low", label: "Low" },
+  ];
   // State to track whether the checkbox is checked
   const [isChecked, setIsChecked] = useState(false);
 
@@ -58,9 +68,12 @@ const IssueForm = () => {
             <SelectValue placeholder="Select an issue type" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="product_quality">Product Quality</SelectItem>
-            <SelectItem value="it_hardware">IT Hardware</SelectItem>
-            <SelectItem value="system">System</SelectItem>
+            {/* Render options using the issueTypes array */}
+            {issueTypes.map((type) => (
+              <SelectItem key={type.value} value={type.value}>
+                {type.label}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
         {errors.type && <div className="text-red-600">{errors.type}</div>}
@@ -92,9 +105,12 @@ const IssueForm = () => {
             <SelectValue placeholder="Select priority" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="high">High</SelectItem>
-            <SelectItem value="medium">Medium</SelectItem>
-            <SelectItem value="low">Low</SelectItem>
+            {/* Render options using the priorityOptions array */}
+            {priorityOptions.map((priority) => (
+              <SelectItem key={priority.value} value={priority.value}>
+                {priority.label}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
         {errors.priority && (
@@ -104,7 +120,7 @@ const IssueForm = () => {
 
       {/* Description */}
       <div>
-        <Label htmlFor="description">Describe your issue</Label>
+        <Label htmlFor="description">Description</Label>
         <Textarea
           id="description"
           value={data.description}

@@ -120,7 +120,7 @@ export default function IssueIndex({ issues }) {
           </Tabs>
         </SheetContent>
       </Sheet>
-      <Tabs defaultValue="kanban" className="w-full">
+      <Tabs defaultValue="table" className="w-full">
         <div className="flex justify-between">
           <div>
             <TabsList className="w-full">
@@ -141,13 +141,6 @@ export default function IssueIndex({ issues }) {
         </TabsContent>
         <TabsContent value="kanban" className="mt-10">
           <KanbanBoard issues={issues.data ? issues.data : []} />
-          {/* <KanbanBoard
-            issues={issues.data.map(({ id, title, priority, status }) => ({
-              id,
-              status: status,
-              title: title, // Rename title to content
-            }))}
-          /> */}
         </TabsContent>
       </Tabs>
     </AuthenticatedLayout>

@@ -1,21 +1,16 @@
 import { SidebarProvider, SidebarTrigger } from "../ui/sidebar";
 import { AppSidebar } from "../app-sidebar";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "../ui/breadcrumb";
 import { Separator } from "../ui/separator";
-import { usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+function Layout({ children }: { children: React.ReactNode }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(
+    () => localStorage.getItem("sidebar:state") === "true",
+  );
+
   useEffect(() => {
-    // Check if a theme is saved in localStorage
+    // Manage dark mode state and persist in localStorage
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme === "dark") {
       setIsDarkMode(true);
@@ -24,8 +19,17 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       document.body.classList.remove("dark");
     }
   }, []);
+
+  const handleSidebarStateChange = (state: boolean) => {
+    setSidebarOpen(state);
+    localStorage.setItem("sidebar:state", String(state));
+  };
+
   return (
-    <SidebarProvider>
+    <SidebarProvider
+      defaultOpen={sidebarOpen}
+      onOpenChange={handleSidebarStateChange}
+    >
       <AppSidebar />
       <main className="p-2 w-full">
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
@@ -34,9 +38,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <Separator orientation="vertical" className="mr-2 h-4" />
           </div>
         </header>
-
         {children}
       </main>
     </SidebarProvider>
   );
 }
+
+export default Layout;
