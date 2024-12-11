@@ -15,17 +15,26 @@ class IssueCommentController extends Controller
             'text' => 'required|string|max:500',
             'file' => 'nullable|file|mimes:jpg,png,pdf', // Adjust based on your file types
         ]);
- 
+
         $comment = IssueComment::create([
             'issue_id' => $validated['issue_id'],
             'user_id' => auth()->id(), // Assuming the user is logged in
             'text' => $validated['text'],
-            'file' => $request->file('file') ? $request->file('file')->store('comments','public') : null, // Adjust file storage path
+            'file' => $request->file('file') ? $request->file('file')->store('comments', 'public') : null, // Adjust file storage path
         ]);
 
 
         return redirect()->route('issue.index')->with('success', 'Comment added.');
     }
 
-    
+    public function latest()
+    {
+        $comments = IssueComment::with(['creator', 'issue'])
+            ->latest()
+            ->limit(15)
+            ->get();
+
+        return response()->json($comments);
+    }
+
 }

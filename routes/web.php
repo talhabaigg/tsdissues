@@ -26,10 +26,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 Route::resource('issue', IssueController::class);
-   // web.php
-   Route::post('/issues/{id}/update-status', [IssueController::class, 'updateStatus'])->name('issues.updateStatus');
-   Route::post('/issue-comments', [IssueCommentController::class, 'store'])->name('issue-comments.store');
-   Route::get('/issue-comments/{issueId}', [IssueCommentController::class, 'getCommentsByIssueId'])->name('issue-comments.getCommentsByIssueId');
-   
+// web.php
+Route::post('/issues/{id}/update-status', [IssueController::class, 'updateStatus'])->name('issues.updateStatus');
+Route::post('/issue-comments', [IssueCommentController::class, 'store'])->name('issue-comments.store');
+Route::get('/issue-comments/{issueId}', [IssueCommentController::class, 'getCommentsByIssueId'])->name('issue-comments.getCommentsByIssueId');
+Route::get('/api/latest-comments', [IssueCommentController::class, 'latest']);
 
-require __DIR__.'/auth.php';
+
+require __DIR__ . '/auth.php';
