@@ -66,43 +66,38 @@ const LatestComments = () => {
 
       <ScrollArea className="h-[600px] sm:h-[700px] xlg:h-[900px]  w-full rounded-md ">
         {comments.length > 0 ? (
-          comments
-            .slice()
-            .reverse()
-            .map((comment, index) => (
-              <div className="">
-                <div>
-                  <div className="flex justify-start space-y-2">
-                    <SmallAvatar userFullName={comment.creator.name} />
-                    <Card className="p-2 ml-2 w-full">
-                      {comment.text}{" "}
-                      {comment.file && (
-                        <div className="mt-2">
-                          <FilePreview file={comment.file} />
-                        </div>
-                      )}
-                      <div className=" space-x-2">
-                        <div className=" font-light text-xs">
-                          <span>
-                            Commented on "issue #{comment.issue.id}-
-                            {comment.issue.name}" on{" "}
-                          </span>
-                          <span>
-                            {new Date(comment.created_at).toLocaleDateString(
-                              "en-AU",
-                            )}
-                          </span>
-                        </div>
-                        <ColoredBadge value={comment.issue.type}></ColoredBadge>
-                        <ColoredBadge
-                          value={comment.issue.status}
-                        ></ColoredBadge>
+          comments.slice().map((comment, index) => (
+            <div className="">
+              <div>
+                <div className="flex justify-start space-y-2">
+                  <SmallAvatar userFullName={comment.creator.name} />
+                  <Card className="p-2 ml-2 w-full">
+                    {comment.text}{" "}
+                    {comment.file && (
+                      <div className="mt-2">
+                        <FilePreview file={comment.file} />
                       </div>
-                    </Card>
-                  </div>
+                    )}
+                    <div className=" space-x-2">
+                      <div className=" font-light text-xs">
+                        <span>
+                          Commented on "issue #{comment.issue.id}-
+                          {comment.issue.name}" on{" "}
+                        </span>
+                        <span>
+                          {new Date(comment.created_at).toLocaleDateString(
+                            "en-AU",
+                          )}
+                        </span>
+                      </div>
+                      <ColoredBadge value={comment.issue.type}></ColoredBadge>
+                      <ColoredBadge value={comment.issue.status}></ColoredBadge>
+                    </div>
+                  </Card>
                 </div>
               </div>
-            ))
+            </div>
+          ))
         ) : (
           <Card className="p-20 ">
             No comments yet. <br />

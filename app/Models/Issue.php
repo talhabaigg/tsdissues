@@ -29,8 +29,8 @@ class Issue extends Model
                 // Handle case when type is null, if needed
                 $issue->assigned_to = null; // Or assign a default user ID, e.g., 1
             }
-            $issue->updated_by = Auth::id();
-            $issue->created_by = Auth::id();
+            $issue->updated_by = Auth::id() ?? 1;
+            $issue->created_by = Auth::id() ?? 1; // Or assign a default user ID, e.g., 1
         });
 
         static::updating(function ($issue) {

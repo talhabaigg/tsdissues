@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use App\Models\Issue;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class IssueController extends Controller
 {
@@ -64,6 +65,9 @@ class IssueController extends Controller
                 'status' => 'open',  // Default status
                 'description' => $request->description,
             ]);
+            if (!Auth::check()) {
+                return redirect()->back()->with('success', 'Issue submitted successfully as a guest.');
+            }
             return redirect()->route('issue.index')->with('success', 'Issue created successfully');
         }
 

@@ -30,9 +30,10 @@ class IssueCommentController extends Controller
     public function latest()
     {
         $comments = IssueComment::with(['creator', 'issue'])
-            ->latest()
+            ->orderBy('created_at', 'desc')
             ->limit(15)
             ->get();
+
 
         return response()->json($comments);
     }

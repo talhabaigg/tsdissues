@@ -19,7 +19,7 @@ import { Head } from "@inertiajs/react";
 import React from "react";
 import { useEffect, useState } from "react";
 import { Tab } from "@headlessui/react";
-
+import IssueFormQR from "~/components/issue-form-guest-qr";
 export default function IssueIndex({ issues }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
@@ -136,7 +136,8 @@ export default function IssueIndex({ issues }) {
               <TabsTrigger value="kanban">Kanban View</TabsTrigger>
             </TabsList>
           </div>
-          <div>
+          <div className="space-x-2">
+            <IssueFormQR />
             <IssueFormModal />
           </div>
         </div>
