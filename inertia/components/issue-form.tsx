@@ -13,6 +13,7 @@ import {
 import { Textarea } from "./ui/textarea";
 import { Checkbox } from "./ui/checkbox"; // Assuming Checkbox is from ShadCN
 import { useState, useEffect } from "react";
+import { toast } from "sonner";
 
 const IssueForm = ({ issue }) => {
   // Determine if the form is in "edit" or "create" mode
@@ -55,6 +56,7 @@ const IssueForm = ({ issue }) => {
       return;
     }
     post(route("issue.store"));
+    toast.success("Issue has been submitted.");
     // Use PUT for editing, POST for creating
   };
 

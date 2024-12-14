@@ -63,7 +63,7 @@ class IssueController extends Controller
                 'type' => $request->type,
                 'title' => $request->name,
                 'priority' => $request->priority,
-                'status' => 'open',  // Default status
+                'status' => 'pending',  // Default status
                 'description' => $request->description,
             ]);
             

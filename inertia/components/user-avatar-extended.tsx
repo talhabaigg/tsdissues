@@ -18,7 +18,9 @@ const ExtendedAvatar = ({
     <div className="flex items-center">
       <Avatar className="w-8 h-8">
         <AvatarImage src="" alt={userFullName} />
-        <AvatarFallback>{initials}</AvatarFallback>
+        <AvatarFallback className="bg-gray-500 text-white ">
+          {initials}
+        </AvatarFallback>
       </Avatar>
       <span className="ml-2">{userFullName}</span>
     </div>

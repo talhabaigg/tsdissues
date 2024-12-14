@@ -2,7 +2,8 @@ import { SidebarProvider, SidebarTrigger } from "../ui/sidebar";
 import { AppSidebar } from "../app-sidebar";
 import { Separator } from "../ui/separator";
 import { useEffect, useState } from "react";
-
+import { Toaster } from "~/components/ui/sonner";
+import { toast } from "sonner";
 function Layout({ children }: { children: React.ReactNode }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(
@@ -11,6 +12,7 @@ function Layout({ children }: { children: React.ReactNode }) {
 
   const handleSidebarStateChange = (state: boolean) => {
     setSidebarOpen(state);
+    toast.success("Event has been created."); // Add toast message
     localStorage.setItem("sidebar:state", String(state));
   };
 
@@ -26,6 +28,7 @@ function Layout({ children }: { children: React.ReactNode }) {
         </header>
         {children}
       </main>
+      <Toaster richColors />
     </SidebarProvider>
   );
 }

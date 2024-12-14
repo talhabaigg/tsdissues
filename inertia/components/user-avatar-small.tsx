@@ -15,7 +15,9 @@ const SmallAvatar = ({ userFullName = "Unassigned" }: AvatarProps) => {
   return (
     <Avatar className="w-8 h-8">
       <AvatarImage src="" alt={userFullName} />
-      <AvatarFallback>{initials}</AvatarFallback>
+      <AvatarFallback className="bg-gray-500 text-white font-bold">
+        {initials}
+      </AvatarFallback>
     </Avatar>
   );
 };

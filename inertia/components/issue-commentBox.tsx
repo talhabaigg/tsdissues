@@ -5,6 +5,7 @@ import { Card } from "~/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { FilePreview } from "~/components/comment-file-preview";
 import ExtendedAvatar from "~/components/user-avatar-extended";
+import { toast } from "sonner";
 // You can use this for a small upload icon
 import { Paperclip } from "lucide-react";
 import { useForm } from "@inertiajs/react";
@@ -57,8 +58,8 @@ const IssueCommentBox = ({ issueId, existingComments }) => {
       text: newComment, // Update status
       file: file, // Update file
     });
+    toast.success("Comment added");
 
-    console.log("Comment to be added:", form.data);
     // form.post("/issue-comments");
 
     setComments([...comments, comment]);

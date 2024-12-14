@@ -6,7 +6,7 @@ import "ag-grid-community/styles/ag-theme-quartz.css";
 import { Button } from "~/components/ui/button";
 import { ComboboxEditor } from "~/components/user-select-cell-editor";
 import { Badge } from "~/components/ui/badge";
-
+import { toast } from "sonner";
 import {
   Tooltip,
   TooltipContent,
@@ -41,6 +41,7 @@ const IssueTable = ({ issues, onOpenRow, mode }) => {
       const issueId = selectedRow?.id; // Assume selectedRow contains the issueId
 
       form.post(`/issues/${issueId}/update-status`);
+      toast.success("Issue has been updated.");
     }
   }, [form.data.status, selectedRow]);
 
@@ -78,7 +79,7 @@ const IssueTable = ({ issues, onOpenRow, mode }) => {
               <Tooltip>
                 <TooltipTrigger>
                   <Button
-                    variant="outline"
+                    variant="ghost"
                     size="icon"
                     className="w-8 h-8"
                     onClick={() => onOpenRow(params.data)}
@@ -177,7 +178,12 @@ const IssueTable = ({ issues, onOpenRow, mode }) => {
       },
       cellRenderer: (props) => <ExtendedAvatar userFullName={props.value} />,
     },
-    { headerName: "Updated By", field: "updated_by", sortable: true },
+    {
+      headerName: "Updated By",
+      field: "updated_by",
+      sortable: true,
+      cellRenderer: (props) => <ExtendedAvatar userFullName={props.value} />,
+    },
     {
       headerName: "Created At",
       field: "created_at",
