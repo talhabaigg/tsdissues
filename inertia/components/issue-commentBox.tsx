@@ -12,7 +12,15 @@ import { useForm } from "@inertiajs/react";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { useEffect } from "react";
 import DateLabelAgo from "~/components/date-label-ago";
-const IssueCommentBox = ({ issueId, existingComments }) => {
+interface IssueCommentBoxProps {
+  issueId: number;
+  existingComments: Array<any>;
+}
+
+const IssueCommentBox = ({
+  issueId,
+  existingComments,
+}: IssueCommentBoxProps) => {
   // console.log("Issue ID:", issueId);
   const [comments, setComments] = useState(existingComments);
   // console.log("Existing Comments:", existingComments);

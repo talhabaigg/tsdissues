@@ -40,77 +40,10 @@ const defaultCols = [
 
 export type ColumnId = (typeof defaultCols)[number]["id"];
 
-const initialTasks: Task[] = [
-  {
-    id: "1",
-    columnId: "done",
-    content: "Project initiation and planning",
-  },
-  {
-    id: "2",
-    columnId: "done",
-    content: "Gather requirements from stakeholders",
-  },
-  {
-    id: "3",
-    columnId: "done",
-    content: "Create wireframes and mockups",
-  },
-  {
-    id: "4",
-    columnId: "in-progress",
-    content: "Develop homepage layout",
-  },
-  {
-    id: "5",
-    columnId: "in-progress",
-    content: "Design color scheme and typography",
-  },
-  {
-    id: "task6",
-    columnId: "pending",
-    content: "Implement user authentication",
-  },
-  {
-    id: "task7",
-    columnId: "pending",
-    content: "Build contact us page",
-  },
-  {
-    id: "task8",
-    columnId: "pending",
-    content: "Create product catalog",
-  },
-  {
-    id: "task9",
-    columnId: "pending",
-    content: "Develop about us page",
-  },
-  {
-    id: "task10",
-    columnId: "pending",
-    content: "Optimize website for mobile devices",
-  },
-  {
-    id: "task11",
-    columnId: "pending",
-    content: "Integrate payment gateway",
-  },
-  {
-    id: "task12",
-    columnId: "pending",
-    content: "Perform testing and bug fixing",
-  },
-  {
-    id: "task13",
-    columnId: "pending",
-    content: "Launch website and deploy to server",
-  },
-];
-export function KanbanBoard(issues, handleTaskOpen) {
+export function KanbanBoard(issues: any, handleTaskOpen: (task: Task) => void) {
   const formattedIssues = Object.keys(issues)
     .map((key) => {
-      return issues[key].map((issue) => ({
+      return issues[key].map((issue: any) => ({
         ...issue,
         id: String(issue.id), // Convert id to string
         columnId: issue.status, // Add the key as columnId

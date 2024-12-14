@@ -9,9 +9,10 @@ import jsPDF from "jspdf";
 const loginLink = route("welcome");
 
 const IssueFormQR = () => {
-  const qrRef = useRef(null);
+  const qrRef = useRef<HTMLDivElement>(null);
 
   const downloadQRCodeAsPDF = () => {
+    if (!qrRef.current) return;
     const svg = qrRef.current.querySelector("svg");
     if (!svg) return;
 
@@ -23,7 +24,9 @@ const IssueFormQR = () => {
     img.onload = () => {
       canvas.width = img.width;
       canvas.height = img.height;
-      ctx.drawImage(img, 0, 0);
+      if (ctx) {
+        ctx.drawImage(img, 0, 0);
+      }
       const pngFile = canvas.toDataURL("image/png");
 
       const pdf = new jsPDF();

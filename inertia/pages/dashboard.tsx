@@ -7,7 +7,9 @@ import { usePage } from "@inertiajs/react";
 import React, { useState, useEffect } from "react";
 
 export default function Dashboard() {
-  const { existingActivities } = usePage().props;
+  const { existingActivities } = usePage().props as unknown as {
+    existingActivities: any[];
+  };
 
   return (
     <AuthenticatedLayout>

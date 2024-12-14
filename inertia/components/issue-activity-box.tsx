@@ -16,7 +16,7 @@ import {
 import SmallAvatar from "~/components/user-avatar-small";
 import ColoredBadge from "./colored-badge";
 interface IssueActivityBoxProps {
-  issueId: number;
+  issueId?: number;
   existingActivities: any[];
 }
 const isJson = (value: string) => {

@@ -15,7 +15,16 @@ import { Checkbox } from "./ui/checkbox"; // Assuming Checkbox is from ShadCN
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
-const IssueForm = ({ issue }) => {
+interface Issue {
+  id: number;
+  type: string;
+  title: string;
+  priority: string;
+  description: string;
+  file: string;
+}
+
+const IssueForm = ({ issue }: { issue: Issue | null }) => {
   // Determine if the form is in "edit" or "create" mode
   const isEditing = !!issue;
 
@@ -70,7 +79,6 @@ const IssueForm = ({ issue }) => {
       <div>
         <Label htmlFor="type">Issue Type</Label>
         <Select
-          id="issue_type"
           value={data.type} // Controlled value bound to form state
           onValueChange={(value) => setData("type", value)} // Update state when value changes
         >
@@ -106,7 +114,6 @@ const IssueForm = ({ issue }) => {
       <div>
         <Label htmlFor="priority">Priority</Label>
         <Select
-          id="priority"
           value={data.priority}
           onValueChange={(value) => setData("priority", value)} // Controlled value
         >
@@ -146,9 +153,7 @@ const IssueForm = ({ issue }) => {
           id="attachments"
           onChange={handleFileChange}
         />
-        {errors.attachments && (
-          <div className="text-red-600">{errors.attachments}</div>
-        )}
+        {errors.file && <div className="text-red-600">{errors.file}</div>}
       </div>
 
       {/* Checkbox for confirmation */}

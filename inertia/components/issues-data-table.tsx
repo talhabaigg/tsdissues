@@ -4,6 +4,7 @@ import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS
 import "ag-grid-community/styles/ag-theme-alpine.css"; // Optional Theme
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import { Button } from "~/components/ui/button";
+import { ColDef } from "ag-grid-community";
 import { ComboboxEditor } from "~/components/user-select-cell-editor";
 import { Badge } from "~/components/ui/badge";
 import { toast } from "sonner";
@@ -18,8 +19,31 @@ import ColoredBadge from "~/components/colored-badge";
 import ExtendedAvatar from "~/components/user-avatar-extended";
 import { useForm } from "@inertiajs/react";
 
-const IssueTable = ({ issues, onOpenRow, mode }) => {
-  const [selectedRow, setSelectedRow] = useState(null);
+interface Issue {
+  id: number;
+  type: string;
+  title: string;
+  priority: string;
+  status: string;
+  description: string;
+  file: string;
+  comments: string;
+  activities: string;
+  assignee?: { name: string };
+  creator: { name: string };
+  updater: { name: string };
+  created_at: string;
+  updated_at: string;
+}
+
+interface IssueTableProps {
+  issues: Issue[];
+  onOpenRow: (issue: Issue) => void;
+  mode: boolean;
+}
+
+const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
+  const [selectedRow, setSelectedRow] = useState<{ id: number } | null>(null);
 
   console.log("mode", mode);
 
@@ -46,17 +70,22 @@ const IssueTable = ({ issues, onOpenRow, mode }) => {
   }, [form.data.status, selectedRow]);
 
   const handleStatusChange = (
-    issueId,
-    newStatus,
-    newAssignee,
-    newPriority,
-    newTitle,
+    issueId: number,
+    newStatus?: string,
+    newAssignee?: string,
+    newPriority?: string,
+    newTitle?: string,
   ) => {
     // Set form data for both status and assigned_to
+    // @ts-ignore
     form.setData({
+      // @ts-ignore
       status: newStatus ?? rowData.status, // Update status
+      // @ts-ignore
       assigned_to: newAssignee ?? rowData.assigned_to, // Update assigned user
+      // @ts-ignore
       priority: newPriority ?? rowData.priority,
+      // @ts-ignore
       title: newTitle ?? rowData.title,
     });
 
@@ -65,13 +94,24 @@ const IssueTable = ({ issues, onOpenRow, mode }) => {
   };
 
   // AG Grid column definitions
-  const columnDefs = [
+  const columnDefs: ColDef<Issue>[] = [
     {
       headerName: "ID",
       field: "id",
       sortable: true,
       filter: true,
-      cellRenderer: (params) => {
+      cellRenderer: (params: {
+        value:
+          | string
+          | number
+          | boolean
+          | React.ReactElement<any, string | React.JSXElementConstructor<any>>
+          | Iterable<React.ReactNode>
+          | React.ReactPortal
+          | null
+          | undefined;
+        data: Issue;
+      }) => {
         return (
           <div className="flex items-center justify-between gap-2">
             <span>{params.value}</span>
@@ -103,10 +143,10 @@ const IssueTable = ({ issues, onOpenRow, mode }) => {
       filter: true,
       editable: true,
       singleClickEdit: true,
-      onCellValueChanged: (event) => {
+      onCellValueChanged: (event: any) => {
         const issueId = event.data.id; // Get the issue ID
         const newTitle = event.newValue; // Get the new title
-        handleStatusChange(issueId, null, null, null, newTitle);
+        handleStatusChange(issueId, undefined, undefined, undefined, newTitle);
       },
     },
     {
@@ -115,7 +155,7 @@ const IssueTable = ({ issues, onOpenRow, mode }) => {
       sortable: true,
       filter: true,
       cellClass: "text-center",
-      cellRenderer: (props) => {
+      cellRenderer: (props: { value: string }) => {
         const value = props.value;
         const formattedValue = value.replace(/_/g, " ").toUpperCase();
         return <Badge>{formattedValue}</Badge>;
@@ -133,14 +173,18 @@ const IssueTable = ({ issues, onOpenRow, mode }) => {
       cellEditorParams: {
         values: ["high", "medium", "low"],
       },
-      onCellValueChanged: (event) => {
+      onCellValueChanged: (event: any) => {
         const issueId = event.data.id; // Get the issue ID
+        // @ts-ignore
         const status = rowData.status; // Get the new status
+        // @ts-ignore
         const assigned_to = rowData.assigned_to;
         const newPriority = event.newValue; // Get the new priority
         handleStatusChange(issueId, status, assigned_to, newPriority);
       },
-      cellRenderer: (props) => <ColoredBadge value={props.value} />,
+      cellRenderer: (props: { value: string }) => (
+        <ColoredBadge value={props.value} />
+      ),
     },
     {
       headerName: "Status",
@@ -154,13 +198,15 @@ const IssueTable = ({ issues, onOpenRow, mode }) => {
       cellEditorParams: {
         values: ["active", "resolved", "pending"],
       },
-      onCellValueChanged: (event) => {
+      onCellValueChanged: (event: { data: { id: any }; newValue: any }) => {
         const issueId = event.data.id; // Get the issue ID
         const newStatus = event.newValue; // Get the new status
 
         handleStatusChange(issueId, newStatus);
       },
-      cellRenderer: (props) => <ColoredBadge value={props.value} />,
+      cellRenderer: (props: { value: string }) => (
+        <ColoredBadge value={props.value} />
+      ),
     },
     {
       headerName: "Assigned To",
@@ -170,30 +216,40 @@ const IssueTable = ({ issues, onOpenRow, mode }) => {
       singleClickEdit: true,
       editable: true,
       cellEditor: ComboboxEditor,
-      onCellValueChanged: (event) => {
+      onCellValueChanged: (event: {
+        data: { id: any; status: any };
+        newValue: any;
+      }) => {
         const issueId = event.data.id; // Get the issue ID
         const newAssignee = event.newValue; // Get the new assignee
         const newStatus = event.data.status;
         handleStatusChange(issueId, newStatus, newAssignee);
       },
-      cellRenderer: (props) => <ExtendedAvatar userFullName={props.value} />,
+      cellRenderer: (props: { value: string | undefined }) => (
+        <ExtendedAvatar userFullName={props.value} />
+      ),
     },
     {
       headerName: "Updated By",
+      // @ts-ignore
       field: "updated_by",
       sortable: true,
-      cellRenderer: (props) => <ExtendedAvatar userFullName={props.value} />,
+      cellRenderer: (props: { value: string | undefined }) => (
+        <ExtendedAvatar userFullName={props.value} />
+      ),
     },
     {
       headerName: "Created At",
       field: "created_at",
       sortable: true,
-      cellRenderer: (props) => {
+      cellRenderer: (props: { value: string | number | Date }) => {
         const date = new Date(props.value);
-        const options = { day: "2-digit", month: "short", year: "numeric" };
-        const formattedDate = new Intl.DateTimeFormat("en-AU", options).format(
-          date,
-        );
+
+        const formattedDate = new Intl.DateTimeFormat("en-AU", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }).format(date);
 
         // Replacing the default separator with a hyphen and converting month to uppercase
         const [day, month, year] = formattedDate.split(" ");
@@ -223,6 +279,8 @@ const IssueTable = ({ issues, onOpenRow, mode }) => {
     updated_by: issue.updater.name || "N/A",
     created_at: issue.created_at,
     updated_at: issue.updated_at,
+    creator: issue.creator,
+    updater: issue.updater,
   }));
 
   return (

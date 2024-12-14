@@ -15,6 +15,11 @@ export interface Task {
   columnId: ColumnId;
   content: string;
   description: string;
+  priority: string;
+  type: string;
+  assignee: {
+    name: string;
+  };
 }
 
 interface TaskCardProps {
