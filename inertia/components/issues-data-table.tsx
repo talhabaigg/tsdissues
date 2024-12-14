@@ -211,6 +211,7 @@ const IssueTable = ({ issues, onOpenRow, mode }) => {
     description: issue.description,
     file: issue.file,
     comments: issue.comments,
+    activities: issue.activities,
     assigned_to: issue.assignee?.name || "N/A",
     created_by: issue.creator.name || "N/A",
     updated_by: issue.updater.name || "N/A",

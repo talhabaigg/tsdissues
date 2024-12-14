@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\IssueLogActivity; 
 
 class Issue extends Model
 {
+    use IssueLogActivity;
     protected $fillable = [
         'type',
         'title',
@@ -19,6 +21,7 @@ class Issue extends Model
 
     ];
 
+   
     protected static function booted()
     {
         static::creating(function ($issue) {
@@ -32,11 +35,26 @@ class Issue extends Model
             }
             $issue->updated_by = Auth::id() ?? 1;
             $issue->created_by = Auth::id() ?? 1; // Or assign a default user ID, e.g., 1
+            $issue_id = $issue->id;
+            
         });
-
+        static::created(function ($issue) {
+            // Now that the issue is created, log the activity
+            $issue->addActivity('created', null, $issue->toJson(), $issue->id);
+        });
         static::updating(function ($issue) {
             // Set updated_by when updating the issue
             $issue->updated_by = Auth::id();
+            $original = $issue->getOriginal(); // Get the original (old) values
+            $changes = $issue->getDirty(); // Get the changed (new) values
+    
+            foreach ($changes as $field => $newValue) {
+                $oldValue = $original[$field] ?? null;  // Get the old value or null if not set
+                // Only log activity if the field has changed
+                if ($oldValue !== $newValue) {
+                    $issue->addActivity("changed $field", $oldValue, $newValue, $issue->id);
+                }
+            }
         });
     }
 
@@ -76,5 +94,10 @@ class Issue extends Model
     public function comments()
     {
         return $this->hasMany(IssueComment::class);
+    }
+
+    public function activities()
+    {
+        return $this->hasMany(IssueActivity::class);  // Assuming your activity model is named IssueActivity
     }
 }

@@ -21,6 +21,7 @@ import { useEffect, useState } from "react";
 import { Tab } from "@headlessui/react";
 import IssueFormQR from "~/components/issue-form-guest-qr";
 import { FilePreview } from "~/components/comment-file-preview";
+import IssueActivityBox from "~/components/issue-activity-box";
 export default function IssueIndex({ issues }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
@@ -61,6 +62,7 @@ export default function IssueIndex({ issues }) {
             <TabsList className="dark:bg-transparent">
               <TabsTrigger value="details">Details</TabsTrigger>
               <TabsTrigger value="comments">Comments</TabsTrigger>
+              <TabsTrigger value="log">Log</TabsTrigger>
               <TabsTrigger value="edit">Edit</TabsTrigger>
             </TabsList>
             <TabsContent value="details">
@@ -121,6 +123,15 @@ export default function IssueIndex({ issues }) {
                   issueId={selectedRow ? selectedRow.id : 0}
                   existingComments={selectedRow ? selectedRow.comments : []}
                 />
+              </div>
+            </TabsContent>
+            <TabsContent value="log">
+              <div className="md:w-80 w-72 p-4">
+                {" "}
+                <IssueActivityBox
+                  issueId={selectedRow ? selectedRow.id : 0}
+                  existingActivities={selectedRow ? selectedRow.activities : []}
+                ></IssueActivityBox>
               </div>
             </TabsContent>
             <TabsContent value="edit">

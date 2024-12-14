@@ -6,6 +6,7 @@ use Illuminate\Foundation\Application;
 use App\Http\Controllers\IssueController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\IssueCommentController;
+use App\Models\IssueActivity;
 
 Route::get('/', function () {
     return Inertia::render('welcome', [
@@ -17,7 +18,11 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return Inertia::render('dashboard');
+    $existingActivities = IssueActivity::with(['issue', 'user'])
+        ->latest()
+        ->take(15)
+        ->get();
+    return Inertia::render('dashboard')->with('existingActivities', $existingActivities);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {

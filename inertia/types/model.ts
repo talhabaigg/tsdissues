@@ -18,6 +18,19 @@ export type Issue = {
     updater?: User;
     creator?: User;
     comments?: IssueComment[];
+    activities?: IssueActivity[];
+};
+export type IssueActivity = {
+    id: number;
+    issue_id: number;
+    user_id: number;
+    action: string;
+    old_value?: string;
+    new_value: string;
+    created_at?: string;
+    updated_at?: string;
+    issue?: Issue;
+    user?: User;
 };
 export type IssueComment = {
     id: number;

@@ -15,10 +15,10 @@ class IssueController extends Controller
     public function index()
     {
         // Fetch all issues, you can paginate or filter as needed
-        $issues = Issue::with('user', 'assignee', 'creator', 'updater', 'comments.creator') // Load related user if there's a relationship
+        $issues = Issue::with('user', 'assignee', 'creator', 'updater', 'comments.creator', 'activities.user') // Load related user if there's a relationship
             ->orderBy('created_at', 'desc')
             ->paginate(1000); // Adjust pagination as needed
-
+    
         // Pass data to the Inertia view
         return Inertia::render('issue/index', [
             'issues' => $issues,
