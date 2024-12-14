@@ -12,7 +12,7 @@ export default function Welcome({
   phpVersion,
 }: PageProps<{ laravelVersion: string; phpVersion: string }>) {
   const { props } = usePage();
-  const { flash = {} } = props; // Add a default value for flash
+  const { flash = {} } = props as unknown as { flash: { success?: string } }; // Add a default value for flash
   console.log(props);
 
   const [loading, setLoading] = useState(false);
@@ -100,7 +100,7 @@ export default function Welcome({
                   )}
                   {!flash.success && !loading && (
                     <div className="bg-gray-50 p-4 rounded-2xl shadow-2xl ">
-                      <IssueForm />
+                      <IssueForm issue={null} />
                     </div>
                   )}
                 </div>

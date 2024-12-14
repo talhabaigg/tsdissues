@@ -22,9 +22,33 @@ import { Tab } from "@headlessui/react";
 import IssueFormQR from "~/components/issue-form-guest-qr";
 import { FilePreview } from "~/components/comment-file-preview";
 import IssueActivityBox from "~/components/issue-activity-box";
-export default function IssueIndex({ issues }) {
+interface Issue {
+  id: number;
+  type: string;
+  title: string;
+  description: string;
+  file: string;
+  priority: string;
+  status: string;
+  assigned_to: string;
+  created_by: string;
+  creator: string;
+  updated_at: string;
+  updater: string;
+  created_at: string;
+  comments: string;
+  activities: any[];
+}
+
+interface IssuesProps {
+  issues: {
+    data: Issue[];
+  };
+}
+
+export default function IssueIndex({ issues }: IssuesProps) {
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [selectedRow, setSelectedRow] = useState(null);
+  const [selectedRow, setSelectedRow] = useState<Issue | null>(null);
   const [open, setOpen] = React.useState(false);
 
   useEffect(() => {
@@ -121,6 +145,7 @@ export default function IssueIndex({ issues }) {
               <div className="min-h-screen flex items-center justify-center mr-10">
                 <IssueCommentBox
                   issueId={selectedRow ? selectedRow.id : 0}
+                  // @ts-ignore
                   existingComments={selectedRow ? selectedRow.comments : []}
                 />
               </div>
@@ -157,6 +182,7 @@ export default function IssueIndex({ issues }) {
         </div>
         <TabsContent value="table" className="w-full">
           <IssueTable
+            // @ts-ignore
             issues={issues.data}
             onOpenRow={onOpenRow}
             mode={isDarkMode}

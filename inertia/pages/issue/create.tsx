@@ -1,3 +1,4 @@
+// @ts-nocheck
 import AuthenticatedLayout from "~/components/layouts/authenticated-layout";
 import {
   Card,

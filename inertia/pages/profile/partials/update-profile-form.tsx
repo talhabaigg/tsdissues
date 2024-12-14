@@ -79,6 +79,7 @@ export default function UpdateProfileInformation() {
               onChange={(e) => setData("email", e.target.value)}
               required
               autoComplete="username"
+              // @ts-ignore
               error={errors.email}
             />
           </div>

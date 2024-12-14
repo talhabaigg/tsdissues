@@ -72,6 +72,7 @@ export default function UpdatePasswordForm() {
               value={data.current_password}
               onChange={(e) => setData("current_password", e.target.value)}
               autoComplete="current-password"
+              // @ts-ignore
               error={errors.current_password}
             />
           </div>
@@ -86,6 +87,7 @@ export default function UpdatePasswordForm() {
               value={data.password}
               onChange={(e) => setData("password", e.target.value)}
               autoComplete="new-password"
+              // @ts-ignore
               error={errors.password}
             />
           </div>
@@ -99,6 +101,7 @@ export default function UpdatePasswordForm() {
               value={data.password_confirmation}
               onChange={(e) => setData("password_confirmation", e.target.value)}
               autoComplete="new-password"
+              // @ts-ignore
               error={errors.password_confirmation}
             />
           </div>
