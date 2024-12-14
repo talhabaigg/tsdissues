@@ -11,6 +11,7 @@ class Issue extends Model
         'type',
         'title',
         'description',
+        'file',
         'priority',
         'status',
         'assigned_to',

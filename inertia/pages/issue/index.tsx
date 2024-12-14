@@ -20,6 +20,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { Tab } from "@headlessui/react";
 import IssueFormQR from "~/components/issue-form-guest-qr";
+import { FilePreview } from "~/components/comment-file-preview";
 export default function IssueIndex({ issues }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
@@ -77,6 +78,8 @@ export default function IssueIndex({ issues }) {
                         {" "}
                         {selectedRow.description}
                       </div>
+                      <div className="font-bold">Uploaded evidence:</div>
+                      <FilePreview file={selectedRow.file} />
                       <div className="font-bold">Priority:</div>
                       <div>
                         {" "}

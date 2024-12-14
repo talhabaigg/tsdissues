@@ -1,4 +1,5 @@
 export type RouteParams = {
+    "api.latestComments": {};
     "password.confirm": {};
     "dashboard": {};
     "verification.send": {};

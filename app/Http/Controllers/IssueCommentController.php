@@ -13,7 +13,7 @@ class IssueCommentController extends Controller
         $validated = $request->validate([
             'issue_id' => 'required|exists:issues,id',
             'text' => 'required|string|max:500',
-            'file' => 'nullable|file|mimes:jpg,png,pdf', // Adjust based on your file types
+            'file' => 'nullable|file|mimes:jpg,png,pdf,mp4', // Adjust based on your file types
         ]);
 
         $comment = IssueComment::create([
@@ -33,7 +33,7 @@ class IssueCommentController extends Controller
             ->orderBy('created_at', 'desc')
             ->limit(15)
             ->get();
-
+        // dd($comments);
 
         return response()->json($comments);
     }

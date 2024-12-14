@@ -209,6 +209,7 @@ const IssueTable = ({ issues, onOpenRow, mode }) => {
     priority: issue.priority,
     status: issue.status,
     description: issue.description,
+    file: issue.file,
     comments: issue.comments,
     assigned_to: issue.assignee?.name || "N/A",
     created_by: issue.creator.name || "N/A",

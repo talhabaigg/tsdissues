@@ -24,13 +24,15 @@ const IssueForm = ({ issue }) => {
     name: isEditing ? issue.title : "",
     priority: isEditing ? issue.priority : "",
     description: isEditing ? issue.description : "",
-    attachments: [], // No pre-filled attachments for editing (can handle as needed)
+    file: isEditing ? issue.file : "", // No pre-filled attachments for editing (can handle as needed)
   });
 
   const issueTypes = [
     { value: "product_quality", label: "Product Quality" },
     { value: "it_hardware", label: "IT Hardware" },
-    { value: "system", label: "System" },
+    { value: "system", label: "IT Applications" },
+    { value: "system", label: "Warehouse Operations" },
+    { value: "system", label: "Human Resources" },
   ];
 
   const priorityOptions = [
@@ -43,7 +45,7 @@ const IssueForm = ({ issue }) => {
   const [isChecked, setIsChecked] = useState(false);
 
   const handleFileChange = (e) => {
-    setData("attachments", Array.from(e.target.files));
+    setData("file", e.target.files[0]);
   };
 
   const submit = (e) => {

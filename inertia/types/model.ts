@@ -3,6 +3,7 @@ export type Issue = {
     type: string;
     title: string;
     description?: string;
+    file?: string;
     priority: string;
     status: string;
     assigned_to?: string;

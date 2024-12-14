@@ -4,7 +4,7 @@ const FilePreview = ({ file }: { file: File | string }) => {
   const renderFilePreview = (file: File | string) => {
     if (!file) return null;
 
-    const BASE_URL = "http://tsdissues.test/storage/";
+    const BASE_URL = "http://127.0.0.1:8000/storage/";
 
     const isFileObject = file instanceof File;
     const fileUrl = isFileObject
