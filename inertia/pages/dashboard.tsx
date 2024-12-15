@@ -5,7 +5,7 @@ import LatestComments from "~/components/issue-updates-widget";
 import IssueActivityBox from "~/components/issue-activity-box";
 import { usePage } from "@inertiajs/react";
 import React, { useState, useEffect } from "react";
-
+import { ScrollArea } from "~/components/ui/scroll-area";
 export default function Dashboard() {
   const { existingActivities } = usePage().props as unknown as {
     existingActivities: any[];
@@ -14,25 +14,31 @@ export default function Dashboard() {
   return (
     <AuthenticatedLayout>
       <Head title="Dashboard" />
-      <div className="flex flex-1 flex-col gap-4 p-4">
-        <div className="grid auto-rows-min gap-4 md:grid-cols-2">
-          <div className="aspect-videooverflow-auto rounded-xl bg-muted/50">
-            <LatestComments />
-          </div>
+      <div className="flex flex-1 flex-col  ">
+        <div className="grid auto-rows-min grid-cols-1 gap-2 md:grid-cols-2">
           <div className="aspect-video rounded-xl bg-muted/50">
             <Card>
-              <CardHeader>
-                {" "}
-                <h1 className="font-bold p-2">Latest Activites</h1>
-              </CardHeader>
+              <CardHeader> Latest Comments</CardHeader>
               <CardContent>
-                <IssueActivityBox existingActivities={existingActivities} />
+                <ScrollArea className="h-[300px]  sm:h-[400px]  rounded-md  ">
+                  <LatestComments />
+                </ScrollArea>
               </CardContent>
             </Card>
           </div>
+          <div className="aspect-video rounded-xl bg-muted/50">
+            <Card>
+              <CardHeader> Latest Activites</CardHeader>
+              <CardContent>
+                <ScrollArea className="h-[300px]  sm:h-[400px] ">
+                  <IssueActivityBox existingActivities={existingActivities} />
+                </ScrollArea>
+              </CardContent>
+            </Card>
+          </div>
+
           {/* <div className="aspect-video rounded-xl bg-muted/50" /> */}
         </div>
-        <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
       </div>
     </AuthenticatedLayout>
   );

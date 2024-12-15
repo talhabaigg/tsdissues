@@ -35,6 +35,7 @@ export default function Register() {
             autoComplete="name"
             autoFocus
             onChange={(e) => setData("name", e.target.value)}
+            // @ts-ignore
             error={errors.name}
             required
           />
@@ -49,6 +50,7 @@ export default function Register() {
             value={data.email}
             autoComplete="username"
             onChange={(e) => setData("email", e.target.value)}
+            // @ts-ignore
             error={errors.email}
             required
           />
@@ -63,6 +65,7 @@ export default function Register() {
             value={data.password}
             autoComplete="new-password"
             onChange={(e) => setData("password", e.target.value)}
+            // @ts-ignore
             error={errors.password}
             required
           />
@@ -77,6 +80,7 @@ export default function Register() {
             value={data.password_confirmation}
             autoComplete="new-password"
             onChange={(e) => setData("password_confirmation", e.target.value)}
+            // @ts-ignore
             error={errors.password_confirmation}
             required
           />

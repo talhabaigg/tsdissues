@@ -17,7 +17,7 @@ const FilePreview = ({ file }: { file: File | string }) => {
 
     if (
       fileType === "image" ||
-      ["png", "jpg", "jpeg", "gif"].includes(fileType)
+      ["png", "jpg", "jpeg", "gif"].includes(fileType ?? "")
     ) {
       return (
         <img
@@ -28,7 +28,10 @@ const FilePreview = ({ file }: { file: File | string }) => {
       );
     }
 
-    if (fileType === "video" || ["mp4", "avi", "mov"].includes(fileType)) {
+    if (
+      fileType === "video" ||
+      ["mp4", "avi", "mov"].includes(fileType ?? "")
+    ) {
       return (
         <video controls className="w-full max-h-64">
           <source src={fileUrl} type={`video/${fileType}`} />

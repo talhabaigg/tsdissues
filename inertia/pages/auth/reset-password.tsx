@@ -1,3 +1,4 @@
+// @ts-nocheck
 import GuestLayout from "~/components/layouts/guest-layout";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -72,6 +73,7 @@ export default function ResetPassword({
             className="mt-1 block w-full"
             autoComplete="new-password"
             onChange={(e) => setData("password_confirmation", e.target.value)}
+            // @ts-ignore
             error={errors.password_confirmation}
           />
         </div>

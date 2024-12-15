@@ -43,41 +43,49 @@ const IssueActivityBox: React.FC<IssueActivityBoxProps> = ({
   const [activity, setActivity] = useState(existingActivities.reverse());
 
   return (
-    <ScrollArea className="h-[600px] sm:h-[700px] 2xl:h-[900px]  w-full rounded-md ">
-      {activity.map((act) => (
-        <Card className="mb-2">
-          <CardHeader>
-            {" "}
-            <SmallAvatar userFullName={act.user.name} />
-            {act.action}
-            <div className="space-x-1 flex flex-box">
-              <div className="break-words overflow-hidden text-ellipsis max-w-full">
-                {!isJson(act.old_value) ? (
-                  <ColoredBadge value={act.old_value ?? ""}></ColoredBadge>
-                ) : (
-                  <p className="break-words overflow-hidden text-ellipsis max-w-full">
-                    {act.old_value}
-                  </p>
+    <>
+      <div className="space-y-2 w-64 md:w-full">
+        {activity.map((act) => (
+          <>
+            <div className="flex flex-wrap space-x-2 items-center sm:space-x-4 border p-2 rounded">
+              <SmallAvatar userFullName={act.user.name} />
+              <span className="mx-1">{act.action}</span>
+              <div className="flex mt-2">
+                {act.action !== "created" && (
+                  <>
+                    {act.old_value.length <= 10 ? (
+                      <ColoredBadge value={act.old_value} />
+                    ) : (
+                      <p className="text-sm text-gray-500">
+                        Value is too long to display
+                      </p>
+                    )}
+                  </>
                 )}
-              </div>
 
-              <div> {act.action === "created" ? "" : <ArrowRight />}</div>
-              <div className="break-words overflow-hidden text-ellipsis max-w-full">
+                {act.action === "created" ? "" : <ArrowRight />}
+
                 {!isJson(act.new_value) ? (
-                  <ColoredBadge value={act.new_value ?? ""}></ColoredBadge>
+                  <>
+                    {act.new_value.length <= 10 ? (
+                      <ColoredBadge value={act.new_value} />
+                    ) : (
+                      <p className="wrap text-sm text-gray-500">
+                        {act.new_value}
+                      </p>
+                    )}
+                  </>
                 ) : (
-                  <pre className="max-w-full p-2  rounded">
+                  <pre className="p-1 rounded-lg text-wrap text-xs ">
                     {formatJson(act.new_value)}
-                  </pre> // Display raw value if JSON
+                  </pre>
                 )}
               </div>
             </div>
-            <div className="text-xs font-light-">{act.created_at}</div>
-          </CardHeader>
-          <CardContent></CardContent>
-        </Card>
-      ))}
-    </ScrollArea>
+          </>
+        ))}
+      </div>
+    </>
   );
 };
 

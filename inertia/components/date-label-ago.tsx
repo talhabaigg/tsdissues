@@ -5,8 +5,9 @@ interface DateLabelAgoProps {
 const DateLabelAgo = ({
   date = "2024-12-09 23:04:36", // Default date if none is provided
 }: DateLabelAgoProps) => {
-  // Parse the date string into a Date object
-  const parsedDate = new Date(date.replace(" ", "T")); // Convert 'YYYY-MM-DD HH:MM:SS' to 'YYYY-MM-DDTHH:MM:SS'
+  // Ensure date is a string before calling replace
+  const parsedDate =
+    typeof date === "string" ? new Date(date.replace(" ", "T")) : new Date();
 
   // Function to calculate the time ago in human-readable format
   const timeAgo = (date: Date) => {

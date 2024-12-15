@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { Card, CardContent } from "~/components/ui/card";
 import { KanbanBoard } from "~/components/KanbanBoard";
 import IssueForm from "~/components/issue-form";
+import { ScrollArea } from "~/components/ui/scroll-area";
 import {
   Sheet,
   SheetContent,
@@ -56,15 +57,14 @@ export default function IssueIndex({ issues }: IssuesProps) {
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme === "dark") {
       setIsDarkMode(true);
-      document.body.classList.add("dark");
     } else {
-      document.body.classList.remove("dark");
+      setIsDarkMode(false);
     }
   }, []);
 
   const onOpenRow = (rowData) => {
     setSelectedRow(rowData);
-    console.log(rowData);
+
     setOpen(true);
   };
 
@@ -153,10 +153,14 @@ export default function IssueIndex({ issues }: IssuesProps) {
             <TabsContent value="log">
               <div className="md:w-80 w-72 p-4">
                 {" "}
-                <IssueActivityBox
-                  issueId={selectedRow ? selectedRow.id : 0}
-                  existingActivities={selectedRow ? selectedRow.activities : []}
-                ></IssueActivityBox>
+                <ScrollArea className="h-[700px] sm:h-[600px]  xl:h-[800px]  rounded-md  ">
+                  <IssueActivityBox
+                    issueId={selectedRow ? selectedRow.id : 0}
+                    existingActivities={
+                      selectedRow ? selectedRow.activities : []
+                    }
+                  ></IssueActivityBox>
+                </ScrollArea>
               </div>
             </TabsContent>
             <TabsContent value="edit">

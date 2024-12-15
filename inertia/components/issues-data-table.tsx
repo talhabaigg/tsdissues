@@ -99,6 +99,7 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
       headerName: "ID",
       field: "id",
       sortable: true,
+      flex: 2,
       filter: true,
       cellRenderer: (params: {
         value:
@@ -113,7 +114,7 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
         data: Issue;
       }) => {
         return (
-          <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center justify-between  gap-2">
             <span>{params.value}</span>
             <TooltipProvider>
               <Tooltip>
@@ -139,6 +140,8 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
     {
       headerName: "Title",
       field: "title",
+
+      flex: 8,
       sortable: true,
       filter: true,
       editable: true,
@@ -294,8 +297,8 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
         pagination={true}
         paginationPageSize={20}
         defaultColDef={{
-          flex: 1,
-          minWidth: 100,
+          flex: 4,
+          minWidth: 50,
           resizable: false, // Allow resizing columns
         }}
       />

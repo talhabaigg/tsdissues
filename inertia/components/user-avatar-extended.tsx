@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-
+import SmallAvatar from "./user-avatar-small";
 interface ExtendedAvatarProps {
   userFullName?: string; // Make userFullName optional
 }
@@ -16,12 +16,7 @@ const ExtendedAvatar = ({
 
   return (
     <div className="flex items-center">
-      <Avatar className="w-8 h-8">
-        <AvatarImage src="" alt={userFullName} />
-        <AvatarFallback className="bg-gray-500 text-white ">
-          {initials}
-        </AvatarFallback>
-      </Avatar>
+      <SmallAvatar userFullName={userFullName} />
       <span className="ml-2">{userFullName}</span>
     </div>
   );

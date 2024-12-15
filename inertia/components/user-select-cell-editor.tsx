@@ -30,10 +30,15 @@ const users = [
 ];
 
 // Combobox Editor Component
-export function ComboboxEditor({ value, onValueChange }) {
+interface ComboboxEditorProps {
+  value: string | null;
+  onValueChange: (value: string | null) => void;
+}
+
+export function ComboboxEditor({ value, onValueChange }: ComboboxEditorProps) {
   const [open, setOpen] = React.useState(false);
 
-  const handleSelect = (selectedValue) => {
+  const handleSelect = (selectedValue: string) => {
     // When a selection is made, update the value and close the dropdown
     onValueChange(selectedValue === value ? null : selectedValue);
     setOpen(false);

@@ -10,7 +10,24 @@ import { useEffect, useState } from "react";
 import ColoredBadge from "./colored-badge";
 const LatestComments = () => {
   const { props } = usePage();
-  const [comments, setComments] = useState([]);
+  interface Comment {
+    id: number;
+    issue: {
+      id: number;
+      name: string;
+      type: string;
+      status: string;
+    };
+    creator: {
+      id: number;
+      name: string;
+    };
+    text: string;
+    file?: string;
+    created_at: string;
+  }
+
+  const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -38,63 +55,50 @@ const LatestComments = () => {
 
   if (loading) return <div>Loading comments...</div>;
   if (error) return <div>Error: {error}</div>;
-  const comments1 = [
-    {
-      id: 1,
-      issue: {
-        id: 1,
-        name: "Fix the pipes before its too late",
-        type: "it_hardware",
-        status: "resolved",
-      },
-      creator: {
-        id: 1,
-        name: "Talha Baig",
-      },
-      text: "This is a comment",
-      file: `https://via.placeholder.com/150`,
-      created_at: "2022-01-01T00:00:00Z",
-    },
-  ];
+
   if (!comments || comments.length === 0) {
     return <div>No comments available.</div>;
   }
 
   return (
-    <div className="p-2  rounded-lg">
-      <h1 className="font-bold p-2">Latest Comments</h1>
-
-      <ScrollArea className="h-[600px] sm:h-[700px] xlg:h-[900px]  w-full rounded-md ">
+    <>
+      <div className="space-y-2">
         {comments.length > 0 ? (
           comments.slice().map((comment, index) => (
-            <div className="">
-              <div>
-                <div className="flex justify-start space-y-2">
-                  <SmallAvatar userFullName={comment.creator.name} />
-                  <Card className="p-2 ml-2 w-full">
+            <div>
+              <div className="flex justify-start space-y-2">
+                <Card className="p-2 ml-2  w-full flex items-center space-x-4">
+                  <div className="">
+                    <SmallAvatar userFullName={comment.creator.name} />
+                  </div>
+                  <div>
                     {comment.text}{" "}
                     {comment.file && (
                       <div className="mt-2">
                         <FilePreview file={comment.file} />
                       </div>
                     )}
-                    <div className=" space-x-2">
-                      <div className=" font-light text-xs">
-                        <span>
-                          Commented on "issue #{comment.issue.id}-
-                          {comment.issue.name}" on{" "}
-                        </span>
-                        <span>
-                          {new Date(comment.created_at).toLocaleDateString(
-                            "en-AU",
-                          )}
-                        </span>
+                    <div className="space-x-2 ">
+                      <div className="flex items-center justify-between  font-light text-xs">
+                        <div className="space-x-1">
+                          <span>
+                            Commented on "issue #{comment.issue.id}-
+                            {comment.issue.name}" on{" "}
+                          </span>
+                          <span>
+                            {new Date(comment.created_at).toLocaleDateString(
+                              "en-AU",
+                            )}
+                          </span>
+                        </div>
+                        {/* <div className="ml-1 space-x-1">
+                          <ColoredBadge value={comment.issue.type} />
+                          <ColoredBadge value={comment.issue.status} />
+                        </div> */}
                       </div>
-                      <ColoredBadge value={comment.issue.type}></ColoredBadge>
-                      <ColoredBadge value={comment.issue.status}></ColoredBadge>
                     </div>
-                  </Card>
-                </div>
+                  </div>
+                </Card>
               </div>
             </div>
           ))
@@ -104,8 +108,8 @@ const LatestComments = () => {
             Be the first to comment!{" "}
           </Card>
         )}
-      </ScrollArea>
-    </div>
+      </div>
+    </>
   );
 };
 

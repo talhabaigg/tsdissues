@@ -9,7 +9,16 @@ function Layout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(
     () => localStorage.getItem("sidebar:state") === "true",
   );
-
+  useEffect(() => {
+    // Check if a theme is saved in localStorage
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      setIsDarkMode(true);
+      document.body.classList.add("dark");
+    } else {
+      document.body.classList.remove("dark");
+    }
+  }, []);
   const handleSidebarStateChange = (state: boolean) => {
     setSidebarOpen(state);
     toast.success("Event has been created."); // Add toast message
