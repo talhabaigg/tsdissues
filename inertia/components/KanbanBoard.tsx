@@ -22,6 +22,7 @@ import type { Column } from "./BoardColumn";
 import { hasDraggableData } from "./utils";
 import { coordinateGetter } from "./multipleContainersKeyboardPreset";
 import { Description } from "@radix-ui/react-toast";
+import { useForm } from "@inertiajs/react";
 
 const defaultCols = [
   {
@@ -40,7 +41,14 @@ const defaultCols = [
 
 export type ColumnId = (typeof defaultCols)[number]["id"];
 
-export function KanbanBoard(issues: any, handleTaskOpen: (task: Task) => void) {
+export function KanbanBoard(
+  issues: any,
+  handleTaskMove: ((task: Task, activeCol: ColumnId) => void) | null
+) {
+  const form = useForm({
+    status: "",
+  });
+
   const formattedIssues = Object.keys(issues)
     .map((key) => {
       return issues[key].map((issue: any) => ({
@@ -307,7 +315,12 @@ export function KanbanBoard(issues: any, handleTaskOpen: (task: Task) => void) {
         const activeIndex = tasks.findIndex((t) => t.id === activeId);
         const activeTask = tasks[activeIndex];
         if (activeTask) {
+
           activeTask.columnId = overId as ColumnId;
+
+          form.data.status = activeTask.columnId;
+          form.post(`/issues/${activeTask.id}/update-status`);
+
           return arrayMove(tasks, activeIndex, activeIndex);
         }
         return tasks;

@@ -70,10 +70,6 @@ export default function Dashboard() {
     setOpen(true);
   };
 
-  const handleTaskOpen = (id) => {
-    console.log("Task Opened", id);
-  };
-
   return (
     <AuthenticatedLayout>
       <Head title="View Submitted Issues" />
@@ -195,7 +191,10 @@ export default function Dashboard() {
           />
         </TabsContent>
         <TabsContent value="kanban" className="mt-10">
-          <KanbanBoard issues={issues.data ? issues.data : []} />
+          <KanbanBoard
+            // @ts-ignore
+            issues={issues.data}
+          />
         </TabsContent>
       </Tabs>
     </AuthenticatedLayout>
