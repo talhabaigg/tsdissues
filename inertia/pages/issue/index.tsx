@@ -1,3 +1,4 @@
+import { usePage } from '@inertiajs/react';
 import AuthenticatedLayout from "~/components/layouts/authenticated-layout";
 import ColoredBadge from "~/components/colored-badge";
 import ExtendedAvatar from "~/components/user-avatar-extended";
@@ -47,7 +48,8 @@ interface IssuesProps {
   };
 }
 
-export default function IssueIndex({ issues }: IssuesProps) {
+export default function Dashboard() {
+  const { issues } = usePage().props;
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [selectedRow, setSelectedRow] = useState<Issue | null>(null);
   const [open, setOpen] = React.useState(false);
