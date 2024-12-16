@@ -41,25 +41,30 @@ const defaultCols = [
 
 export type ColumnId = (typeof defaultCols)[number]["id"];
 
-export function KanbanBoard(
-  issues: any,
-  handleTaskMove: ((task: Task, activeCol: ColumnId) => void) | null
-) {
-  const form = useForm({
-    status: "",
-  });
+interface KanbanBoardProps {
+  issues: any;
+  taskHandlers?: {
+    customMoveHandler?: (task: Task, status: String) => void;
+    customClickHandler?: () => void;
+  };
+}
 
-  const formattedIssues = Object.keys(issues)
-    .map((key) => {
-      return issues[key].map((issue: any) => ({
-        ...issue,
-        id: String(issue.id), // Convert id to string
-        columnId: issue.status, // Add the key as columnId
-        content: issue.title, // Rename title to content
-        description: issue.description, // Add description
-      }));
-    })
-    .flat();
+export function KanbanBoard({ issues, taskHandlers, }: KanbanBoardProps) {
+
+  const formattedIssues = issues.map((issue: any) => ({
+    ...issue,
+    id: String(issue.id),
+    columnId: issue.status,
+    content: issue.title,
+    description: issue.description,
+    assigneeName: issue.assignee?.name,
+    createdBy: issue.creator?.name,
+    activities: issue.activities.map((activity: any) => ({
+      action: activity.action,
+      createdAt: activity.created_at,
+      userName: activity.user?.name,
+    })),
+  }));
 
   const [columns, setColumns] = useState<Column[]>(defaultCols);
   const pickedUpTaskColumn = useRef<ColumnId | null>(null);
@@ -199,6 +204,7 @@ export function KanbanBoard(
         <SortableContext items={columnsId}>
           {columns.map((col) => (
             <BoardColumn
+              customClickHandler={taskHandlers?.customClickHandler}
               key={col.id}
               column={col}
               tasks={tasks.filter((task) => task.columnId === col.id)}
@@ -212,6 +218,7 @@ export function KanbanBoard(
           <DragOverlay>
             {activeColumn && (
               <BoardColumn
+                customClickHandler={taskHandlers?.customClickHandler}
                 isOverlay
                 column={activeColumn}
                 tasks={tasks.filter(
@@ -318,8 +325,10 @@ export function KanbanBoard(
 
           activeTask.columnId = overId as ColumnId;
 
-          form.data.status = activeTask.columnId;
-          form.post(`/issues/${activeTask.id}/update-status`);
+          if (taskHandlers?.customMoveHandler) {
+
+            taskHandlers.customMoveHandler (activeTask, activeTask.columnId);
+          }
 
           return arrayMove(tasks, activeIndex, activeIndex);
         }

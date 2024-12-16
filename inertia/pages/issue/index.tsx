@@ -1,4 +1,4 @@
-import { usePage } from '@inertiajs/react';
+import { useForm, usePage } from '@inertiajs/react';
 import AuthenticatedLayout from "~/components/layouts/authenticated-layout";
 import ColoredBadge from "~/components/colored-badge";
 import ExtendedAvatar from "~/components/user-avatar-extended";
@@ -24,6 +24,7 @@ import { Tab } from "@headlessui/react";
 import IssueFormQR from "~/components/issue-form-guest-qr";
 import { FilePreview } from "~/components/comment-file-preview";
 import IssueActivityBox from "~/components/issue-activity-box";
+import { Task } from '~/components/TaskCard';
 interface Issue {
   id: number;
   type: string;
@@ -53,6 +54,20 @@ export default function Dashboard() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [selectedRow, setSelectedRow] = useState<Issue | null>(null);
   const [open, setOpen] = React.useState(false);
+  const moveForm = useForm ({ status: "", });
+  const taskHandlers = {
+
+    customMoveHandler: (task: Task, status: string) => {
+
+      moveForm.data.status = status;
+      moveForm.post(`/issues/${task.id}/update-status`);
+    },
+
+    customClickHandler: () => {
+
+      setOpen(true);
+    }
+  };
 
   useEffect(() => {
     // Check if a theme is saved in localStorage
@@ -194,6 +209,7 @@ export default function Dashboard() {
           <KanbanBoard
             // @ts-ignore
             issues={issues.data}
+            taskHandlers={taskHandlers}
           />
         </TabsContent>
       </Tabs>

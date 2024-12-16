@@ -26,9 +26,10 @@ interface BoardColumnProps {
   column: Column;
   tasks: Task[];
   isOverlay?: boolean;
+  customClickHandler?: () => void;
 }
 
-export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
+export function BoardColumn({ column, tasks, isOverlay, customClickHandler, }: BoardColumnProps) {
   const tasksIds = useMemo(() => {
     return tasks.map((task) => task.id);
   }, [tasks]);
@@ -96,7 +97,7 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
         <CardContent className="flex flex-grow flex-col gap-2 p-2">
           <SortableContext items={tasksIds}>
             {tasks.map((task) => (
-              <TaskCard key={task.id} task={task} />
+              <TaskCard clickHandler={customClickHandler} key={task.id} task={task} />
             ))}
           </SortableContext>
         </CardContent>
