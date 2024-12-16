@@ -3,8 +3,7 @@
     "type": "module",
     "scripts": {
         "build": "vite build && vite build --ssr",
-        "dev": "vite",
-        "generate-types": "laravel-typegen -o inertia/types  --laravel-enum --ziggy --form-request"
+        "dev": "vite"
     },
     "devDependencies": {
         "@7nohe/laravel-typegen": "^0.6.1",

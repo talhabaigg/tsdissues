@@ -35,7 +35,7 @@ export interface TaskDragData {
   task: Task;
 }
 
-export function TaskCard({ task, isOverlay, clickHandler, }: TaskCardProps) {
+export function TaskCard({ task, isOverlay, clickHandler }: TaskCardProps) {
   const {
     setNodeRef,
     attributes,
@@ -76,7 +76,7 @@ export function TaskCard({ task, isOverlay, clickHandler, }: TaskCardProps) {
       className={variants({
         dragging: isOverlay ? "overlay" : isDragging ? "over" : undefined,
       })}
-      onClick={clickHandler}
+      onClick={() => clickHandler?.(task.id)}
     >
       <CardHeader className="px-2 text-wrap py-3  items-center space-between flex flex-row border-b-2 border-secondary relative justify-between">
         <div className="flex items-center">

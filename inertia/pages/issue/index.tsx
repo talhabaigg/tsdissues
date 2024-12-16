@@ -1,4 +1,4 @@
-import { useForm, usePage } from '@inertiajs/react';
+import { useForm, usePage } from "@inertiajs/react";
 import AuthenticatedLayout from "~/components/layouts/authenticated-layout";
 import ColoredBadge from "~/components/colored-badge";
 import ExtendedAvatar from "~/components/user-avatar-extended";
@@ -24,7 +24,9 @@ import { Tab } from "@headlessui/react";
 import IssueFormQR from "~/components/issue-form-guest-qr";
 import { FilePreview } from "~/components/comment-file-preview";
 import IssueActivityBox from "~/components/issue-activity-box";
-import { Task } from '~/components/TaskCard';
+import { Task } from "~/components/TaskCard";
+import { router } from "@inertiajs/react";
+import { on } from "events";
 interface Issue {
   id: number;
   type: string;
@@ -41,6 +43,7 @@ interface Issue {
   created_at: string;
   comments: string;
   activities: any[];
+  assignee: { name: string };
 }
 
 interface IssuesProps {
@@ -54,19 +57,43 @@ export default function Dashboard() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [selectedRow, setSelectedRow] = useState<Issue | null>(null);
   const [open, setOpen] = React.useState(false);
-  const moveForm = useForm ({ status: "", });
+  const moveForm = useForm({ status: "" });
+  const rowData = (issue: Issue) => ({
+    id: issue.id,
+    type: issue.type,
+    title: issue.title, // Assuming 'title' is a property in issue
+    priority: issue.priority,
+    status: issue.status,
+    description: issue.description,
+    file: issue.file, // Assuming 'file' is a property in issue
+    comments: issue.comments,
+    activities: issue.activities,
+    assigned_to: issue.assignee?.name || "N/A", // If assignee exists, get their name, otherwise "N/A"
+    created_by: issue.creator.name || "N/A", // If creator exists, get their name, otherwise "N/A"
+    updated_by: issue.updater.name || "N/A", // If updater exists, get their name, otherwise "N/A"
+    created_at: issue.created_at,
+    updated_at: issue.updated_at,
+    creator: issue.creator,
+    updater: issue.updater,
+  });
   const taskHandlers = {
-
     customMoveHandler: (task: Task, status: string) => {
-
       moveForm.data.status = status;
       moveForm.post(`/issues/${task.id}/update-status`);
     },
 
-    customClickHandler: () => {
-
-      setOpen(true);
-    }
+    customClickHandler: (id: any) => {
+      console.log("Received task ID:", id);
+      fetch(route("issue.show", id))
+        .then((response) => response.json()) // Parse the JSON response
+        .then((data) => {
+          const formattedData = rowData(data);
+          onOpenRow(formattedData);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+    },
   };
 
   useEffect(() => {

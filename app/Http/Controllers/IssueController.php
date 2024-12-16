@@ -18,7 +18,7 @@ class IssueController extends Controller
         $issues = Issue::with('user', 'assignee', 'creator', 'updater', 'comments.creator', 'activities.user') // Load related user if there's a relationship
             ->orderBy('created_at', 'desc')
             ->paginate(1000); // Adjust pagination as needed
-    
+
         // Pass data to the Inertia view
         return Inertia::render('issue/index', [
             'issues' => $issues,
@@ -66,7 +66,7 @@ class IssueController extends Controller
                 'status' => 'pending',  // Default status
                 'description' => $request->description,
             ]);
-            
+
             if ($request->hasFile('file')) {
                 $file = $request->file('file');
                 $originalFilename = $file->getClientOriginalName(); // Get the original file name
@@ -90,7 +90,16 @@ class IssueController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $issue = Issue::with(
+            'user',
+            'assignee',
+            'creator',
+            'updater',
+            'comments.creator',
+            'activities.user'
+        )->findOrFail($id);
+
+        return response()->json($issue); // Return JSON response
     }
 
     /**

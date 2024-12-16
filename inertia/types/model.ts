@@ -3,7 +3,6 @@ export type Issue = {
     type: string;
     title: string;
     description?: string;
-    file?: string;
     priority: string;
     status: string;
     assigned_to?: string;
@@ -21,14 +20,6 @@ export type Issue = {
     activities?: IssueActivity[];
 };
 export type IssueActivity = {
-    id: number;
-    issue_id: number;
-    user_id: number;
-    action: string;
-    old_value?: string;
-    new_value: string;
-    created_at?: string;
-    updated_at?: string;
     issue?: Issue;
     user?: User;
 };
