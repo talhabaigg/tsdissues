@@ -3,21 +3,16 @@ import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS
 import "ag-grid-community/styles/ag-theme-alpine.css"; // Optional Theme
 import "ag-grid-community/styles/ag-theme-quartz.css";
-import { Button } from "~/components/ui/button";
 import { ColDef } from "ag-grid-community";
 import { ComboboxEditor } from "~/components/user-select-cell-editor";
-import { Badge } from "~/components/ui/badge";
 import { toast } from "sonner";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-  TooltipProvider,
-} from "~/components/ui/tooltip";
-import { MessageCircle } from "lucide-react";
 import ColoredBadge from "~/components/colored-badge";
 import ExtendedAvatar from "~/components/user-avatar-extended";
 import { useForm } from "@inertiajs/react";
+import IdCellRenderer from "./cell-renderers/id-renderer";
+import TypeCellRenderer from "./cell-renderers/type-cell-renderer";
+import PriorityCellRenderer from "./cell-renderers/priority-cell-renderer";
+import CreatedAtCellRenderer from "./cell-renderers/created-at-cell-renderer";
 
 interface Issue {
   id: number;
@@ -98,44 +93,15 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
     {
       headerName: "ID",
       field: "id",
-
       flex: 2,
       filter: true,
-      cellRenderer: (params: {
-        value:
-          | string
-          | number
-          | boolean
-          | React.ReactElement<any, string | React.JSXElementConstructor<any>>
-          | Iterable<React.ReactNode>
-          | React.ReactPortal
-          | null
-          | undefined;
-        data: Issue;
-      }) => {
-        return (
-          <div className="flex items-center justify-between  gap-2">
-            <span>{params.value}</span>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="w-8 h-8"
-                    onClick={() => onOpenRow(params.data)}
-                  >
-                    <MessageCircle />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="right">
-                  <p>View details</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
-        );
-      },
+      cellRenderer: (params: any) => (
+        <IdCellRenderer
+          value={params.value}
+          data={params.data}
+          onOpenRow={onOpenRow}
+        />
+      ),
     },
     {
       headerName: "Title",
@@ -155,11 +121,7 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
       field: "type",
       filter: true,
       cellClass: "text-center",
-      cellRenderer: (props: { value: string }) => {
-        const value = props.value;
-        const formattedValue = value.replace(/_/g, " ").toUpperCase();
-        return <Badge>{formattedValue}</Badge>;
-      },
+      cellRenderer: TypeCellRenderer,
     },
     {
       headerName: "Priority",
@@ -181,8 +143,8 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
         const newPriority = event.newValue; // Get the new priority
         handleStatusChange(issueId, status, assigned_to, newPriority);
       },
-      cellRenderer: (props: { value: string }) => (
-        <ColoredBadge value={props.value} />
+      cellRenderer: (params: { value: string }) => (
+        <PriorityCellRenderer value={params.value} />
       ),
     },
     {
@@ -239,24 +201,11 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
     {
       headerName: "Created At",
       field: "created_at",
-
-      cellRenderer: (props: { value: string | number | Date }) => {
-        const date = new Date(props.value);
-        const formattedDate = new Intl.DateTimeFormat("en-AU", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        }).format(date);
-
-        // Replacing the default separator with a hyphen and converting month to uppercase
-        const [day, month, year] = formattedDate.split(" ");
-        return `${day}-${month.toUpperCase()}-${year}`;
-      },
+      cellRenderer: CreatedAtCellRenderer,
     },
     {
       headerName: "Updated At",
       field: "updated_at",
-
       hide: true,
     },
   ];

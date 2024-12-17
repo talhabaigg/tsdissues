@@ -1,6 +1,6 @@
 import { useForm, usePage } from "@inertiajs/react";
 import AuthenticatedLayout from "~/components/layouts/authenticated-layout";
-import IssueTable from "~/components/issues-data-table";
+import IssueTable from "~/pages/issue/datatable/issues-data-table";
 import IssueFormModal from "~/components/issue-form-modal";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { KanbanBoard } from "~/components/KanbanBoard";
@@ -26,9 +26,9 @@ interface Issue {
   status: string;
   assigned_to: string;
   created_by: string;
-  creator: string;
+  creator: { name: string };
   updated_at: string;
-  updater: string;
+  updater: { name: string };
   created_at: string;
   comments: string;
   activities: any[];
