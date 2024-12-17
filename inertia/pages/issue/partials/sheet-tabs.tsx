@@ -1,7 +1,7 @@
 import ColoredBadge from "~/components/colored-badge";
 import ExtendedAvatar from "~/components/user-avatar-extended";
 import DateLabelAgo from "~/components/date-label-ago";
-import IssueCommentBox from "~/components/issue-commentBox";
+import IssueCommentBox from "~/components/issue-comment-box";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { Card, CardContent } from "~/components/ui/card";
 import IssueForm from "~/components/issue-form";
@@ -11,7 +11,7 @@ import IssueActivityBox from "~/components/issue-activity-box";
 import IssueDetailsTab from "./tab-details";
 const IssueSheetTabs = ({ selectedRow }) => {
   return (
-    <Tabs defaultValue="details" className="w-[400px]">
+    <Tabs defaultValue="details">
       <TabsList className="dark:bg-transparent">
         <TabsTrigger value="details">Details</TabsTrigger>
         <TabsTrigger value="comments">Comments</TabsTrigger>
@@ -22,7 +22,7 @@ const IssueSheetTabs = ({ selectedRow }) => {
         <IssueDetailsTab selectedRow={selectedRow} />
       </TabsContent>
       <TabsContent value="comments">
-        <div className="min-h-screen flex items-center justify-center mr-10">
+        <div className="min-h-screen flex items-center justify-center  ">
           <IssueCommentBox
             issueId={selectedRow ? selectedRow.id : 0}
             // @ts-ignore
@@ -31,9 +31,9 @@ const IssueSheetTabs = ({ selectedRow }) => {
         </div>
       </TabsContent>
       <TabsContent value="log">
-        <div className="md:w-80 w-72 p-4">
+        <div className="">
           {" "}
-          <ScrollArea className="h-[700px] sm:h-[600px]  xl:h-[800px]  rounded-md  ">
+          <ScrollArea className="h-[700px] sm:h-[600px]  xl:h-[800px]  rounded-md   ">
             <IssueActivityBox
               issueId={selectedRow ? selectedRow.id : 0}
               existingActivities={selectedRow ? selectedRow.activities : []}
@@ -42,7 +42,7 @@ const IssueSheetTabs = ({ selectedRow }) => {
         </div>
       </TabsContent>
       <TabsContent value="edit">
-        <Card className="md:w-80 w-72 p-4">
+        <Card className=" p-4">
           <IssueForm issue={selectedRow} />
         </Card>
       </TabsContent>

@@ -24,7 +24,7 @@ const SmallAvatar = ({ userFullName = "Unassigned" }: AvatarProps) => {
       <HoverCardTrigger>
         <Avatar className="w-8 h-8">
           <AvatarImage src="" alt={userFullName} />
-          <AvatarFallback className="bg-gray-500 text-white font-bold">
+          <AvatarFallback className="bg-gray-500 text-white">
             {initials}
           </AvatarFallback>
         </Avatar>
@@ -34,7 +34,7 @@ const SmallAvatar = ({ userFullName = "Unassigned" }: AvatarProps) => {
         <HoverCardContent className="w-full z-[1050]">
           <div className="flex justify-between space-x-4">
             <Avatar>
-              <AvatarFallback className="bg-gray-500 text-white font-bold">
+              <AvatarFallback className="bg-gray-500 text-white">
                 {initials}
               </AvatarFallback>
             </Avatar>

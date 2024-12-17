@@ -56,7 +56,7 @@ export function AppSidebar() {
         </SidebarMenuButton>
         <SidebarMenuButton
           asChild
-          tooltip="Dashboard"
+          tooltip="Issues"
           isActive={isLinkActive(route("issue.index"))}
         >
           <Link href={route("issue.index")} className="flex items-center">

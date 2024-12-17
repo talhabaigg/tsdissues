@@ -16,8 +16,8 @@ export default function Dashboard() {
       <Head title="Dashboard" />
       <div className="flex flex-1 flex-col  ">
         <div className="grid auto-rows-min grid-cols-1 gap-2 md:grid-cols-2">
-          <div className="aspect-video rounded-xl bg-muted/50">
-            <Card>
+          <div className="aspect-video rounded-xl ">
+            <Card className="shadow-lg">
               <CardHeader> Latest Comments</CardHeader>
               <CardContent>
                 <ScrollArea className="h-[300px]  sm:h-[400px]  rounded-md  ">
@@ -26,8 +26,8 @@ export default function Dashboard() {
               </CardContent>
             </Card>
           </div>
-          <div className="aspect-video rounded-xl bg-muted/50">
-            <Card>
+          <div className="aspect-video rounded-xl  ">
+            <Card className="shadow-lg">
               <CardHeader> Latest Activites</CardHeader>
               <CardContent>
                 <ScrollArea className="h-[300px]  sm:h-[400px] ">

@@ -1,7 +1,7 @@
 const FilePreview = ({ file }: { file: File | string }) => {
   // Logic for rendering file preview
   // Similar to the renderFilePreview function you previously had
-  const renderFilePreview = (file: File | string) => {
+  const renderFilePreview = (file: File | string | null) => {
     if (!file) return null;
 
     const BASE_URL = `${window.location.origin}/storage/`;
@@ -17,7 +17,7 @@ const FilePreview = ({ file }: { file: File | string }) => {
 
     if (
       fileType === "image" ||
-      ["png", "jpg", "jpeg", "gif"].includes(fileType ?? "")
+      ["png", "jpg", "jpeg", "gif", "svg"].includes(fileType ?? "")
     ) {
       return (
         <img
@@ -58,7 +58,7 @@ const FilePreview = ({ file }: { file: File | string }) => {
       );
     }
 
-    return <span className="text-gray-500">Unsupported file type</span>;
+    return <span className="text-gray-500">File attached</span>;
   };
 
   return <div>{renderFilePreview(file)}</div>;

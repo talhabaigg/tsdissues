@@ -3,11 +3,60 @@ import ExtendedAvatar from "~/components/user-avatar-extended";
 import DateLabelAgo from "~/components/date-label-ago";
 import { Card, CardContent } from "~/components/ui/card";
 import { FilePreview } from "~/components/comment-file-preview";
+type User = {
+  id: number;
+  name: string;
+  email: string;
+  email_verified_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
 
-const IssueDetailsTab = ({ selectedRow }) => {
+type Comment = {
+  id: number;
+  issue_id: number;
+  user_id: number;
+  text: string;
+  file: string | null;
+  created_at: string;
+  updated_at: string;
+  creator: User;
+};
+
+type Activity = {
+  id: number;
+  issue_id: number;
+  user_id: number;
+  action: string;
+  old_value: string | null;
+  new_value: string | null;
+  created_at: string;
+  updated_at: string;
+  user: User;
+};
+
+type Issue = {
+  id: number;
+  type: string;
+  title: string;
+  file: string | File | undefined;
+  priority: string;
+  status: string;
+  description: string;
+  comments: Comment[];
+  activities: Activity[];
+  assigned_to: string;
+  created_by: string;
+  updated_by: string;
+  created_at: string;
+  updated_at: string;
+  creator: User;
+};
+
+const IssueDetailsTab = ({ selectedRow }: { selectedRow: Issue }) => {
   return selectedRow ? (
-    <div className="pb-2 pr-20 sm:pr-2 sm:w-full">
-      <Card className="p-2 mr-10 my-2">
+    <div className="">
+      <Card className="p-2  my-2">
         <CardContent className="my-4 space-y-2">
           <div className="font-bold">Title:</div>
           <div className="text-md text-muted-foreground">
@@ -18,7 +67,7 @@ const IssueDetailsTab = ({ selectedRow }) => {
             {selectedRow.description}
           </div>
           <div className="font-bold">Uploaded evidence:</div>
-          <FilePreview file={selectedRow.file} />
+          {selectedRow.file && <FilePreview file={selectedRow.file} />}
           <div className="font-bold">Priority:</div>
           <div>
             <ColoredBadge value={selectedRow.priority} />

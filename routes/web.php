@@ -38,6 +38,6 @@ Route::post('/issue-comments', [IssueCommentController::class, 'store'])->name('
 Route::get('/issue-comments/{issueId}', [IssueCommentController::class, 'getCommentsByIssueId'])->name('issue-comments.getCommentsByIssueId');
 Route::get('/api/latest-comments', [IssueCommentController::class, 'latest'])->name('api.latestComments');
 
-Route::get('/users', [UserController::class, 'getUsers'])->name('users.getUsers');
+Route::get('/get-users', [UserController::class, 'getUsers'])->name('users.getUsers');
 
 require __DIR__ . '/auth.php';

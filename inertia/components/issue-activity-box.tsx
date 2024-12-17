@@ -33,18 +33,18 @@ const IssueActivityBox: React.FC<IssueActivityBoxProps> = ({
   const [activity, setActivity] = useState(existingActivities.reverse());
 
   return (
-    <div className="space-y-2 w-64 md:w-full">
+    <div className="space-y-2  ">
       {activity.length === 0 ? (
         <p className="text-center text-gray-500">No activity found.</p>
       ) : (
         activity.map((act, index) => (
           <div
             key={index}
-            className="flex flex-wrap space-x-2 items-center sm:space-x-4 border p-2 rounded"
+            className="flex flex-wrap space-x-2 items-center sm:space-x-4 border p-2 rounded  my-2"
           >
             <SmallAvatar userFullName={act.user.name} />
-            <span className="mx-1">{act.action}</span>
-            <div className="flex mt-2">
+            <span className="mx-1 font-semibold">{act.action}</span>
+            <div className="flex ">
               {act.action !== "created" && (
                 <>
                   {act.old_value.length <= 10 ? (

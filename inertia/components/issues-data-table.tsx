@@ -98,7 +98,7 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
     {
       headerName: "ID",
       field: "id",
-      sortable: true,
+
       flex: 2,
       filter: true,
       cellRenderer: (params: {
@@ -128,7 +128,7 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
                     <MessageCircle />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent side="left">
+                <TooltipContent side="right">
                   <p>View details</p>
                 </TooltipContent>
               </Tooltip>
@@ -140,9 +140,7 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
     {
       headerName: "Title",
       field: "title",
-
       flex: 8,
-      sortable: true,
       filter: true,
       editable: true,
       singleClickEdit: true,
@@ -155,7 +153,6 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
     {
       headerName: "Type",
       field: "type",
-      sortable: true,
       filter: true,
       cellClass: "text-center",
       cellRenderer: (props: { value: string }) => {
@@ -167,7 +164,6 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
     {
       headerName: "Priority",
       field: "priority",
-      sortable: true,
       filter: true,
       editable: true,
       cellClass: "text-center",
@@ -192,7 +188,7 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
     {
       headerName: "Status",
       field: "status",
-      sortable: true,
+
       filter: true,
       editable: true,
       cellClass: "text-center",
@@ -214,7 +210,6 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
     {
       headerName: "Assigned To",
       field: "assigned_to",
-      sortable: true,
       cellClass: "text-center",
       singleClickEdit: true,
       editable: true,
@@ -236,7 +231,7 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
       headerName: "Updated By",
       // @ts-ignore
       field: "updated_by",
-      sortable: true,
+
       cellRenderer: (props: { value: string | undefined }) => (
         <ExtendedAvatar userFullName={props.value} />
       ),
@@ -244,10 +239,9 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
     {
       headerName: "Created At",
       field: "created_at",
-      sortable: true,
+
       cellRenderer: (props: { value: string | number | Date }) => {
         const date = new Date(props.value);
-
         const formattedDate = new Intl.DateTimeFormat("en-AU", {
           day: "2-digit",
           month: "short",
@@ -262,7 +256,7 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
     {
       headerName: "Updated At",
       field: "updated_at",
-      sortable: true,
+
       hide: true,
     },
   ];
@@ -298,7 +292,6 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
         paginationPageSize={20}
         defaultColDef={{
           flex: 4,
-          minWidth: 50,
           resizable: false, // Allow resizing columns
         }}
       />
