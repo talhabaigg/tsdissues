@@ -15,20 +15,6 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 // import { Avatar } from "./ui/avatar";
 
-// Updated users array with avatars
-const users = [
-  {
-    value: "2",
-    label: "Talha Baig",
-    avatar: "https://randomuser.me/api/portraits/men/1.jpg", // Avatar URL
-  },
-  {
-    value: "3",
-    label: "Kim Flynn",
-    avatar: "https://randomuser.me/api/portraits/women/2.jpg", // Avatar URL
-  },
-];
-
 // Combobox Editor Component
 interface ComboboxEditorProps {
   value: string | null;
@@ -37,7 +23,24 @@ interface ComboboxEditorProps {
 
 export function ComboboxEditor({ value, onValueChange }: ComboboxEditorProps) {
   const [open, setOpen] = React.useState(false);
+  const [users, setUsers] = React.useState<{ value: string; label: string }[]>(
+    [],
+  );
 
+  React.useEffect(() => {
+    fetch(route("users.getUsers"))
+      .then((response) => response.json()) // Parse the JSON response
+      .then((data) => {
+        const transformedUsers = data.users.map((user: any) => ({
+          value: user.id.toString(),
+          label: user.name,
+        }));
+        setUsers(transformedUsers);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []); // Empty dependency array means this effect runs once on mount
   const handleSelect = (selectedValue: string) => {
     // When a selection is made, update the value and close the dropdown
     onValueChange(selectedValue === value ? null : selectedValue);

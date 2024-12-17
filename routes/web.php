@@ -1,12 +1,13 @@
 <?php
 
 use Inertia\Inertia;
+use App\Models\IssueActivity;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\IssueController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\IssueCommentController;
-use App\Models\IssueActivity;
 
 Route::get('/', function () {
     return Inertia::render('welcome', [
@@ -37,5 +38,6 @@ Route::post('/issue-comments', [IssueCommentController::class, 'store'])->name('
 Route::get('/issue-comments/{issueId}', [IssueCommentController::class, 'getCommentsByIssueId'])->name('issue-comments.getCommentsByIssueId');
 Route::get('/api/latest-comments', [IssueCommentController::class, 'latest'])->name('api.latestComments');
 
+Route::get('/users', [UserController::class, 'getUsers'])->name('users.getUsers');
 
 require __DIR__ . '/auth.php';

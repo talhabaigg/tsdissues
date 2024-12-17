@@ -87,8 +87,7 @@ const IssueCommentBox = ({
     if (!file) return null;
 
     // Define your base URL
-    const BASE_URL = "http://127.0.0.1:8000/storage/";
-
+    const BASE_URL = `${window.location.origin}/storage/`;
     // Check if the file is a local File object or a server-provided path
     const isFileObject = file instanceof File;
     const fileUrl = isFileObject
@@ -205,10 +204,7 @@ const IssueCommentBox = ({
                 </div>
               ))
           ) : (
-            <Card className="p-20 ">
-              No comments yet. <br />
-              Be the first to comment!{" "}
-            </Card>
+            <p className="text-center text-gray-500">No comments found.</p>
           )}
         </ScrollArea>
       </div>

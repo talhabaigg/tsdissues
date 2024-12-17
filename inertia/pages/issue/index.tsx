@@ -1,16 +1,9 @@
 import { useForm, usePage } from "@inertiajs/react";
 import AuthenticatedLayout from "~/components/layouts/authenticated-layout";
-import ColoredBadge from "~/components/colored-badge";
-import ExtendedAvatar from "~/components/user-avatar-extended";
-import DateLabelAgo from "~/components/date-label-ago";
 import IssueTable from "~/components/issues-data-table";
 import IssueFormModal from "~/components/issue-form-modal";
-import IssueCommentBox from "~/components/issue-commentBox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
-import { Card, CardContent } from "~/components/ui/card";
 import { KanbanBoard } from "~/components/KanbanBoard";
-import IssueForm from "~/components/issue-form";
-import { ScrollArea } from "~/components/ui/scroll-area";
 import {
   Sheet,
   SheetContent,
@@ -20,13 +13,9 @@ import {
 import { Head } from "@inertiajs/react";
 import React from "react";
 import { useEffect, useState } from "react";
-import { Tab } from "@headlessui/react";
 import IssueFormQR from "~/components/issue-form-guest-qr";
-import { FilePreview } from "~/components/comment-file-preview";
-import IssueActivityBox from "~/components/issue-activity-box";
 import { Task } from "~/components/TaskCard";
-import { router } from "@inertiajs/react";
-import { on } from "events";
+import IssueSheetTabs from "./partials/sheet-tabs";
 interface Issue {
   id: number;
   type: string;
@@ -122,93 +111,7 @@ export default function Dashboard() {
               Issue #{selectedRow?.id}
             </SheetTitle>
           </SheetHeader>
-          <Tabs defaultValue="details" className="w-[400px]">
-            <TabsList className="dark:bg-transparent">
-              <TabsTrigger value="details">Details</TabsTrigger>
-              <TabsTrigger value="comments">Comments</TabsTrigger>
-              <TabsTrigger value="log">Log</TabsTrigger>
-              <TabsTrigger value="edit">Edit</TabsTrigger>
-            </TabsList>
-            <TabsContent value="details">
-              {selectedRow ? (
-                <div className=" pb-2 pr-20 sm:pr-2 sm:w-full">
-                  <Card className="p-2 mr-10 my-2 ">
-                    <CardContent className="my-4 space-y-2">
-                      <div className="font-bold">Title:</div>
-                      <div className="text-md text-muted-foreground">
-                        {" "}
-                        {selectedRow.title}
-                      </div>
-                      <div className="font-bold">Description:</div>
-                      <div className="text-md text-muted-foreground">
-                        {" "}
-                        {selectedRow.description}
-                      </div>
-                      <div className="font-bold">Uploaded evidence:</div>
-                      <FilePreview file={selectedRow.file} />
-                      <div className="font-bold">Priority:</div>
-                      <div>
-                        {" "}
-                        <ColoredBadge value={selectedRow.priority} />
-                      </div>
-                      <div className="font-bold">Status:</div>
-                      <div>
-                        {" "}
-                        <ColoredBadge value={selectedRow.status} />
-                      </div>
-                      <div className="font-bold">Assigned To:</div>
-                      <ExtendedAvatar userFullName={selectedRow.assigned_to} />
-                      <div className="font-bold">Submitted by:</div>
-                      <ExtendedAvatar userFullName={selectedRow.created_by} />
-                      <div className="font-bold">Created At:</div>
-                      <div>
-                        {" "}
-                        <DateLabelAgo date={selectedRow.creator} />
-                      </div>
-                      <div className="font-bold">Last Updated At:</div>
-                      <div>
-                        {" "}
-                        <DateLabelAgo date={selectedRow.updated_at} />
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              ) : (
-                <p className="mt-4 text-center text-sm text-gray-500">
-                  <Card className="p-2 mr-10 my-2 ">
-                    Select a row to view details{" "}
-                  </Card>
-                </p>
-              )}
-            </TabsContent>
-            <TabsContent value="comments">
-              <div className="min-h-screen flex items-center justify-center mr-10">
-                <IssueCommentBox
-                  issueId={selectedRow ? selectedRow.id : 0}
-                  // @ts-ignore
-                  existingComments={selectedRow ? selectedRow.comments : []}
-                />
-              </div>
-            </TabsContent>
-            <TabsContent value="log">
-              <div className="md:w-80 w-72 p-4">
-                {" "}
-                <ScrollArea className="h-[700px] sm:h-[600px]  xl:h-[800px]  rounded-md  ">
-                  <IssueActivityBox
-                    issueId={selectedRow ? selectedRow.id : 0}
-                    existingActivities={
-                      selectedRow ? selectedRow.activities : []
-                    }
-                  ></IssueActivityBox>
-                </ScrollArea>
-              </div>
-            </TabsContent>
-            <TabsContent value="edit">
-              <Card className="md:w-80 w-72 p-4">
-                <IssueForm issue={selectedRow} />
-              </Card>
-            </TabsContent>
-          </Tabs>
+          <IssueSheetTabs selectedRow={selectedRow} />
         </SheetContent>
       </Sheet>
       <Tabs defaultValue="table" className="w-full">

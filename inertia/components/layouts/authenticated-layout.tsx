@@ -21,7 +21,6 @@ function Layout({ children }: { children: React.ReactNode }) {
   }, []);
   const handleSidebarStateChange = (state: boolean) => {
     setSidebarOpen(state);
-    toast.success("Event has been created."); // Add toast message
     localStorage.setItem("sidebar:state", String(state));
   };
 

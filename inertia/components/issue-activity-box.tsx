@@ -1,24 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader } from "~/components/ui/card";
-import { Avatar } from "~/components/ui/avatar";
-import DateLabelAgo from "~/components/date-label-ago";
 import { ArrowRight } from "lucide-react";
-import { ScrollArea } from "~/components/ui/scroll-area";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "~/components/ui/table";
 import SmallAvatar from "~/components/user-avatar-small";
-import ColoredBadge from "./colored-badge";
+import ColoredBadge from "~/components/colored-badge";
+
 interface IssueActivityBoxProps {
   issueId?: number;
   existingActivities: any[];
 }
+
 const isJson = (value: string) => {
   try {
     JSON.parse(value);
@@ -36,6 +25,7 @@ const formatJson = (json: string) => {
     return json; // If it's not valid JSON, just return the raw value
   }
 };
+
 const IssueActivityBox: React.FC<IssueActivityBoxProps> = ({
   issueId,
   existingActivities,
@@ -43,49 +33,52 @@ const IssueActivityBox: React.FC<IssueActivityBoxProps> = ({
   const [activity, setActivity] = useState(existingActivities.reverse());
 
   return (
-    <>
-      <div className="space-y-2 w-64 md:w-full">
-        {activity.map((act) => (
-          <>
-            <div className="flex flex-wrap space-x-2 items-center sm:space-x-4 border p-2 rounded">
-              <SmallAvatar userFullName={act.user.name} />
-              <span className="mx-1">{act.action}</span>
-              <div className="flex mt-2">
-                {act.action !== "created" && (
-                  <>
-                    {act.old_value.length <= 10 ? (
-                      <ColoredBadge value={act.old_value} />
-                    ) : (
-                      <p className="text-sm text-gray-500">
-                        Value is too long to display
-                      </p>
-                    )}
-                  </>
-                )}
+    <div className="space-y-2 w-64 md:w-full">
+      {activity.length === 0 ? (
+        <p className="text-center text-gray-500">No activity found.</p>
+      ) : (
+        activity.map((act, index) => (
+          <div
+            key={index}
+            className="flex flex-wrap space-x-2 items-center sm:space-x-4 border p-2 rounded"
+          >
+            <SmallAvatar userFullName={act.user.name} />
+            <span className="mx-1">{act.action}</span>
+            <div className="flex mt-2">
+              {act.action !== "created" && (
+                <>
+                  {act.old_value.length <= 10 ? (
+                    <ColoredBadge value={act.old_value} />
+                  ) : (
+                    <p className="text-sm text-gray-500">
+                      Value is too long to display
+                    </p>
+                  )}
+                </>
+              )}
 
-                {act.action === "created" ? "" : <ArrowRight />}
+              {act.action === "created" ? "" : <ArrowRight />}
 
-                {!isJson(act.new_value) ? (
-                  <>
-                    {act.new_value.length <= 10 ? (
-                      <ColoredBadge value={act.new_value} />
-                    ) : (
-                      <p className="wrap text-sm text-gray-500">
-                        {act.new_value}
-                      </p>
-                    )}
-                  </>
-                ) : (
-                  <pre className="p-1 rounded-lg text-wrap text-xs ">
-                    {formatJson(act.new_value)}
-                  </pre>
-                )}
-              </div>
+              {!isJson(act.new_value) ? (
+                <>
+                  {act.new_value.length <= 10 ? (
+                    <ColoredBadge value={act.new_value} />
+                  ) : (
+                    <p className="wrap text-sm text-gray-500">
+                      {act.new_value}
+                    </p>
+                  )}
+                </>
+              ) : (
+                <pre className="p-1 rounded-lg text-wrap text-xs ">
+                  {formatJson(act.new_value)}
+                </pre>
+              )}
             </div>
-          </>
-        ))}
-      </div>
-    </>
+          </div>
+        ))
+      )}
+    </div>
   );
 };
 
