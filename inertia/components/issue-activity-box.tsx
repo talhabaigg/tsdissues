@@ -6,6 +6,7 @@ import ColoredBadge from "~/components/colored-badge";
 interface IssueActivityBoxProps {
   issueId?: number;
   existingActivities: any[];
+  commentClickHandler?: (id: number) => void;
 }
 
 const isJson = (value: string) => {
@@ -28,10 +29,16 @@ const formatJson = (json: string) => {
 
 const IssueActivityBox: React.FC<IssueActivityBoxProps> = ({
   issueId,
+  commentClickHandler,
   existingActivities,
 }) => {
   const [activity, setActivity] = useState(existingActivities.reverse());
-
+  const handleCommentClick = (id: number) => {
+    console.log("Comment clicked:", id);
+    if (commentClickHandler) {
+      commentClickHandler(id); // Call the handler if provided
+    }
+  };
   return (
     <div className="space-y-2  ">
       {activity.length === 0 ? (
@@ -40,7 +47,8 @@ const IssueActivityBox: React.FC<IssueActivityBoxProps> = ({
         activity.map((act, index) => (
           <div
             key={index}
-            className="flex flex-wrap space-x-2 items-center sm:space-x-4 border p-2 rounded  my-2"
+            onClick={() => handleCommentClick(act.issue.id)}
+            className="flex flex-wrap space-x-2 items-center sm:space-x-4 border p-2 rounded  my-2 dark:hover:bg-gray-900 hover:bg-gray-100 cursor-pointer"
           >
             <SmallAvatar userFullName={act.user.name} />
             <span className="mx-1 font-semibold">{act.action}</span>

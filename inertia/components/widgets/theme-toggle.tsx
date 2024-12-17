@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import { Button } from "./ui/button";
-import { SidebarMenuButton } from "./ui/sidebar";
-import { SunMoon } from "lucide-react";
+import { Button } from "~/components/ui/button";
+import { SunMoon, MoonStar } from "lucide-react";
 function ThemeToggle() {
   const [darkMode, setDarkMode] = useState(false);
 
@@ -34,12 +33,17 @@ function ThemeToggle() {
   };
 
   return (
-    <SidebarMenuButton asChild onClick={toggleDarkMode}>
-      <a href="#">
-        <SunMoon />
-        {darkMode ? "Switch to Dark Mode" : "Switch to Light Mode"}
-      </a>
-    </SidebarMenuButton>
+    <Button onClick={toggleDarkMode} variant={"ghost"}>
+      {darkMode ? (
+        <div className="flex items-center">
+          <SunMoon />
+        </div>
+      ) : (
+        <div className="flex items-center">
+          <MoonStar />
+        </div>
+      )}
+    </Button>
   );
 }
 
