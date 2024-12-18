@@ -1,9 +1,11 @@
 "use client";
 
+import { Badge } from "~/components/ui/badge";
+import SmallAvatar from "~/components/user-avatar-small";
 import { TrendingUp } from "lucide-react";
 import { Bar, BarChart, XAxis, YAxis } from "recharts";
 import IssueAssignedWidget from "./issue-assigned-widget";
-
+import { ScrollArea } from "~/components/ui/scroll-area";
 import {
   Card,
   CardContent,
@@ -60,7 +62,7 @@ const assignees = [
   },
   {
     id: 5,
-    name: "test Doe",
+    name: "Talha Baig",
     email: "Jane@test.com",
     region: "US",
     role: "User",
@@ -74,46 +76,58 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function IssueAssignedUsersChart() {
+  const CustomizedGroupTick = (props: any) => {
+    const { index, x, y, payload } = props;
+    const assignee = assignees.find(
+      (assignee) => assignee.name === payload.value,
+    );
+    return (
+      <g transform={`translate(${x},${y})`}>
+        {assignee && (
+          <foreignObject x={-30} y={-20} width={50} height={50}>
+            <SmallAvatar userFullName={assignee.name} />
+          </foreignObject>
+        )}
+      </g>
+    );
+  };
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Issues assigned to users</CardTitle>
-        <CardDescription>
-          The below chart displays total issues assigned to users.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig}>
-          <BarChart
-            accessibilityLayer
-            data={assignees}
-            layout="vertical"
-            margin={{
-              left: 0,
-            }}
-          >
-            <YAxis
-              dataKey="name"
-              type="category"
-              tickLine={false}
-              tickMargin={0}
-              axisLine={false}
-              tickFormatter={(value) => value}
-            />
-            <XAxis dataKey="assigned" type="number" hide />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
-            <Bar
-              dataKey="assigned"
+    <div className="p-2 h-[300px] sm:h-[450px]">
+      <ScrollArea className="h-[300px] sm:h-[450px] mt-2">
+        <CardHeader></CardHeader>
+        <CardContent>
+          <ChartContainer config={chartConfig}>
+            <BarChart
+              accessibilityLayer
+              data={assignees}
               layout="vertical"
-              radius={5}
-              fill="#8884d8"
-            />
-          </BarChart>
-        </ChartContainer>
-      </CardContent>
-    </Card>
+              margin={{
+                left: 0,
+              }}
+            >
+              <YAxis
+                dataKey="name"
+                type="category"
+                tickLine={false}
+                tickMargin={0}
+                axisLine={false}
+                tick={<CustomizedGroupTick />}
+              />
+              <XAxis dataKey="assigned" type="number" hide />
+              <ChartTooltip
+                cursor={false}
+                content={<ChartTooltipContent hideLabel />}
+              />
+              <Bar
+                dataKey="assigned"
+                layout="vertical"
+                radius={5}
+                fill="#8884d8"
+              />
+            </BarChart>
+          </ChartContainer>
+        </CardContent>
+      </ScrollArea>
+    </div>
   );
 }
