@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ArrowRight } from "lucide-react";
 import SmallAvatar from "~/components/user-avatar-small";
 import ColoredBadge from "~/components/colored-badge";
+import DateTimeFormatted from "./date-time-formatted";
 
 interface IssueActivityBoxProps {
   issueId?: number;
@@ -86,17 +87,8 @@ const IssueActivityBox: React.FC<IssueActivityBoxProps> = ({
               </div>
               <div className="text-xs" title={"Issue ID:" + act.issue?.id}>
                 {" "}
-                <span className="mx-1 font-semibold">{act.action} </span>
-                {new Date(act.created_at)
-                  .toLocaleString("en-GB", {
-                    day: "2-digit",
-                    month: "long",
-                    year: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: true,
-                  })
-                  .replace(",", "")}
+                <span className="">{act.action} </span>
+                <DateTimeFormatted date={act.created_at} />
               </div>
             </div>
           </div>

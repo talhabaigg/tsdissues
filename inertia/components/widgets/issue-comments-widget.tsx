@@ -3,7 +3,7 @@ import { Card } from "~/components/ui/card";
 import { FilePreview } from "~/components/comment-file-preview";
 import SmallAvatar from "~/components/user-avatar-small";
 import { useEffect, useState } from "react";
-
+import DateTimeFormatted from "~/components/date-time-formatted";
 interface UpdatesWidgetProps {
   commentClickHandler?: (id: number) => void; // Accepts comment ID as a parameter
 }
@@ -94,15 +94,8 @@ const LatestComments = ({ commentClickHandler }: UpdatesWidgetProps) => {
                 <div className="space-x-2">
                   <div className="flex items-center justify-between font-light text-xs">
                     <div className="space-x-1">
-                      <span>
-                        Commented on "issue #{comment.issue.id}-
-                        {comment.issue.name}" on{" "}
-                      </span>
-                      <span>
-                        {new Date(comment.created_at).toLocaleDateString(
-                          "en-AU",
-                        )}
-                      </span>
+                      Commented on "issue Id{comment.issue.id}" on{" "}
+                      <DateTimeFormatted date={comment.created_at} />
                     </div>
                   </div>
                 </div>
