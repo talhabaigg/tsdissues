@@ -104,39 +104,45 @@ export function IssueAssignedUsersChart(existingAssignees: any) {
   };
   return (
     <div className="p-2 h-[300px] sm:h-[450px]">
-      <ScrollArea className="h-[300px] sm:h-[450px] mt-2">
+      <ScrollArea className="h-[300px] mt-2">
         <CardHeader></CardHeader>
         <CardContent>
-          <ChartContainer config={chartConfig}>
-            <BarChart
-              accessibilityLayer
-              data={assignees}
-              layout="vertical"
-              margin={{
-                left: 0,
-              }}
-            >
-              <YAxis
-                dataKey="name"
-                type="category"
-                tickLine={false}
-                tickMargin={0}
-                axisLine={false}
-                tick={<CustomizedGroupTick />}
-              />
-              <XAxis dataKey="issues_count" type="number" hide />
-              <ChartTooltip
-                cursor={false}
-                content={<ChartTooltipContent hideLabel />}
-              />
-              <Bar
-                dataKey="issues_count"
+          {assignees.length > 0 ? (
+            <ChartContainer config={chartConfig}>
+              <BarChart
+                accessibilityLayer
+                data={assignees}
                 layout="vertical"
-                radius={5}
-                fill="#8884d8"
-              />
-            </BarChart>
-          </ChartContainer>
+                margin={{
+                  left: 0,
+                }}
+              >
+                <YAxis
+                  dataKey="name"
+                  type="category"
+                  tickLine={false}
+                  tickMargin={0}
+                  axisLine={false}
+                  tick={<CustomizedGroupTick />}
+                />
+                <XAxis dataKey="issues_count" type="number" hide />
+                <ChartTooltip
+                  cursor={false}
+                  content={<ChartTooltipContent hideLabel />}
+                />
+                <Bar
+                  dataKey="issues_count"
+                  layout="vertical"
+                  radius={5}
+                  fill="#8884d8"
+                />
+              </BarChart>
+            </ChartContainer>
+          ) : (
+            <div className="flex justify-center items-center -mt-10">
+              No Active Issues to display
+            </div>
+          )}
         </CardContent>
       </ScrollArea>
     </div>
