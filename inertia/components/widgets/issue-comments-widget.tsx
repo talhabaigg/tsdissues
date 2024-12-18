@@ -98,11 +98,8 @@ const LatestComments = ({ commentClickHandler }: UpdatesWidgetProps) => {
                   <div className="space-x-2">
                     <div className="flex items-center justify-between font-light text-xs">
                       <div className="space-x-1">
-                        Commented on "issue Id{comment.issue.id}" on{" "}
+                        Commented on "issue Id: {comment.issue.id}" on{" "}
                         <DateTimeFormatted date={comment.created_at} />
-                        <Button
-                          onClick={() => handleCommentClick(comment.issue.id)}
-                        ></Button>
                       </div>
                     </div>
                   </div>

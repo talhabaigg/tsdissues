@@ -33,7 +33,7 @@ const IssueActivityBox: React.FC<IssueActivityBoxProps> = ({
   commentClickHandler,
   existingActivities,
 }) => {
-  const [activity, setActivity] = useState(existingActivities.reverse());
+  const [activity, setActivity] = useState(existingActivities);
   const handleCommentClick = (id: number) => {
     console.log("Comment clicked:", id);
     if (commentClickHandler) {
@@ -57,7 +57,7 @@ const IssueActivityBox: React.FC<IssueActivityBoxProps> = ({
               <div className="flex ">
                 {act.action !== "created" && (
                   <>
-                    {act.old_value.length <= 10 ? (
+                    {act.old_value?.length <= 10 ? (
                       <ColoredBadge value={act.old_value} />
                     ) : (
                       <p className="text-sm text-gray-500">
@@ -85,7 +85,7 @@ const IssueActivityBox: React.FC<IssueActivityBoxProps> = ({
                   </pre>
                 )}
               </div>
-              <div className="text-xs" title={"Issue ID:" + act.issue?.id}>
+              <div className="text-xs" title={"Issue ID: " + act.issue?.id}>
                 {" "}
                 <span className="">{act.action} </span>
                 <DateTimeFormatted date={act.created_at} />

@@ -6,6 +6,7 @@ import {
   arrayMove,
   rectSortingStrategy,
 } from "@dnd-kit/sortable";
+import { Grip } from "lucide-react";
 import { CSS } from "@dnd-kit/utilities";
 import AuthenticatedLayout from "~/components/layouts/authenticated-layout";
 import { Card, CardContent } from "~/components/ui/card";
@@ -71,15 +72,20 @@ function SortableCard({
     width: 200,
     height: 200,
   };
+  const stylecard = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    zIndex: isDragging ? 10 : "auto",
+  };
   return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
-      className="aspect-video rounded-xl shadow-lg"
-    >
-      {children}
+    <div ref={setNodeRef} style={style} className="aspect-video group">
+      <div className=" justify-between p-2">
+        {/* Drag Handle Button */}
+        <button className="w-3 h-3 " {...listeners} {...attributes}>
+          <Grip />
+        </button>
+      </div>
+      <div>{children}</div>
     </div>
   );
 }
@@ -151,7 +157,10 @@ export default function Dashboard() {
       content: (
         <div className="p-4 h-[350] sm:h-[450px]">
           <ScrollArea className="h-[300px] sm:h-[400px]">
-            <IssueActivityBox existingActivities={existingActivities} />
+            <IssueActivityBox
+              existingActivities={existingActivities}
+              commentClickHandler={commentClickHandler}
+            />
           </ScrollArea>
         </div>
       ),
