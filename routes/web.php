@@ -23,13 +23,20 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     $existingActivities = IssueActivity::with(['issue', 'user'])
         ->latest()
-        ->take(15)
+        ->take(5)
         ->get();
-    $existingAssignees = User::withCount('issues')
+    $existingAssignees = User::withCount([
+        'issues' => function ($query) {
+            $query->where('status', 'active'); // Count only issues with active status
+        }
+    ])
         ->orderByDesc('issues_count') // Sort users by issue count in descending order
-        ->take(5) // Limit to top 5 users
+        ->take(5) // Limit to the top 5 users
         ->get();
-    $existingIssuesByDepartment = Issue::all()->countBy('type')->toArray();
+    $existingIssuesByDepartment = Issue::where('status', 'active')
+        ->get()
+        ->countBy('type')
+        ->toArray();
 
     return Inertia::render('dashboard', [
         'existingActivities' => $existingActivities,

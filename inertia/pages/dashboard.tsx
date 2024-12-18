@@ -164,7 +164,8 @@ export default function Dashboard() {
         />
       ),
       title: "Issues by Department",
-      description: "The below chart displays total issues by department.",
+      description:
+        "The below chart displays total active issues by department.",
     },
     {
       id: "comments",
