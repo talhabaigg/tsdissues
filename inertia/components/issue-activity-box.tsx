@@ -51,37 +51,53 @@ const IssueActivityBox: React.FC<IssueActivityBoxProps> = ({
             className="flex flex-wrap space-x-2 items-center sm:space-x-4 border p-2 rounded  my-2 dark:hover:bg-gray-900 hover:bg-gray-100 cursor-pointer"
           >
             <SmallAvatar userFullName={act.user.name} />
-            <span className="mx-1 font-semibold">{act.action}</span>
-            <div className="flex ">
-              {act.action !== "created" && (
-                <>
-                  {act.old_value.length <= 10 ? (
-                    <ColoredBadge value={act.old_value} />
-                  ) : (
-                    <p className="text-sm text-gray-500">
-                      Value is too long to display
-                    </p>
-                  )}
-                </>
-              )}
 
-              {act.action === "created" ? "" : <ArrowRight />}
+            <div>
+              <div className="flex ">
+                {act.action !== "created" && (
+                  <>
+                    {act.old_value.length <= 10 ? (
+                      <ColoredBadge value={act.old_value} />
+                    ) : (
+                      <p className="text-sm text-gray-500">
+                        Value is too long to display
+                      </p>
+                    )}
+                  </>
+                )}
 
-              {!isJson(act.new_value) ? (
-                <>
-                  {act.new_value.length <= 10 ? (
-                    <ColoredBadge value={act.new_value} />
-                  ) : (
-                    <p className="wrap text-sm text-gray-500">
-                      {act.new_value}
-                    </p>
-                  )}
-                </>
-              ) : (
-                <pre className="p-1 rounded-lg text-wrap text-xs ">
-                  {formatJson(act.new_value)}
-                </pre>
-              )}
+                {act.action === "created" ? "" : <ArrowRight />}
+
+                {!isJson(act.new_value) ? (
+                  <>
+                    {act.new_value.length <= 10 ? (
+                      <ColoredBadge value={act.new_value} />
+                    ) : (
+                      <p className="wrap text-sm text-gray-500">
+                        {act.new_value}
+                      </p>
+                    )}
+                  </>
+                ) : (
+                  <pre className="p-1 rounded-lg text-wrap text-xs ">
+                    {formatJson(act.new_value)}
+                  </pre>
+                )}
+              </div>
+              <div className="text-xs" title={"Issue ID: " + act.issue.id}>
+                {" "}
+                <span className="mx-1 font-semibold">{act.action} </span>
+                {new Date(act.created_at)
+                  .toLocaleString("en-GB", {
+                    day: "2-digit",
+                    month: "long",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: true,
+                  })
+                  .replace(",", "")}
+              </div>
             </div>
           </div>
         ))

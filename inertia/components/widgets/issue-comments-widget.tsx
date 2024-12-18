@@ -41,7 +41,6 @@ const LatestComments = ({ commentClickHandler }: UpdatesWidgetProps) => {
         throw new Error("Failed to fetch comments");
       }
       const data = await response.json();
-      console.log(data);
       setComments(data);
     } catch (error: any) {
       setError(error.message);
@@ -79,7 +78,7 @@ const LatestComments = ({ commentClickHandler }: UpdatesWidgetProps) => {
         <div key={comment.id}>
           <div className="flex justify-start space-y-2">
             <Card
-              className="p-2 ml-2 w-full flex items-center space-x-4 cursor-pointer dark:hover:bg-gray-900 hover:bg-gray-100 cursor-pointer"
+              className="p-2 ml-2 w-full flex items-center space-x-4 cursor-pointer dark:hover:bg-gray-900 hover:bg-gray-100"
               onClick={() => handleCommentClick(comment.issue.id)}
             >
               <div>

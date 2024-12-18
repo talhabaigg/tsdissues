@@ -1,7 +1,7 @@
 import AuthenticatedLayout from "~/components/layouts/authenticated-layout";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import { Head } from "@inertiajs/react";
-import LatestComments from "~/components/widgets/issue-updates-widget";
+import LatestComments from "~/components/widgets/issue-comments-widget";
 import IssueActivityBox from "~/components/issue-activity-box";
 import { usePage } from "@inertiajs/react";
 import { ScrollArea } from "~/components/ui/scroll-area";
@@ -14,6 +14,7 @@ import {
 import IssueSheetTabs from "./issue/partials/sheet-tabs";
 import { useState, useEffect } from "react";
 import React from "react";
+import { LoadingSpinner } from "~/components/ui/spinner";
 interface Issue {
   id: number;
   type: string;
@@ -33,13 +34,9 @@ interface Issue {
   assignee: { name: string };
 }
 
-interface IssuesProps {
-  issues: {
-    data: Issue[];
-  };
-}
 export default function Dashboard() {
   const [selectedRow, setSelectedRow] = useState<Issue | null>(null);
+  const [loading, setLoading] = useState(false);
   const { existingActivities } = usePage().props as unknown as {
     existingActivities: any[];
   };
@@ -65,6 +62,8 @@ export default function Dashboard() {
   });
   const commentClickHandler = (id: any) => {
     console.log("Received comment ID:", id);
+    setLoading(true);
+    setOpen(true);
     fetch(route("issue.show", id))
       .then((response) => response.json()) // Parse the JSON response
       .then((data) => {
@@ -75,14 +74,13 @@ export default function Dashboard() {
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
+      })
+      .finally(() => {
+        // Set loading state to false after the fetch is complete
+        setLoading(false);
       });
   };
-  useEffect(() => {
-    if (selectedRow) {
-      console.log("Updated selectedRow:", selectedRow);
-      setOpen(true);
-    }
-  }, [selectedRow]);
+
   return (
     <AuthenticatedLayout>
       <Head title="Dashboard" />
@@ -91,12 +89,20 @@ export default function Dashboard() {
           <div className="aspect-video rounded-xl ">
             <Sheet open={open} onOpenChange={setOpen}>
               <SheetContent className="max-w-md mx-auto shadow-lg rounded-lg p-6">
-                <SheetHeader>
-                  <SheetTitle className="text-xl font-bold ">
-                    Issue #{selectedRow?.id}
-                  </SheetTitle>
-                </SheetHeader>
-                <IssueSheetTabs selectedRow={selectedRow} />
+                {loading ? (
+                  <div className="flex justify-center items-center h-full">
+                    <LoadingSpinner size={24} className="text-primary-500" />
+                  </div>
+                ) : (
+                  <>
+                    <SheetHeader>
+                      <SheetTitle className="text-xl font-bold ">
+                        Issue #{selectedRow?.id}
+                      </SheetTitle>
+                    </SheetHeader>
+                    <IssueSheetTabs selectedRow={selectedRow} />
+                  </>
+                )}
               </SheetContent>
             </Sheet>
             <Card className="shadow-lg">
@@ -121,8 +127,6 @@ export default function Dashboard() {
               </CardContent>
             </Card>
           </div>
-
-          {/* <div className="aspect-video rounded-xl bg-muted/50" /> */}
         </div>
       </div>
     </AuthenticatedLayout>
