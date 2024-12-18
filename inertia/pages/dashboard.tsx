@@ -15,6 +15,10 @@ import IssueSheetTabs from "./issue/partials/sheet-tabs";
 import { useState, useEffect } from "react";
 import React from "react";
 import { LoadingSpinner } from "~/components/ui/spinner";
+import IssueWidgetByDepartment from "~/components/widgets/issue-widget-by-department";
+import IssueAssignedWidget from "~/components/widgets/issue-assigned-widget";
+import { IssueAssignedUsersChart } from "~/components/widgets/issue-assigned-chart";
+import { IssueDepartmentChart } from "~/components/widgets/issue-department-chart";
 interface Issue {
   id: number;
   type: string;
@@ -85,7 +89,16 @@ export default function Dashboard() {
     <AuthenticatedLayout>
       <Head title="Dashboard" />
       <div className="flex flex-1 flex-col  ">
-        <div className="grid auto-rows-min grid-cols-1 gap-2 md:grid-cols-2">
+        <div className="grid auto-rows-min grid-cols-1 gap-2 md:grid-cols-3">
+          <div className="aspect-video rounded-xl ">
+            {" "}
+            <IssueAssignedUsersChart />
+          </div>
+          <div className="aspect-video rounded-xl ">
+            {" "}
+            <IssueDepartmentChart />
+          </div>
+
           <div className="aspect-video rounded-xl ">
             <Sheet open={open} onOpenChange={setOpen}>
               <SheetContent className="max-w-md mx-auto shadow-lg rounded-lg p-6">
@@ -114,6 +127,7 @@ export default function Dashboard() {
               </CardContent>
             </Card>
           </div>
+
           <div className="aspect-video rounded-xl  ">
             <Card className="shadow-lg">
               <CardHeader> Latest Activites</CardHeader>
@@ -125,6 +139,28 @@ export default function Dashboard() {
                   />
                 </ScrollArea>
               </CardContent>
+            </Card>
+          </div>
+          <div className="aspect-video rounded-xl ">
+            {" "}
+            <Card className="shadow-lg">
+              <CardHeader> Open Issues by Department</CardHeader>
+              <ScrollArea className="h-[300px]  sm:h-[400px] ">
+                <CardContent>
+                  <IssueWidgetByDepartment />
+                </CardContent>
+              </ScrollArea>
+            </Card>
+          </div>
+          <div className="aspect-video rounded-xl ">
+            {" "}
+            <Card className="shadow-lg">
+              <CardHeader> Assigned issues by User</CardHeader>
+              <ScrollArea className="h-[300px]  sm:h-[400px] ">
+                <CardContent>
+                  <IssueAssignedWidget />
+                </CardContent>
+              </ScrollArea>
             </Card>
           </div>
         </div>
