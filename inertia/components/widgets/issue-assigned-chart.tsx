@@ -28,48 +28,6 @@ const chartData = [
   { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
   { browser: "other", visitors: 90, fill: "var(--color-other)" },
 ];
-// const assignees = [
-//   {
-//     id: 1,
-//     name: "John Doe",
-//     email: "john@test.com",
-//     region: "US",
-//     role: "Admin",
-//     assigned: 160,
-//   },
-//   {
-//     id: 2,
-//     name: "Jane Doe",
-//     email: "Jane@test.com",
-//     region: "US",
-//     role: "User",
-//     assigned: 250,
-//   },
-//   {
-//     id: 3,
-//     name: "testt Doe",
-//     email: "Jane@test.com",
-//     region: "US",
-//     role: "User",
-//     assigned: 360,
-//   },
-//   {
-//     id: 4,
-//     name: "test Doe",
-//     email: "Jane@test.com",
-//     region: "US",
-//     role: "User",
-//     assigned: 500,
-//   },
-//   {
-//     id: 5,
-//     name: "Talha Baig",
-//     email: "Jane@test.com",
-//     region: "US",
-//     role: "User",
-//     assigned: 523,
-//   },
-// ];
 
 interface Assignee {
   id: number;
