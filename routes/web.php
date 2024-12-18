@@ -25,11 +25,14 @@ Route::get('/dashboard', function () {
         ->latest()
         ->take(5)
         ->get();
-    $existingAssignees = User::withCount([
-        'issues' => function ($query) {
-            $query->where('status', 'active'); // Count only issues with active status
-        }
-    ])
+    $existingAssignees = User::whereHas('issues', function ($query) {
+        $query->where('status', 'active'); // Only include users with active issues
+    })
+        ->withCount([
+            'issues' => function ($query) {
+                $query->where('status', 'active'); // Count only issues with active status
+            }
+        ])
         ->orderByDesc('issues_count') // Sort users by issue count in descending order
         ->take(5) // Limit to the top 5 users
         ->get();
