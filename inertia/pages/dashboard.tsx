@@ -50,6 +50,7 @@ interface Issue {
 function SortableCard({
   id,
   children,
+  title,
 }: {
   id: string;
   children: React.ReactNode;
@@ -78,14 +79,17 @@ function SortableCard({
     zIndex: isDragging ? 10 : "auto",
   };
   return (
-    <div ref={setNodeRef} style={style} className="aspect-video group">
-      <div className=" justify-between p-2">
-        {/* Drag Handle Button */}
-        <button className="w-3 h-3 " {...listeners} {...attributes}>
-          <Grip />
-        </button>
-      </div>
-      <div>{children}</div>
+    <div ref={setNodeRef} style={style} className="aspect-video group ">
+      <Card>
+        <div className=" flex justify-between py-4 px-2">
+          <CardTitle>{title}</CardTitle>
+          {/* Drag Handle Button */}
+          <button className="mr-1" {...listeners} {...attributes}>
+            <Grip />
+          </button>
+        </div>
+        <div>{children}</div>
+      </Card>
     </div>
   );
 }
@@ -94,6 +98,11 @@ export default function Dashboard() {
   const { existingActivities } = usePage().props as unknown as {
     existingActivities: any[];
   };
+
+  const { existingAssignees } = usePage().props as unknown as {
+    existingAssignees: any[];
+  };
+  console.log(existingAssignees);
   const [selectedRow, setSelectedRow] = useState<Issue | null>(null);
   const [open, setOpen] = React.useState(false);
   const rowData = (issue: Issue) => ({
@@ -137,7 +146,9 @@ export default function Dashboard() {
   const cards = [
     {
       id: "chart-users",
-      content: <IssueAssignedUsersChart />,
+      content: (
+        <IssueAssignedUsersChart existingAssignees={existingAssignees} />
+      ),
       title: "Issues Assigned to Users",
       description: "The below chart displays total issues assigned to users.",
     },
@@ -209,9 +220,8 @@ export default function Dashboard() {
             {cardOrder.map((id) => {
               const card = cards.find((card) => card.id === id);
               return (
-                <SortableCard key={id} id={id}>
-                  <Card className="p-4">
-                    <CardTitle>{card?.title}</CardTitle>
+                <SortableCard key={id} id={id} title={card?.title}>
+                  <Card className="p-2">
                     <CardDescription>
                       {card?.description || "No description"}
                     </CardDescription>

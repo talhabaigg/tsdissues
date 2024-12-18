@@ -1,6 +1,7 @@
 "use client";
 
 import { Badge } from "~/components/ui/badge";
+import { useState } from "react";
 import SmallAvatar from "~/components/user-avatar-small";
 import { TrendingUp } from "lucide-react";
 import { Bar, BarChart, XAxis, YAxis } from "recharts";
@@ -27,55 +28,65 @@ const chartData = [
   { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
   { browser: "other", visitors: 90, fill: "var(--color-other)" },
 ];
-const assignees = [
-  {
-    id: 1,
-    name: "John Doe",
-    email: "john@test.com",
-    region: "US",
-    role: "Admin",
-    assigned: 160,
-  },
-  {
-    id: 2,
-    name: "Jane Doe",
-    email: "Jane@test.com",
-    region: "US",
-    role: "User",
-    assigned: 250,
-  },
-  {
-    id: 3,
-    name: "testt Doe",
-    email: "Jane@test.com",
-    region: "US",
-    role: "User",
-    assigned: 360,
-  },
-  {
-    id: 4,
-    name: "test Doe",
-    email: "Jane@test.com",
-    region: "US",
-    role: "User",
-    assigned: 500,
-  },
-  {
-    id: 5,
-    name: "Talha Baig",
-    email: "Jane@test.com",
-    region: "US",
-    role: "User",
-    assigned: 523,
-  },
-];
+// const assignees = [
+//   {
+//     id: 1,
+//     name: "John Doe",
+//     email: "john@test.com",
+//     region: "US",
+//     role: "Admin",
+//     assigned: 160,
+//   },
+//   {
+//     id: 2,
+//     name: "Jane Doe",
+//     email: "Jane@test.com",
+//     region: "US",
+//     role: "User",
+//     assigned: 250,
+//   },
+//   {
+//     id: 3,
+//     name: "testt Doe",
+//     email: "Jane@test.com",
+//     region: "US",
+//     role: "User",
+//     assigned: 360,
+//   },
+//   {
+//     id: 4,
+//     name: "test Doe",
+//     email: "Jane@test.com",
+//     region: "US",
+//     role: "User",
+//     assigned: 500,
+//   },
+//   {
+//     id: 5,
+//     name: "Talha Baig",
+//     email: "Jane@test.com",
+//     region: "US",
+//     role: "User",
+//     assigned: 523,
+//   },
+// ];
+
+interface Assignee {
+  id: number;
+  name: string;
+  issues_count: number; // This should come from the backend
+}
 const chartConfig = {
   visitors: {
     label: "Visitors",
   },
 } satisfies ChartConfig;
 
-export function IssueAssignedUsersChart() {
+export function IssueAssignedUsersChart(existingAssignees: any) {
+  console.log(existingAssignees.existingAssignees);
+  const [assignees, setAssignees] = useState<Assignee[]>(
+    existingAssignees.existingAssignees,
+  );
   const CustomizedGroupTick = (props: any) => {
     const { index, x, y, payload } = props;
     const assignee = assignees.find(
@@ -113,13 +124,13 @@ export function IssueAssignedUsersChart() {
                 axisLine={false}
                 tick={<CustomizedGroupTick />}
               />
-              <XAxis dataKey="assigned" type="number" hide />
+              <XAxis dataKey="issues_count" type="number" hide />
               <ChartTooltip
                 cursor={false}
                 content={<ChartTooltipContent hideLabel />}
               />
               <Bar
-                dataKey="assigned"
+                dataKey="issues_count"
                 layout="vertical"
                 radius={5}
                 fill="#8884d8"

@@ -31,7 +31,7 @@ class IssueCommentController extends Controller
     {
         $comments = IssueComment::with(['creator', 'issue'])
             ->orderBy('created_at', 'desc')
-            ->limit(15)
+            ->limit(5)
             ->get();
         // dd($comments);
 

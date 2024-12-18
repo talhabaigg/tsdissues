@@ -40,9 +40,9 @@ const IssueForm = ({ issue }: { issue: Issue | null }) => {
   const issueTypes = [
     { value: "product_quality", label: "Product Quality" },
     { value: "it_hardware", label: "IT Hardware" },
-    { value: "system", label: "IT Applications" },
-    { value: "system", label: "Warehouse Operations" },
-    { value: "system", label: "Human Resources" },
+    { value: "it_software", label: "IT Applications" },
+    { value: "warehouse_operations", label: "Warehouse Operations" },
+    { value: "human_resources", label: "Human Resources" },
   ];
 
   const priorityOptions = [

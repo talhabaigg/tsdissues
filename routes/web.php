@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Inertia\Inertia;
 use App\Models\IssueActivity;
 use Illuminate\Support\Facades\Route;
@@ -23,7 +24,15 @@ Route::get('/dashboard', function () {
         ->latest()
         ->take(15)
         ->get();
-    return Inertia::render('dashboard')->with('existingActivities', $existingActivities);
+    $existingAssignees = User::withCount('issues')
+        ->orderByDesc('issues_count') // Sort users by issue count in descending order
+        ->take(5) // Limit to top 5 users
+        ->get();
+
+    return Inertia::render('dashboard', [
+        'existingActivities' => $existingActivities,
+        'existingAssignees' => $existingAssignees,
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
