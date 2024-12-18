@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use Inertia\Inertia;
+use App\Models\Issue;
 use App\Models\IssueActivity;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
@@ -28,10 +29,12 @@ Route::get('/dashboard', function () {
         ->orderByDesc('issues_count') // Sort users by issue count in descending order
         ->take(5) // Limit to top 5 users
         ->get();
+    $existingIssuesByDepartment = Issue::all()->countBy('type')->toArray();
 
     return Inertia::render('dashboard', [
         'existingActivities' => $existingActivities,
         'existingAssignees' => $existingAssignees,
+        'existingIssuesByDepartment' => $existingIssuesByDepartment,
     ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 

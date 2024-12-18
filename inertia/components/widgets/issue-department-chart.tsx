@@ -5,46 +5,29 @@ import { TrendingUp } from "lucide-react";
 import { Label, Pie, PieChart } from "recharts";
 import { ScrollArea } from "~/components/ui/scroll-area";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
+import { CardContent } from "~/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "~/components/ui/chart";
-const chartData = [
-  { browser: "it", visitors: 12, fill: "var(--color-chrome)" },
-  { browser: "human_resources", visitors: 15, fill: "var(--color-safari)" },
-  { browser: "warehouse", visitors: 19, fill: "var(--color-firefox)" },
-  { browser: "other", visitors: 3, fill: "var(--color-other)" },
-];
 
 const chartConfig = {
-  visitors: {
-    label: "Visitors",
+  total_issues: {
+    label: "Total Issues",
   },
-  chrome: {
-    label: "Chrome",
+  product_quality: {
+    label: "Product Quality",
     color: "hsl(var(--chart-1))",
   },
-  safari: {
-    label: "Safari",
+  it_hardware: {
+    label: "IT Hardware",
     color: "hsl(var(--chart-2))",
   },
-  firefox: {
-    label: "Firefox",
+  it_software: {
+    label: "IT Software",
     color: "hsl(var(--chart-3))",
-  },
-  edge: {
-    label: "Edge",
-    color: "hsl(var(--chart-4))",
   },
   other: {
     label: "Other",
@@ -52,7 +35,28 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function IssueDepartmentChart() {
+interface IssueDepartmentChartProps {
+  existingIssuesByDepartment: {
+    existingIssuesByDepartment: Record<string, number>;
+  };
+}
+
+export function IssueDepartmentChart(
+  existingIssuesByDepartment: IssueDepartmentChartProps,
+) {
+  const fillMap: { [key: string]: string } = {
+    it_hardware: "hsl(var(--chart-1))",
+    product_quality: "hsl(var(--chart-2))",
+  };
+
+  const chartData = Object.entries(
+    existingIssuesByDepartment.existingIssuesByDepartment,
+  ).map(([key, value]) => ({
+    browser: key,
+    visitors: Number(value),
+    fill: fillMap[key] || "var(--color-other)",
+  }));
+  console.log(chartData);
   const totalVisitors = React.useMemo(() => {
     return chartData.reduce((acc, curr) => acc + curr.visitors, 0);
   }, []);

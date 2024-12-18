@@ -102,7 +102,11 @@ export default function Dashboard() {
   const { existingAssignees } = usePage().props as unknown as {
     existingAssignees: any[];
   };
-  console.log(existingAssignees);
+
+  const { existingIssuesByDepartment } = usePage().props as unknown as {
+    existingIssuesByDepartment: any[];
+  };
+  console.log("dashboard", existingIssuesByDepartment);
   const [selectedRow, setSelectedRow] = useState<Issue | null>(null);
   const [open, setOpen] = React.useState(false);
   const rowData = (issue: Issue) => ({
@@ -154,7 +158,11 @@ export default function Dashboard() {
     },
     {
       id: "chart-department",
-      content: <IssueDepartmentChart />,
+      content: (
+        <IssueDepartmentChart
+          existingIssuesByDepartment={existingIssuesByDepartment}
+        />
+      ),
       title: "Issues by Department",
       description: "The below chart displays total issues by department.",
     },
