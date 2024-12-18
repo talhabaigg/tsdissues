@@ -84,7 +84,7 @@ const IssueActivityBox: React.FC<IssueActivityBoxProps> = ({
                   </pre>
                 )}
               </div>
-              <div className="text-xs" title={"Issue ID: " + act.issue.id}>
+              <div className="text-xs" title={"Issue ID:" + act.issue?.id}>
                 {" "}
                 <span className="mx-1 font-semibold">{act.action} </span>
                 {new Date(act.created_at)
