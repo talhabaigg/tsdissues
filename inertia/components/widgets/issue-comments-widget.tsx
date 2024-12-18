@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import DateTimeFormatted from "~/components/date-time-formatted";
 import { ScrollArea } from "../ui/scroll-area";
 import { Car } from "lucide-react";
+import { Button } from "../ui/button";
 interface UpdatesWidgetProps {
   commentClickHandler?: (id: number) => void; // Accepts comment ID as a parameter
 }
@@ -99,6 +100,9 @@ const LatestComments = ({ commentClickHandler }: UpdatesWidgetProps) => {
                       <div className="space-x-1">
                         Commented on "issue Id{comment.issue.id}" on{" "}
                         <DateTimeFormatted date={comment.created_at} />
+                        <Button
+                          onClick={() => handleCommentClick(comment.issue.id)}
+                        ></Button>
                       </div>
                     </div>
                   </div>
