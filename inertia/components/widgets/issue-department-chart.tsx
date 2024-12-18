@@ -62,7 +62,7 @@ export function IssueDepartmentChart() {
         <CardContent className=" ">
           <ChartContainer
             config={chartConfig}
-            className="mx-auto aspect-square h-[250px] sm:h-[400px] w-[100px] lg:w-[300px]"
+            className="mx-auto aspect-square h-[250px] sm:h-[400px] w-[300px] lg:w-[300px]"
           >
             <PieChart>
               <ChartTooltip
