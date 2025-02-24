@@ -1,5 +1,5 @@
 import ColoredBadge from "~/components/colored-badge";
 const PriorityCellRenderer = ({ value }: { value: string }) => (
-  <ColoredBadge value={value} />
+  <div>{value}</div>
 );
 export default PriorityCellRenderer;

@@ -29,7 +29,7 @@ export function AppSidebar() {
         </SidebarGroupLabel>
       </SidebarHeader>
       <SidebarContent className="px-2">
-        <SidebarMenuButton
+        {/* <SidebarMenuButton
           asChild
           tooltip="Dashboard"
           className="-mb-1"
@@ -39,7 +39,7 @@ export function AppSidebar() {
             <LayoutDashboard />
             Dashboard
           </Link>
-        </SidebarMenuButton>
+        </SidebarMenuButton> */}
         <SidebarMenuButton
           asChild
           tooltip="Issues"

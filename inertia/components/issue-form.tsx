@@ -46,9 +46,8 @@ const IssueForm = ({ issue }: { issue: Issue | null }) => {
   ];
 
   const priorityOptions = [
-    { value: "high", label: "High" },
-    { value: "medium", label: "Medium" },
-    { value: "low", label: "Low" },
+    { value: "critical", label: "Critical" },
+    { value: "normal", label: "Normal" },
   ];
 
   // State to track whether the checkbox is checked
@@ -76,6 +75,7 @@ const IssueForm = ({ issue }: { issue: Issue | null }) => {
   return (
     <form onSubmit={submit} className="space-y-4">
       {/* Issue Type */}
+      <Label>REPORT A NEW ISSUE</Label>
       <div>
         <Label htmlFor="type">Issue Type</Label>
         <Select
@@ -104,9 +104,13 @@ const IssueForm = ({ issue }: { issue: Issue | null }) => {
           type="text"
           placeholder="Enter issue title"
           value={data.name}
-          onChange={(e) => setData("name", e.target.value)}
+          onChange={(e) => setData("name", e.target.value.slice(0, 50))}
+          maxLength={50}
           required
         />
+        <div className="text-xs text-right text-gray-500 mt-1">
+          {data.name.length}/50 characters
+        </div>
         {errors.name && <div className="text-red-600">{errors.name}</div>}
       </div>
 

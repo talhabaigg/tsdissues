@@ -54,12 +54,12 @@ export default function Welcome({
                 >
                   Log in
                 </Link>
-                <Link
+                {/* <Link
                   href={route("register")}
                   className="rounded-md px-3 py-2  text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
                 >
                   Register
-                </Link>
+                </Link> */}
               </>
             )}
           </nav>
@@ -99,8 +99,13 @@ export default function Welcome({
                     </div>
                   )}
                   {!flash.success && !loading && (
-                    <div className="bg-gray-50 p-4 rounded-2xl shadow-2xl ">
-                      <IssueForm issue={null} />
+                    <div>
+                      <h2 className="text-white font-bold text-left text-4xl">
+                        ISSUE LOG
+                      </h2>
+                      <div className="bg-gray-50 p-4 rounded-2xl shadow-2xl ">
+                        <IssueForm issue={null} />
+                      </div>
                     </div>
                   )}
                 </div>

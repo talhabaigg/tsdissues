@@ -28,6 +28,7 @@ class Issue extends Model
             // Set created_by when creating the issue
             if ($issue->type) {
                 // Ensure $type is not null before calling getUserForIssueType
+                $issue->owner_id = $issue->getUserForIssueType($issue->type);
                 $issue->assigned_to = $issue->getUserForIssueType($issue->type);
             } else {
                 // Handle case when type is null, if needed
@@ -72,6 +73,8 @@ class Issue extends Model
             'product_quality' => 1, // User ID for Product Quality
             'it_hardware' => 1,     // User ID for IT Hardware
             'system' => 1,          // User ID for System issues
+            'it_applications' => 1,     // User ID for IT Software
+            'human_resources' => 1, // User ID for Human Resources
         ];
 
         // Return the corresponding user ID or null if not found
@@ -88,6 +91,10 @@ class Issue extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'owner_id');
+    }
     public function updater()
     {
         return $this->belongsTo(User::class, 'updated_by');
@@ -107,4 +114,6 @@ class Issue extends Model
     {
         return $this->hasMany(IssueActivity::class);  // Assuming your activity model is named IssueActivity
     }
+
+
 }

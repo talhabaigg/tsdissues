@@ -15,7 +15,7 @@ class IssueController extends Controller
     public function index()
     {
         // Fetch all issues, you can paginate or filter as needed
-        $issues = Issue::with('user', 'assignee', 'creator', 'updater', 'comments.creator', 'activities.user') // Load related user if there's a relationship
+        $issues = Issue::with('user', 'owner', 'assignee', 'creator', 'updater', 'comments.creator', 'activities.user') // Load related user if there's a relationship
             ->orderBy('created_at', 'desc')
             ->paginate(1000); // Adjust pagination as needed
 
@@ -93,13 +93,15 @@ class IssueController extends Controller
         $issue = Issue::with(
             'user',
             'assignee',
+            'owner',
             'creator',
             'updater',
             'comments.creator',
             'activities.user'
         )->findOrFail($id);
+        // dd($issue);
 
-        return response()->json($issue); // Return JSON response
+        return Inertia::render('issue/show', ['issue' => $issue]);
     }
 
     /**
@@ -135,7 +137,7 @@ class IssueController extends Controller
             'title' => 'nullable',
         ]);
 
-        //    dd($validated);
+
         $issue = Issue::findOrFail($id);
         $issue->update($validated);
         // $issue = Issue::findOrFail($id);

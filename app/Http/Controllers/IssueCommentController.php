@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class IssueCommentController extends Controller
 {
-    public function store(Request $request)
+    public function store(Request $request): void
     {
         $validated = $request->validate([
             'issue_id' => 'required|exists:issues,id',
@@ -24,7 +24,7 @@ class IssueCommentController extends Controller
         ]);
 
 
-        return redirect()->route('issue.index')->with('success', 'Comment added.');
+        return;
     }
 
     public function latest()

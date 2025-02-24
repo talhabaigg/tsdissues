@@ -37,6 +37,7 @@ export default function Login({
       )}
 
       <form onSubmit={submit} className="space-y-4">
+        <h1 className="font-bold">ISSUE LOG - Log in</h1>
         <div>
           <Label htmlFor="email">Email</Label>
 

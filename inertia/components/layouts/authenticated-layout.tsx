@@ -81,11 +81,11 @@ function Layout({ children }: { children: React.ReactNode }) {
           </div>
           <div>
             <Sheet>
-              <SheetTrigger>
+              {/* <SheetTrigger>
                 <Button variant="ghost" size="icon">
                   <Bell />
                 </Button>
-              </SheetTrigger>
+              </SheetTrigger> */}
               <SheetContent>
                 <SheetHeader>
                   <SheetTitle>Notifications</SheetTitle>

@@ -3,6 +3,7 @@ import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS
 import "ag-grid-community/styles/ag-theme-alpine.css"; // Optional Theme
 import "ag-grid-community/styles/ag-theme-quartz.css";
+import "~/css/custom-ag-grid-theme.css"; // Import your custom theme
 import { ColDef } from "ag-grid-community";
 import { ComboboxEditor } from "~/components/user-select-cell-editor";
 import { toast } from "sonner";
@@ -24,6 +25,7 @@ interface Issue {
   file: string;
   comments: string;
   activities: string;
+  owner?: { name: string };
   assignee?: { name: string };
   creator: { name: string };
   updater: { name: string };
@@ -40,7 +42,7 @@ interface IssueTableProps {
 const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
   const [selectedRow, setSelectedRow] = useState<{ id: number } | null>(null);
 
-  console.log("mode", mode);
+  // console.log("mode", mode);
 
   const form = useForm({
     status: "",
@@ -90,26 +92,32 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
 
   // AG Grid column definitions
   const columnDefs: ColDef<Issue>[] = [
-    {
-      headerName: "ID",
-      field: "id",
-      flex: 2,
-      filter: true,
-      cellRenderer: (params: any) => (
-        <IdCellRenderer
-          value={params.value}
-          data={params.data}
-          onOpenRow={onOpenRow}
-        />
-      ),
-    },
+    // {
+    //   headerName: "ID",
+    //   field: "id",
+    //   flex: 2,
+    //   filter: true,
+    //   cellRenderer: (params: any) => (
+    //     <IdCellRenderer
+    //       value={params.value}
+    //       data={params.data}
+    //       onOpenRow={onOpenRow}
+    //     />
+    //   ),
+    // },
     {
       headerName: "Title",
       field: "title",
       flex: 8,
-      filter: true,
-      editable: true,
+      resizable: true,
+      autoHeight: true,
+      editable: false,
+      cellClass: "font-bold",
       singleClickEdit: true,
+      wrapText: true,
+      cellRenderer: (params: any) => (
+        <IdCellRenderer value={params.value} data={params.data} />
+      ),
       onCellValueChanged: (event: any) => {
         const issueId = event.data.id; // Get the issue ID
         const newTitle = event.newValue; // Get the new title
@@ -119,20 +127,20 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
     {
       headerName: "Type",
       field: "type",
-      filter: true,
-      cellClass: "text-center",
+      filter: false,
+      cellClass: "text-left",
       cellRenderer: TypeCellRenderer,
     },
     {
       headerName: "Priority",
       field: "priority",
-      filter: true,
+      filter: false,
       editable: true,
-      cellClass: "text-center",
+      cellClass: "text-left",
       cellEditor: "agSelectCellEditor",
       singleClickEdit: true,
       cellEditorParams: {
-        values: ["high", "medium", "low"],
+        values: ["critical", "normal"],
       },
       onCellValueChanged: (event: any) => {
         const issueId = event.data.id; // Get the issue ID
@@ -151,9 +159,9 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
       headerName: "Status",
       field: "status",
 
-      filter: true,
+      filter: false,
       editable: true,
-      cellClass: "text-center",
+      cellClass: "text-left",
       cellEditor: "agSelectCellEditor",
       singleClickEdit: true,
       cellEditorParams: {
@@ -165,12 +173,30 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
 
         handleStatusChange(issueId, newStatus);
       },
-      cellRenderer: (props: { value: string }) => (
-        <ColoredBadge value={props.value} />
+      cellRenderer: (props: { value: string }) => <div>{props.value}</div>,
+    },
+    {
+      headerName: "Owner",
+      field: "owner_id",
+      cellClass: "text-center",
+      singleClickEdit: true,
+      editable: false,
+      cellEditor: ComboboxEditor,
+      onCellValueChanged: (event: {
+        data: { id: any; status: any };
+        newValue: any;
+      }) => {
+        const issueId = event.data.id; // Get the issue ID
+        const newAssignee = event.newValue; // Get the new assignee
+        const newStatus = event.data.status;
+        handleStatusChange(issueId, newStatus, newAssignee);
+      },
+      cellRenderer: (props: { value: string | undefined }) => (
+        <ExtendedAvatar userFullName={props.value} />
       ),
     },
     {
-      headerName: "Assigned To",
+      headerName: "Assigned to",
       field: "assigned_to",
       cellClass: "text-center",
       singleClickEdit: true,
@@ -190,9 +216,9 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
       ),
     },
     {
-      headerName: "Updated By",
+      headerName: "Created by",
       // @ts-ignore
-      field: "updated_by",
+      field: "created_by",
 
       cellRenderer: (props: { value: string | undefined }) => (
         <ExtendedAvatar userFullName={props.value} />
@@ -204,9 +230,9 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
       cellRenderer: CreatedAtCellRenderer,
     },
     {
-      headerName: "Updated At",
+      headerName: "Last update",
       field: "updated_at",
-      hide: true,
+      cellRenderer: CreatedAtCellRenderer,
     },
   ];
 
@@ -220,6 +246,7 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
     file: issue.file,
     comments: issue.comments,
     activities: issue.activities,
+    owner_id: issue.owner?.name,
     assigned_to: issue.assignee?.name || "N/A",
     created_by: issue.creator.name || "N/A",
     updated_by: issue.updater.name || "N/A",

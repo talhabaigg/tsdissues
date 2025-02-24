@@ -1,0 +1,14 @@
+@import "ag-grid-community/styles/ag-theme-quartz.css"; /* Import the original quartz theme */
+
+.ag-theme-quartz {
+  --ag-cell-horizontal-border: var(--ag-row-border-width)
+  var(--ag-row-border-style) var(--ag-row-border-color); /* Add left and right borders to each cell and use row border's properties  */
+--ag-header-column-separator-display: block;
+}
+
+.ag-theme-quartz-dark {
+  --ag-cell-horizontal-border: var(--ag-row-border-width)
+  var(--ag-row-border-style) var(--ag-row-border-color); /* Add left and right borders to each cell and use row border's properties  */
+--ag-header-column-separator-display: block;
+}
+/*  */

@@ -6,21 +6,22 @@ import {
   TooltipProvider,
 } from "~/components/ui/tooltip";
 import { MessageCircle } from "lucide-react";
+import { Link } from "@inertiajs/react";
 
-const IdCellRenderer = ({ value, data, onOpenRow }: any) => (
+const IdCellRenderer = ({ value, data }: any) => (
   <div className="flex items-center justify-between gap-2">
     <span>{value}</span>
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="w-8 h-8"
-            onClick={() => onOpenRow(data)}
+          <Link
+            href={route("issue.show", data.id)} // Link to the issue details page
+            className=" hover:underline"
           >
-            <MessageCircle />
-          </Button>
+            <Button size="sm" variant="link" className="p-2">
+              Open
+            </Button>
+          </Link>
         </TooltipTrigger>
         <TooltipContent side="right">
           <p>View details</p>

@@ -36,23 +36,16 @@ const IssueFormQR = () => {
       const margin = 20;
 
       // Add header with title
-      pdf.setFontSize(18);
+      pdf.setFontSize(24);
       pdf.setTextColor("#333333");
       pdf.setFont("helvetica", "bold");
-      pdf.text("Systemic Issue Reporting QR Code", pageWidth / 2, margin, {
-        align: "center",
-      });
+      const maxTextWidth = pageWidth - 40; // Keep margins
+      const titleText =
+        "Do you want to fix something in the business? Scan here";
+      const wrappedText = pdf.splitTextToSize(titleText, maxTextWidth);
 
-      // Add subtext below the header
-      pdf.setFontSize(12);
-      pdf.setFont("helvetica", "normal");
-      pdf.setTextColor("#666666");
-      pdf.text(
-        "Use this QR code to access the issue reporting form.",
-        pageWidth / 2,
-        margin + 10,
-        { align: "center" },
-      );
+      // Draw the text centered
+      pdf.text(wrappedText, pageWidth / 2, margin, { align: "center" });
 
       // Draw a border around the QR code
       const qrX = (pageWidth - qrSize) / 2;
