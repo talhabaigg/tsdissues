@@ -109,10 +109,11 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
       headerName: "Title",
       field: "title",
       flex: 8,
-      resizable: true,
+      resizable: false,
       autoHeight: true,
       editable: false,
       cellClass: "font-bold",
+      hide: false,
       singleClickEdit: true,
       wrapText: true,
       cellRenderer: (params: any) => (
@@ -158,7 +159,7 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
     {
       headerName: "Status",
       field: "status",
-
+      hide: false,
       filter: false,
       editable: true,
       cellClass: "text-left",
@@ -181,6 +182,7 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
       cellClass: "text-center",
       singleClickEdit: true,
       editable: false,
+      hide: window.innerWidth <= 768,
       cellEditor: ComboboxEditor,
       onCellValueChanged: (event: {
         data: { id: any; status: any };
@@ -200,6 +202,7 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
       field: "assigned_to",
       cellClass: "text-center",
       singleClickEdit: true,
+      hide: window.innerWidth <= 768,
       editable: true,
       cellEditor: ComboboxEditor,
       onCellValueChanged: (event: {
@@ -219,7 +222,7 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
       headerName: "Created by",
       // @ts-ignore
       field: "created_by",
-
+      hide: window.innerWidth <= 768,
       cellRenderer: (props: { value: string | undefined }) => (
         <ExtendedAvatar userFullName={props.value} />
       ),
@@ -227,11 +230,13 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
     {
       headerName: "Created At",
       field: "created_at",
+      hide: window.innerWidth <= 768,
       cellRenderer: CreatedAtCellRenderer,
     },
     {
       headerName: "Last update",
       field: "updated_at",
+
       cellRenderer: CreatedAtCellRenderer,
     },
   ];
@@ -268,6 +273,7 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
         paginationPageSize={20}
         defaultColDef={{
           flex: 4,
+          hide: window.innerWidth <= 768,
           resizable: false, // Allow resizing columns
         }}
       />
