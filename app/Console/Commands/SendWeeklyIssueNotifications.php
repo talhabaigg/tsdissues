@@ -23,13 +23,16 @@ class SendWeeklyIssueNotifications extends Command
         $owners = User::has('issues')->get();
 
         foreach ($owners as $owner) {
-            $issueCount = $owner->issues()->where('status', '!=', 'resolved')->count();
+            $issues = $owner->issues()->where('status', '!=', 'resolved')->get();
+            $issueCount = $issues->count();
 
             if ($issueCount > 0) {
-                Mail::to($owner->email)->send(new IssueReminder($issueCount));
+
+                Mail::to($owner->email)->send(new IssueReminder($issueCount, $issues));
             }
         }
 
         $this->info('Weekly issue notifications sent.');
     }
+    
 }
