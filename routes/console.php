@@ -1,8 +1,6 @@
 <?php
 
-use Illuminate\Foundation\Inspiring;
+use App\Console\Commands\SendWeeklyIssueNotifications;
 use Illuminate\Support\Facades\Artisan;
 
-Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->purpose('Display an inspiring quote')->hourly();
+Schedule::command(SendWeeklyIssueNotifications::class)->weeklyOn(1, '09:00');
