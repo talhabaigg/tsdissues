@@ -29,6 +29,7 @@ import {
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { set } from "date-fns";
+import { match } from "assert";
 
 interface Issue {
   id: number;
@@ -56,7 +57,7 @@ interface IssuesProps {
 }
 
 export default function Dashboard() {
-  const { issues } = usePage().props;
+  const { issues, auth } = usePage().props;
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [selectedRow, setSelectedRow] = useState<Issue | null>(null);
   const [open, setOpen] = React.useState(false);
@@ -65,10 +66,11 @@ export default function Dashboard() {
   const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
   const [selectedCreator, setSelectedCreator] = useState("");
   const [selectedAssignee, setSelectedAssignee] = useState("");
+  const [selectedOwner, setSelectedOwner] = useState("");
   const [filteredIssues, setFilteredIssues] = useState<Issue[]>(issues.data);
   const [searchQuery, setSearchQuery] = useState(""); // New state for search query
   const moveForm = useForm({ status: "" });
-
+  const isAdmin = auth.user?.roles?.some(role => role.name === 'admin');
   const typeList = [
     { value: "it_hardware", label: "IT Hardware" },
     { value: "product_quality", label: "Product Quality"},
@@ -101,6 +103,7 @@ export default function Dashboard() {
       const matchesAssignee = selectedAssignee
         ? issue.assignee.name === selectedAssignee
         : true;
+        const matchesOwner = selectedOwner? issue.owner.name === selectedOwner : true;
       const matchesTitle = issue.title
         .toLowerCase()
         .includes(searchQuery.toLowerCase()); // Match title with search query
@@ -111,6 +114,7 @@ export default function Dashboard() {
         matchesStatus &&
         matchesCreator &&
         matchesAssignee &&
+        matchesOwner &&
         matchesTitle // Include title match in filter
       );
     });
@@ -126,6 +130,7 @@ export default function Dashboard() {
     selectedStatus,
     selectedCreator,
     selectedAssignee,
+    selectedOwner,
     searchQuery, // Add search query to dependencies
   ]);
   const clearFilters = () => {
@@ -134,6 +139,7 @@ export default function Dashboard() {
     setSelectedStatus([]);
     setSelectedCreator("");
     setSelectedAssignee("");
+    setSelectedOwner("");
     setSearchQuery(""); // Clear search query
     fetchIssues(); // Refetch issues to reset filters
   };
@@ -254,6 +260,26 @@ export default function Dashboard() {
               </SelectContent>
             </Select>
             <Select
+              value={selectedOwner}
+              onValueChange={setSelectedOwner}
+            >
+              <SelectTrigger className="w-[250px] sm:w-[180px]">
+                <SelectValue placeholder="Filter by owner" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Owner</SelectLabel>
+                  {[
+                    ...new Set(issues.data.map((issue) => issue.owner.name)),
+                  ].map((ownerName, index) => (
+                    <SelectItem key={index} value={ownerName}>
+                      {ownerName}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <Select
               value={selectedAssignee}
               onValueChange={setSelectedAssignee}
             >
@@ -276,7 +302,7 @@ export default function Dashboard() {
           </div>
 
           <div className="grid md:grid-cols-2 sm:space-x-2">
-            <IssueFormQR />
+          {isAdmin && <IssueFormQR />}
             <IssueFormModal />
           </div>
         </div>
@@ -296,6 +322,7 @@ export default function Dashboard() {
           <IssueTable
             issues={filteredIssues} // Use filtered issues
             onOpenRow={onOpenRow}
+            isAdmin={isAdmin}
             mode={isDarkMode}
           />
         </TabsContent>

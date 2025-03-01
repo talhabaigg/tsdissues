@@ -37,9 +37,10 @@ interface IssueTableProps {
   issues: Issue[];
   onOpenRow: (issue: Issue) => void;
   mode: boolean;
+  isAdmin: boolean;
 }
 
-const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
+const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmin }) => {
   const [selectedRow, setSelectedRow] = useState<{ id: number } | null>(null);
 
   // console.log("mode", mode);
@@ -111,9 +112,10 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
       flex: 8,
       resizable: false,
       autoHeight: true,
-      editable: false,
+      editable: isAdmin,
       cellClass: "font-bold",
       hide: false,
+      minWidth: 700,
       singleClickEdit: true,
       wrapText: true,
       
@@ -126,6 +128,7 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
     {
       headerName: "Action",
       hide: false,
+      maxWidth: 120,
       cellRenderer: (params: any) => (
         <IdCellRenderer value={params.value} data={params.data} />
       ),
@@ -142,7 +145,7 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
       headerName: "Priority",
       field: "priority",
       filter: false,
-      editable: true,
+      editable: isAdmin,
       cellClass: "text-left",
       cellEditor: "agSelectCellEditor",
       singleClickEdit: true,
@@ -167,7 +170,7 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
       field: "status",
       hide: false,
       filter: false,
-      editable: true,
+      editable: isAdmin,
       cellClass: "text-left",
       cellEditor: "agSelectCellEditor",
       singleClickEdit: true,
@@ -209,7 +212,7 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
       cellClass: "text-center",
       singleClickEdit: true,
       hide: window.innerWidth <= 768,
-      editable: true,
+      editable: isAdmin,
       cellEditor: ComboboxEditor,
       onCellValueChanged: (event: {
         data: { id: any; status: any };
@@ -273,11 +276,14 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
       style={{ height: 750, width: "100%" }}
     >
       <AgGridReact
+      
+        suppressAutoSize={true}
         columnDefs={columnDefs}
         rowData={rowData}
         pagination={true}
         paginationPageSize={20}
         defaultColDef={{
+          minWidth: 150,
           flex: 4,
           hide: window.innerWidth <= 768,
           resizable: false, // Allow resizing columns
