@@ -106,7 +106,7 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
     //   ),
     // },
     {
-      headerName: "Title",
+      headerName: "Name",
       field: "title",
       flex: 8,
       resizable: false,
@@ -116,15 +116,21 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode }) => {
       hide: false,
       singleClickEdit: true,
       wrapText: true,
-      cellRenderer: (params: any) => (
-        <IdCellRenderer value={params.value} data={params.data} />
-      ),
+      
       onCellValueChanged: (event: any) => {
         const issueId = event.data.id; // Get the issue ID
         const newTitle = event.newValue; // Get the new title
         handleStatusChange(issueId, undefined, undefined, undefined, newTitle);
       },
     },
+    {
+      headerName: "Action",
+      hide: false,
+      cellRenderer: (params: any) => (
+        <IdCellRenderer value={params.value} data={params.data} />
+      ),
+    },
+    
     {
       headerName: "Type",
       field: "type",

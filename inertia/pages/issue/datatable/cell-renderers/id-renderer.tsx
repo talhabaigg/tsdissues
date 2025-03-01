@@ -10,7 +10,7 @@ import { Link } from "@inertiajs/react";
 
 const IdCellRenderer = ({ value, data }: any) => (
   <div className="flex items-center justify-between gap-2">
-    <span>{value}</span>
+   
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger>
@@ -18,8 +18,8 @@ const IdCellRenderer = ({ value, data }: any) => (
             href={route("issue.show", data.id)} // Link to the issue details page
             className=" hover:underline"
           >
-            <Button size="sm" variant="link" className="p-2">
-              Open
+            <Button size="sm" variant="outline" className="p-2">
+              Open Issue
             </Button>
           </Link>
         </TooltipTrigger>

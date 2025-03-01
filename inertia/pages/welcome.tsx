@@ -52,7 +52,7 @@ export default function Welcome({
                   href={route("login")}
                   className="rounded-md px-3 py-2  text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
                 >
-                  Log in
+                  Log in to access Issues log
                 </Link>
                 {/* <Link
                   href={route("register")}
@@ -101,7 +101,7 @@ export default function Welcome({
                   {!flash.success && !loading && (
                     <div>
                       <h2 className="text-white font-bold text-left text-4xl">
-                        ISSUE LOG
+                        REPORT A COMPANY ISSUE
                       </h2>
                       <div className="bg-gray-50 p-4 rounded-2xl shadow-2xl ">
                         <IssueForm issue={null} />

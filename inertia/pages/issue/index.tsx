@@ -4,6 +4,8 @@ import IssueTable from "~/pages/issue/datatable/issues-data-table";
 import IssueFormModal from "~/components/issue-form-modal";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { KanbanBoard } from "~/components/KanbanBoard";
+import { MultiSelect } from "~/components/multi-select";
+import { Cat, Dog, Fish, Rabbit, Turtle } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -26,6 +28,7 @@ import {
 } from "~/components/ui/select";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
+import { set } from "date-fns";
 
 interface Issue {
   id: number;
@@ -57,22 +60,38 @@ export default function Dashboard() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [selectedRow, setSelectedRow] = useState<Issue | null>(null);
   const [open, setOpen] = React.useState(false);
-  const [selectedType, setSelectedType] = useState("");
+  const [selectedType, setSelectedType] = useState<string[]>([]);
   const [selectedPriority, setSelectedPriority] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
   const [selectedCreator, setSelectedCreator] = useState("");
   const [selectedAssignee, setSelectedAssignee] = useState("");
   const [filteredIssues, setFilteredIssues] = useState<Issue[]>(issues.data);
   const [searchQuery, setSearchQuery] = useState(""); // New state for search query
   const moveForm = useForm({ status: "" });
 
+  const typeList = [
+    { value: "it_hardware", label: "IT Hardware" },
+    { value: "product_quality", label: "Product Quality"},
+    { value: "it_applications", label: "IT Applications" },
+    { value: "warehouse_operations", label: "Warehouse Operations" },
+    { value: "safety", label: "Safety" },
+  ];
+  const statusList = [
+    { value: "active", label: "Active" },
+    { value: "pending", label: "Pending" },
+    { value: "resolved", label: "Resolved" },
+ 
+  ];
   // Fetch and filter issues based on selected filters and search query
   const fetchIssues = () => {
     const newFilteredIssues = issues.data.filter((issue) => {
-      const matchesType = selectedType ? issue.type === selectedType : true;
-      const matchesStatus = selectedStatus
-        ? issue.status === selectedStatus
-        : true;
+      const matchesType = selectedType.length > 0
+      ? selectedType.includes(issue.type) // Check if the issue's type is in the selected types
+      : true;
+      const matchesStatus = selectedStatus.length > 0
+      ? selectedStatus.includes(issue.status) // Check if the issue's status is in the selected statuses
+      : true;
+    
       const matchesPriority = selectedPriority
         ? issue.priority === selectedPriority
         : true;
@@ -110,9 +129,9 @@ export default function Dashboard() {
     searchQuery, // Add search query to dependencies
   ]);
   const clearFilters = () => {
-    setSelectedType("");
+    setSelectedType([]);
     setSelectedPriority("");
-    setSelectedStatus("");
+    setSelectedStatus([]);
     setSelectedCreator("");
     setSelectedAssignee("");
     setSearchQuery(""); // Clear search query
@@ -182,29 +201,25 @@ export default function Dashboard() {
       <Tabs defaultValue="table" className="w-full">
         <div className="flex justify-between">
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-2">
-            <Select value={selectedType} onValueChange={setSelectedType}>
-              <SelectTrigger className="w-[250px] sm:w-[180px]">
-                <SelectValue placeholder="Filter by type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Types</SelectLabel>
-                  <SelectItem value="it_hardware">IT Hardware</SelectItem>
-                  <SelectItem value="product_quality">
-                    Product Quality
-                  </SelectItem>
-                  <SelectItem value="it_applications">
-                    IT Applications
-                  </SelectItem>
-                  <SelectItem value="warehouse_operations">
-                    Warehouse Operations
-                  </SelectItem>
-                  <SelectItem value="human_resources">
-                    Human resources
-                  </SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            
+            <MultiSelect
+                options={typeList}
+                onValueChange={setSelectedType} 
+                defaultValue={selectedType}
+                placeholder="Filter by type"
+                variant="inverted"
+                animation={2}
+                maxCount={2}
+              />
+               <MultiSelect
+                options={statusList}
+                onValueChange={setSelectedStatus}
+                defaultValue={selectedType}
+                placeholder="Filter by status"
+                variant="inverted"
+                animation={2}
+                maxCount={2}
+              />
             <Select
               value={selectedPriority}
               onValueChange={setSelectedPriority}
@@ -220,19 +235,7 @@ export default function Dashboard() {
                 </SelectGroup>
               </SelectContent>
             </Select>
-            <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-              <SelectTrigger className="w-[250px] sm:w-[180px]">
-                <SelectValue placeholder="Filter by status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Status</SelectLabel>
-                  <SelectItem value="pending">Pending</SelectItem>
-                  <SelectItem value="active">Active</SelectItem>
-                  <SelectItem value="resolved">Resolved</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+           
             <Select value={selectedCreator} onValueChange={setSelectedCreator}>
               <SelectTrigger className="w-[250px] sm:w-[180px]">
                 <SelectValue placeholder="Filter by creator" />

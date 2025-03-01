@@ -42,7 +42,7 @@ const IssueForm = ({ issue }: { issue: Issue | null }) => {
     { value: "it_hardware", label: "IT Hardware" },
     { value: "it_software", label: "IT Applications" },
     { value: "warehouse_operations", label: "Warehouse Operations" },
-    { value: "human_resources", label: "Human Resources" },
+    { value: "safety", label: "Safety" },
   ];
 
   const priorityOptions = [
@@ -75,7 +75,7 @@ const IssueForm = ({ issue }: { issue: Issue | null }) => {
   return (
     <form onSubmit={submit} className="space-y-4">
       {/* Issue Type */}
-      <Label>REPORT A NEW ISSUE</Label>
+      
       <div>
         <Label htmlFor="type">Issue Type</Label>
         <Select
@@ -98,11 +98,11 @@ const IssueForm = ({ issue }: { issue: Issue | null }) => {
 
       {/* Issue Name */}
       <div>
-        <Label htmlFor="name">Issue Title</Label>
+        <Label htmlFor="name">Issue Name</Label>
         <Input
           id="name"
           type="text"
-          placeholder="Enter issue title"
+          placeholder="Enter issue name"
           value={data.name}
           onChange={(e) => setData("name", e.target.value.slice(0, 50))}
           maxLength={50}
@@ -169,7 +169,7 @@ const IssueForm = ({ issue }: { issue: Issue | null }) => {
           onChange={handleCheckboxChange}
         />
         <Label htmlFor="terms">
-          I confirm, this is not part of an individual customer credit request.
+        I confirm, this is a public company issue, not a confidential issue that should be handled with a manager.
         </Label>
       </div>
 

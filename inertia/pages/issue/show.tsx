@@ -18,6 +18,7 @@ import {
   TableBody,
   TableCell,
 } from "~/components/ui/table";
+import { FilePreview } from "~/components/comment-file-preview";
 import IssueSheetTabs from "./partials/sheet-tabs";
 import IssueCommentBox from "~/components/issue-comment-box";
 export default function show({ issue }) {
@@ -69,6 +70,17 @@ export default function show({ issue }) {
                   <TableHead className="">Assigned to</TableHead>
                   <TableCell className="font-medium">
                     {issue.assignee?.name || "Unassigned"}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableHead className="">File</TableHead>
+                  <TableCell className="font-medium">
+
+                    {issue.file ? (
+                     <FilePreview file={issue.file} />
+                    ) : (
+                      "No file attached"
+                    )}
                   </TableCell>
                 </TableRow>
               </TableBody>

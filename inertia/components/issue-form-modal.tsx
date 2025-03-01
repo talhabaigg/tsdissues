@@ -6,7 +6,7 @@ const IssueFormModal = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Report new</Button>
+        <Button variant="outline">Report new issue</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <IssueForm />
