@@ -17,7 +17,7 @@ class IssueReminder extends Mailable
 
     public function build()
     {
-        return $this->subject('You Have Issues to Review')
+        return $this->subject("You Have {$this->issueCount} Company Issues to Review")
                     ->view('emails.issueReminder')
                     ->with([
                         'issueCount' => $this->issueCount,

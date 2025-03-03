@@ -17,12 +17,13 @@
     </style>
 </head>
 <body>
-    <p>You have {{ $issueCount }} issues to review:</p>
+    
+    <p>You have {{ $issueCount }} company issues to review:</p>
 
     <table>
         <thead>
             <tr>
-                <th>Issue Title</th>
+                <th>Issue Name</th>
                 <th>Status</th>
                 <th>Action</th>
             </tr>

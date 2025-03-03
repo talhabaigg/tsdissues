@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Foundation\Auth\User;
+
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Spatie\Permission\Models\Role;
+use App\Models\User;
 
 class UserController extends Controller
 {
@@ -12,7 +15,13 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $users = User::with('roles')->get();
+
+        $roles = Role::all();
+        return Inertia::render('user/index', [
+            'users' => $users,
+            'roles' => $roles
+        ]);
     }
 
     /**
@@ -68,5 +77,12 @@ class UserController extends Controller
         return response()->json([
             'users' => User::all()
         ]);
+    }
+
+    public function updateRole(Request $request): void
+    {
+        $user = User::find($request->id);
+        $user->syncRoles([$request->role]);
+        return;
     }
 }

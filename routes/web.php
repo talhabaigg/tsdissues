@@ -30,8 +30,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::post('/update-role', [UserController::class, 'updateRole'])->name('users.updateRole');
 });
 Route::resource('issue', IssueController::class)->middleware(['auth', 'verified']);
+
 // web.php
 Route::post('/issues/{id}/update-status', [IssueController::class, 'updateStatus'])->name('issues.updateStatus');
 Route::post('/issue-comments', [IssueCommentController::class, 'store'])->name('issue-comments.store');
