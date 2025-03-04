@@ -1,6 +1,6 @@
 "use client";
 
-import { BadgeCheck, ChevronsUpDown, LogOut } from "lucide-react";
+import { BadgeCheck, ChevronsUpDown, LogOut, User } from "lucide-react";
 import { Link } from "@inertiajs/react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
@@ -81,6 +81,14 @@ export function NavUser({
                 <DropdownMenuItem>
                   <BadgeCheck />
                   Account
+                </DropdownMenuItem>
+              </Link>
+            </DropdownMenuGroup>
+            <DropdownMenuGroup>
+              <Link href={route("users.index")}>
+                <DropdownMenuItem>
+                  <User />
+                  Manage users
                 </DropdownMenuItem>
               </Link>
             </DropdownMenuGroup>

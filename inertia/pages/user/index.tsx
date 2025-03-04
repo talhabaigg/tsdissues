@@ -6,9 +6,10 @@ import "ag-grid-community/styles/ag-theme-quartz.css";
 import "~/css/custom-ag-grid-theme.css"; // Import your custom theme
 import { ColDef } from "ag-grid-community";
 import AuthenticatedLayout from "~/components/layouts/authenticated-layout";
-import { Head } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
 import { useForm } from "@inertiajs/react";
 import { toast } from "sonner";
+import { Button } from "~/components/ui/button";
 interface Role {
   name: string;
 }
@@ -95,6 +96,12 @@ const UsersTable: React.FC<UserTableProps> = ({ users, roles }) => {
   return (
     <AuthenticatedLayout>
       <Head title="View Users" />
+      <div className="flex justify-end items-center mb-2">
+        <Link href="/users/create">
+          <Button variant="outline">Add user</Button>
+        </Link>
+      </div>
+
       <div
         className={`${isDarkMode ? "ag-theme-quartz-dark" : "ag-theme-quartz"}`}
         style={{ height: 750, width: "100%" }}

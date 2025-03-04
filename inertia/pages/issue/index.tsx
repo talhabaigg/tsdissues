@@ -70,10 +70,10 @@ export default function Dashboard() {
   const [filteredIssues, setFilteredIssues] = useState<Issue[]>(issues.data);
   const [searchQuery, setSearchQuery] = useState(""); // New state for search query
   const moveForm = useForm({ status: "" });
-  const isAdmin = auth.user?.roles?.some(role => role.name === 'admin');
+  const isAdmin = auth.user?.roles?.some((role) => role.name === "admin");
   const typeList = [
     { value: "it_hardware", label: "IT Hardware" },
-    { value: "product_quality", label: "Product Quality"},
+    { value: "product_quality", label: "Product Quality" },
     { value: "it_applications", label: "IT Applications" },
     { value: "warehouse_operations", label: "Warehouse Operations" },
     { value: "safety", label: "Safety" },
@@ -82,18 +82,19 @@ export default function Dashboard() {
     { value: "active", label: "Active" },
     { value: "pending", label: "Pending" },
     { value: "resolved", label: "Resolved" },
- 
   ];
   // Fetch and filter issues based on selected filters and search query
   const fetchIssues = () => {
     const newFilteredIssues = issues.data.filter((issue) => {
-      const matchesType = selectedType.length > 0
-      ? selectedType.includes(issue.type) // Check if the issue's type is in the selected types
-      : true;
-      const matchesStatus = selectedStatus.length > 0
-      ? selectedStatus.includes(issue.status) // Check if the issue's status is in the selected statuses
-      : true;
-    
+      const matchesType =
+        selectedType.length > 0
+          ? selectedType.includes(issue.type) // Check if the issue's type is in the selected types
+          : true;
+      const matchesStatus =
+        selectedStatus.length > 0
+          ? selectedStatus.includes(issue.status) // Check if the issue's status is in the selected statuses
+          : true;
+
       const matchesPriority = selectedPriority
         ? issue.priority === selectedPriority
         : true;
@@ -103,7 +104,9 @@ export default function Dashboard() {
       const matchesAssignee = selectedAssignee
         ? issue.assignee.name === selectedAssignee
         : true;
-        const matchesOwner = selectedOwner? issue.owner.name === selectedOwner : true;
+      const matchesOwner = selectedOwner
+        ? issue.owner.name === selectedOwner
+        : true;
       const matchesTitle = issue.title
         .toLowerCase()
         .includes(searchQuery.toLowerCase()); // Match title with search query
@@ -206,26 +209,27 @@ export default function Dashboard() {
       </Sheet>
       <Tabs defaultValue="table" className="w-full">
         <div className="flex justify-between">
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-2">
-            
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 xlg:grid-cols-8  gap-2">
             <MultiSelect
-                options={typeList}
-                onValueChange={setSelectedType} 
-                defaultValue={selectedType}
-                placeholder="Filter by type"
-                variant="inverted"
-                animation={2}
-                maxCount={2}
-              />
-               <MultiSelect
-                options={statusList}
-                onValueChange={setSelectedStatus}
-                defaultValue={selectedType}
-                placeholder="Filter by status"
-                variant="inverted"
-                animation={2}
-                maxCount={2}
-              />
+              options={typeList}
+              onValueChange={setSelectedType}
+              defaultValue={selectedType}
+              placeholder="Filter by type"
+              variant="inverted"
+              animation={2}
+              maxCount={2}
+              className="col-span-1 sm:col-span-2"
+            />
+            <MultiSelect
+              options={statusList}
+              onValueChange={setSelectedStatus}
+              defaultValue={selectedType}
+              placeholder="Filter by status"
+              variant="inverted"
+              animation={2}
+              maxCount={2}
+              className="col-span-1 sm:col-span-2"
+            />
             <Select
               value={selectedPriority}
               onValueChange={setSelectedPriority}
@@ -241,7 +245,7 @@ export default function Dashboard() {
                 </SelectGroup>
               </SelectContent>
             </Select>
-           
+
             <Select value={selectedCreator} onValueChange={setSelectedCreator}>
               <SelectTrigger className="w-[250px] sm:w-[180px]">
                 <SelectValue placeholder="Filter by creator" />
@@ -259,10 +263,7 @@ export default function Dashboard() {
                 </SelectGroup>
               </SelectContent>
             </Select>
-            <Select
-              value={selectedOwner}
-              onValueChange={setSelectedOwner}
-            >
+            <Select value={selectedOwner} onValueChange={setSelectedOwner}>
               <SelectTrigger className="w-[250px] sm:w-[180px]">
                 <SelectValue placeholder="Filter by owner" />
               </SelectTrigger>
@@ -301,8 +302,8 @@ export default function Dashboard() {
             </Select>
           </div>
 
-          <div className="grid md:grid-cols-2 sm:space-x-2">
-          {isAdmin && <IssueFormQR />}
+          <div className="flex flex-col sm:flex-row  gap-2">
+            {isAdmin && <IssueFormQR />}
             <IssueFormModal />
           </div>
         </div>

@@ -42,12 +42,8 @@ function Layout({ children }: { children: React.ReactNode }) {
   };
 
   // Set dynamic breadcrumbs based on the URL
+  // Set dynamic breadcrumbs based on the URL
   const breadcrumbs = [
-    {
-      label: "Dashboard",
-      route: "dashboard",
-      isActive: url.includes("dashboard"),
-    },
     ...(url.includes("issue") // Check if the current URL includes "issue"
       ? [
           {
@@ -64,6 +60,25 @@ function Layout({ children }: { children: React.ReactNode }) {
             route: "profile.index",
             isActive: url.includes("profile"),
           },
+        ]
+      : []),
+    ...(url.includes("users") // Check if the current URL includes "users"
+      ? [
+          {
+            label: "Users",
+            route: "users.index",
+            isActive: url.includes("users") && !url.includes("create"), // Ensures "Users" shows on the index page, not on "create"
+          },
+          // Only show "Create" if the URL contains "create"
+          ...(url.includes("create")
+            ? [
+                {
+                  label: "Create",
+                  route: "users.create",
+                  isActive: true, // Active when on the create page
+                },
+              ]
+            : []),
         ]
       : []),
   ];

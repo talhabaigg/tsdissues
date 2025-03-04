@@ -72,9 +72,9 @@ class Issue extends Model
         $userAssignment = [
             'product_quality' => 1, // User ID for Product Quality
             'it_hardware' => 1,     // User ID for IT Hardware
-            'system' => 1,          // User ID for System issues
+            'warehouse_operations' => 1,          // User ID for System issues
             'it_applications' => 1,     // User ID for IT Software
-            'human_resources' => 1, // User ID for Human Resources
+            'safety' => 1, // User ID for Human Resources
         ];
 
         // Return the corresponding user ID or null if not found

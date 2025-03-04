@@ -29,7 +29,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('user/create');
     }
 
     /**
@@ -37,7 +37,14 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
+
+        $user = User::create($validated);
+        return redirect()->route('users.index')->with('success', 'User created successfully');
     }
 
     /**
