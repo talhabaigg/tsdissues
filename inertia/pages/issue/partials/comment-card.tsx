@@ -32,7 +32,7 @@ const CommentCard = ({ comment }: { comment: Comment }) => {
     <Card className="space-y-2 p-2 mb-2">
       {/* Avatar */}
       <div className="flex items-center gap-2">
-        <SmallAvatar userFullName={comment.creator.name} />
+        <SmallAvatar user={comment.creator} />
         <div>
           <p>{comment.creator.name}</p>
           <p className="text-[10px] -mt-1 font-light">{timeAgo}</p>
