@@ -56,8 +56,9 @@ export function ComboboxEditor({ value, onValueChange }: ComboboxEditorProps) {
           aria-expanded={open}
           className="w-full justify-between"
         >
-          {value
-            ? users.find((user) => user.value === value)?.label
+          {value && value !== ""
+            ? users.find((user) => user.value === value)?.label ||
+              "Select user..."
             : "Select user..."}
           <ChevronsUpDown className="opacity-50" />
         </Button>
