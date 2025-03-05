@@ -1,16 +1,17 @@
 const FilePreview = ({ file }: { file: File | string }) => {
   // Logic for rendering file preview
-  // Similar to the renderFilePreview function you previously had
   const renderFilePreview = (file: File | string | null) => {
     if (!file) return null;
 
-    const BASE_URL = `${window.location.origin}/storage/`;
+    // If file is a string and starts with https://, it's a URL (e.g., S3 URL)
+    const isFullUrl = typeof file === "string" && file.startsWith("https://");
+    const fileUrl = isFullUrl
+      ? file
+      : file instanceof File
+      ? URL.createObjectURL(file) // For file objects, create a temporary URL
+      : `${window.location.origin}/storage/${file}`; // Assuming file path
 
     const isFileObject = file instanceof File;
-    const fileUrl = isFileObject
-      ? URL.createObjectURL(file)
-      : `${BASE_URL}${file}`;
-
     const fileType = isFileObject
       ? file.type.split("/")[0]
       : file.split(".").pop()?.toLowerCase();

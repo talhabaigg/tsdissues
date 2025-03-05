@@ -78,7 +78,7 @@ class Issue extends Model
         ];
 
         // Return the corresponding user ID or null if not found
-        return $userAssignment[$type] ?? null;
+        return $userAssignment[$type] ?? 1;
     }
 
     public function assignee()

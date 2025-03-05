@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use App\Models\Issue;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class IssueController extends Controller
 {
@@ -16,6 +17,7 @@ class IssueController extends Controller
     {
         // Fetch all issues, you can paginate or filter as needed
         $issues = Issue::with('user', 'owner', 'assignee', 'creator', 'updater', 'comments.creator', 'activities.user') // Load related user if there's a relationship
+            ->orderBy('status', 'asc')
             ->orderBy('created_at', 'desc')
             ->paginate(1000); // Adjust pagination as needed
 
@@ -45,7 +47,6 @@ class IssueController extends Controller
             'priority' => 'required',
             'description' => 'required|string',
             'file' => 'nullable|file|mimes:jpg,png,pdf,mp4|max:20480', // Adjust based on your file types
-
         ]);
         // dd($validated);
         if ($request->id) {
@@ -71,11 +72,16 @@ class IssueController extends Controller
                 $file = $request->file('file');
                 $originalFilename = $file->getClientOriginalName(); // Get the original file name
                 $newFilename = 'issue_' . $issue->id . '_' . $originalFilename; // Add prefix
-                $filePath = $file->storeAs('issues', $newFilename, 'public'); // Save file with new name
-                // dd($filePath);
+
+                // Upload file with public visibility
+                Storage::disk('s3')->put('issues/' . $newFilename, file_get_contents($file), 'public');
+
+                // Get the URL of the uploaded file
+                $fileUrl = Storage::disk('s3')->url('issues/' . $newFilename);
+
                 // Update the issue with the file path
                 $issue->update([
-                    'file' => $filePath,
+                    'file' => $fileUrl,
                 ]);
             }
             if (!Auth::check()) {
