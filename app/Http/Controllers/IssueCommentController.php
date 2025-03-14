@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Inertia\Inertia;
+use App\Models\Issue;
+use Illuminate\Support\Str;
 use App\Models\IssueComment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
-
+use App\Notifications\NewIssueCommentNotification;
+use Illuminate\Support\Collection;
 class IssueCommentController extends Controller
 {
     public function store(Request $request): void
@@ -37,19 +40,20 @@ class IssueCommentController extends Controller
             'text' => $validated['text'],
             'file' => $filePath ? Storage::disk('s3')->url('comments/' . $newFilename) : null,
         ]);
+        $issue = Issue::with('owner')->find($validated['issue_id']); // Ensure owner relation is loaded
+        $commenterId = auth()->id();
+        $owner = $issue->owner; // Owner is stored in `$issue->owner`
+        $assignee = $issue->assigned_to ? User::find($issue->assigned_to) : null; // Get assignee if set
 
+        $recipients = collect([$owner, $assignee])
+            ->filter(fn($user) => $user && $user->id !== $commenterId) // Remove nulls and commenter
+            ->unique('id'); // Ensure unique recipients
+
+        // Send notifications
+        $recipients->each(fn($recipient) => $recipient->notify(new NewIssueCommentNotification($comment)));
         return;
     }
 
-    public function latest()
-    {
-        $comments = IssueComment::with(['creator', 'issue'])
-            ->orderBy('created_at', 'desc')
-            ->limit(5)
-            ->get();
-        // dd($comments);
 
-        return response()->json($comments);
-    }
 
 }

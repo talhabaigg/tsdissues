@@ -7,7 +7,8 @@ use App\Models\Issue;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-
+use App\Models\User;
+use App\Notifications\AssignedIssueNotification;
 class IssueController extends Controller
 {
     /**
@@ -145,14 +146,16 @@ class IssueController extends Controller
 
 
         $issue = Issue::findOrFail($id);
-        $issue->update($validated);
-        // $issue = Issue::findOrFail($id);
-        // $issue->status = $validated['status'];
-        // if ($validated['assigned_to']) {
-        //     $issue->assigned_to = $validated['assigned_to'];
-        // }
+        $previousAssignee = $issue->assigned_to;
 
-        // $issue->save();
+        $issue->update($validated);
+        // Check if 'assigned_to' changed
+        if (!empty($validated['assigned_to']) && $previousAssignee != $validated['assigned_to']) {
+            $assignedUser = User::find($validated['assigned_to']);
+            if ($assignedUser) {
+                $assignedUser->notify(new AssignedIssueNotification($issue));
+            }
+        }
 
         return;
     }
