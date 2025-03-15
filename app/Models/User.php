@@ -53,4 +53,9 @@ class User extends Authenticatable
     public function issues() {
         return $this->hasMany(Issue::class, 'owner_id');
     }
+
+    public function isAdmin()
+    {
+        return $this->hasRole('admin');
+    }
 }

@@ -9,24 +9,35 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 use App\Notifications\AssignedIssueNotification;
+use Illuminate\Support\Facades\Log;
 class IssueController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
-    {
-        // Fetch all issues, you can paginate or filter as needed
-        $issues = Issue::with('user', 'owner', 'assignee', 'creator', 'updater', 'comments.creator', 'activities.user') // Load related user if there's a relationship
-            ->orderBy('status', 'asc')
-            ->orderBy('created_at', 'desc')
-            ->paginate(1000); // Adjust pagination as needed
+{
+    $user = Auth::user();
 
-        // Pass data to the Inertia view
-        return Inertia::render('issue/index', [
-            'issues' => $issues,
-        ]);
+    // Fetch issues based on role
+    $issuesQuery = Issue::with([
+        'user', 'owner', 'assignee', 'creator', 'updater', 'comments.creator', 'activities.user'
+    ])
+    ->orderBy('status', 'asc')
+    ->orderBy('created_at', 'desc');
+
+    // If user is not an admin, restrict to only their created issues
+    if (!$user->isAdmin()) {
+        $issuesQuery->where('created_by', $user->id);
     }
+
+    $issues = $issuesQuery->paginate(1000); // Adjust pagination as needed
+
+    // Pass data to the Inertia view
+    return Inertia::render('issue/index', [
+        'issues' => $issues,
+    ]);
+}
 
     /**
      * Show the form for creating a new resource.
@@ -48,8 +59,14 @@ class IssueController extends Controller
             'priority' => 'required',
             'description' => 'required|string',
             'file' => 'nullable|file|mimes:jpg,png,pdf,mp4|max:20480', // Adjust based on your file types
+            'fullName' => 'nullable|string',
+            'email' => 'nullable|email',
         ]);
-        // dd($validated);
+        
+        
+        // Log the validated data
+        \Log::info('Validated Issue Data:', $validated);
+
         if ($request->id) {
             $issue = Issue::findOrFail($request->id);  // Find the issue by ID
             $issue->update([  // Update the issue with new data
@@ -60,6 +77,21 @@ class IssueController extends Controller
             ]);
             return redirect()->route('issue.index')->with('success', 'Issue updated successfully');
         } else {
+            $user = User::firstorCreate([
+                'email' => $request->email,
+            ], [
+                'name' => $request->fullName,
+                'password' => bcrypt('password'),
+            ]);
+            
+            $owners = [
+                'it_application' => 1,
+                'warehouse_operations' => 2,
+                'safety' => 1,
+                'it_hardware' => 1,
+                'product_quality' => 1,
+            ];
+            $ownerId = $owners[$request->type] ?? 1; 
             // If no ID, create a new issue
             $issue = Issue::create([
                 'type' => $request->type,
@@ -67,8 +99,12 @@ class IssueController extends Controller
                 'priority' => $request->priority,
                 'status' => 'pending',  // Default status
                 'description' => $request->description,
+                'created_by' => $user->id,
+                'owner_id' => $ownerId,
+                'assigned_to' => $ownerId,
+                'updated_by' => $user->id,
             ]);
-
+            
             if ($request->hasFile('file')) {
                 $file = $request->file('file');
                 $originalFilename = $file->getClientOriginalName(); // Get the original file name

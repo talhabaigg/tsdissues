@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Skeleton } from "~/components/ui/skeleton";
 import ApplicationLogo from "~/components/application-logo";
 
+
 export default function Welcome({
   auth,
   laravelVersion,
@@ -13,8 +14,8 @@ export default function Welcome({
 }: PageProps<{ laravelVersion: string; phpVersion: string }>) {
   const { props } = usePage();
   const { flash = {} } = props as unknown as { flash: { success?: string } }; // Add a default value for flash
-  console.log(props);
-
+  const { isLoggedIn } = props as { isLoggedIn: boolean };
+  console.log(isLoggedIn);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -99,12 +100,12 @@ export default function Welcome({
                     </div>
                   )}
                   {!flash.success && !loading && (
-                    <div>
-                      <h2 className="text-white font-bold text-left text-4xl">
+                    <div className="px-2 sm:px-0">
+                      <h2 className="text-white font-bold text-left text-2xl">
                         REPORT A COMPANY ISSUE
                       </h2>
                       <div className="bg-gray-50 p-4 rounded-2xl shadow-2xl ">
-                        <IssueForm issue={null} />
+                        <IssueForm issue={null} loggedIn={isLoggedIn} />
                       </div>
                     </div>
                   )}

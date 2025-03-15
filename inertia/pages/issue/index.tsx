@@ -304,7 +304,7 @@ export default function Dashboard() {
 
           <div className="flex flex-col sm:flex-row  gap-2">
             {isAdmin && <IssueFormQR />}
-            <IssueFormModal />
+            <IssueFormModal loggedIn={true} />
           </div>
         </div>
         <div className="flex gap-2 items-center">

@@ -9,7 +9,9 @@ import {
 } from "~/components/ui/card";
 import { Head } from "@inertiajs/react";
 import IssueForm from "~/components/issue-form";
+import { usePage } from "@inertiajs/react";
 export default function Dashboard() {
+  
   return (
     <AuthenticatedLayout>
       <Head title="Report an Issue" />
@@ -23,7 +25,7 @@ export default function Dashboard() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <IssueForm />
+            <IssueForm loggedIn={loggedIn}/>
           </CardContent>
         </Card>
       </div>

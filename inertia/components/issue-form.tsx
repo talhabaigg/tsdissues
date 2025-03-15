@@ -23,8 +23,11 @@ interface Issue {
   description: string;
   file: string;
 }
-
-const IssueForm = ({ issue }: { issue: Issue | null }) => {
+interface IssueFormProps {
+  issue: Issue | null;
+  loggedIn: boolean; // Add this prop to indicate if the user is logged in
+}
+const IssueForm = ({ issue, loggedIn }:  IssueFormProps) => {
   // Determine if the form is in "edit" or "create" mode
   const isEditing = !!issue;
 
@@ -35,6 +38,8 @@ const IssueForm = ({ issue }: { issue: Issue | null }) => {
     priority: isEditing ? issue.priority : "",
     description: isEditing ? issue.description : "",
     file: isEditing ? issue.file : "", // No pre-filled attachments for editing (can handle as needed)
+     fullName: "",
+    email: "",
   });
 
   const issueTypes = [
@@ -159,7 +164,38 @@ const IssueForm = ({ issue }: { issue: Issue | null }) => {
         />
         {errors.file && <div className="text-red-600">{errors.file}</div>}
       </div>
+{/* Display Full Name and Email if not logged in */}
+{!loggedIn && (
+        <>
+          <div>
+            <Label htmlFor="fullName">Full Name</Label>
+            <Input
+              id="fullName"
+              type="text"
+              placeholder="Enter your full name"
+              value={data.fullName}
+              onChange={(e) => setData("fullName", e.target.value)}
+              required
+            />
+            {errors.fullName && (
+              <div className="text-red-600">{errors.fullName}</div>
+            )}
+          </div>
 
+          <div>
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="Enter your email"
+              value={data.email}
+              onChange={(e) => setData("email", e.target.value)}
+              required
+            />
+            {errors.email && <div className="text-red-600">{errors.email}</div>}
+          </div>
+        </>
+      )}
       {/* Checkbox for confirmation */}
       <div className="flex items-center space-x-2">
         <input

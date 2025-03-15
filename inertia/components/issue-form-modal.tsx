@@ -9,7 +9,7 @@ const IssueFormModal = () => {
         <Button variant="outline">Report new issue</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <IssueForm />
+        <IssueForm loggedIn={true}/>
       </DialogContent>
     </Dialog>
   );

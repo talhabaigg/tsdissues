@@ -17,6 +17,7 @@ Route::get('/', function () {
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
+        'isLoggedIn' => auth()->check(),
     ]);
 })->name('welcome');
 
@@ -36,7 +37,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
     Route::post('/update-role', [UserController::class, 'updateRole'])->name('users.updateRole');
 });
-Route::resource('issue', IssueController::class)->middleware(['auth', 'verified']);
+Route::resource('issue', IssueController::class);
+Route::post('/issue/store', [IssueController::class, 'store'])->name('issue.store');
 
 // web.php
 Route::post('/issues/{id}/update-status', [IssueController::class, 'updateStatus'])->name('issues.updateStatus');

@@ -17,6 +17,8 @@ class Issue extends Model
         'priority',
         'status',
         'assigned_to',
+        'created_by',
+        'owner_id',
         'updated_by',
 
     ];
@@ -24,46 +26,32 @@ class Issue extends Model
 
     protected static function booted()
     {
-        static::creating(function ($issue) {
-            // Set created_by when creating the issue
-            if ($issue->type) {
-                // Ensure $type is not null before calling getUserForIssueType
-                $issue->owner_id = $issue->getUserForIssueType($issue->type);
-                $issue->assigned_to = $issue->getUserForIssueType($issue->type);
-            } else {
-                // Handle case when type is null, if needed
-                $issue->assigned_to = null; // Or assign a default user ID, e.g., 1
-            }
-            $issue->updated_by = Auth::id() ?? 1;
-            $issue->created_by = Auth::id() ?? 1; // Or assign a default user ID, e.g., 1
-            $issue_id = $issue->id;
+        
+        // static::created(function ($issue) {
+        //     // Now that the issue is created, log the activity
+        //     $issue->addActivity('created', null, $issue->toJson(), $issue->id);
+        // });
+        // static::updating(function ($issue) {
+        //     // Set updated_by when updating the issue
+        //     $issue->updated_by = Auth::id();
+        //     $original = $issue->getOriginal(); // Get the original (old) values
+        //     $changes = $issue->getDirty(); // Get the changed (new) values
 
-        });
-        static::created(function ($issue) {
-            // Now that the issue is created, log the activity
-            $issue->addActivity('created', null, $issue->toJson(), $issue->id);
-        });
-        static::updating(function ($issue) {
-            // Set updated_by when updating the issue
-            $issue->updated_by = Auth::id();
-            $original = $issue->getOriginal(); // Get the original (old) values
-            $changes = $issue->getDirty(); // Get the changed (new) values
-
-            foreach ($changes as $field => $newValue) {
-                $oldValue = $original[$field] ?? null;  // Get the old value or null if not set
-                // Only log activity if the field has changed
-                if ($oldValue !== $newValue) {
-                    if ($field === 'assigned_to') {
-                        // Get the user object based on the ID
-                        $newUser = \App\Models\User::find($newValue);
-                        $oldUser = \App\Models\User::find($oldValue);
-                        $newValue = $newUser ? $newUser->name : 'Unknown User';
-                        $oldValue = $oldUser ? $oldUser->name : 'Unknown User';
-                    }
-                    $issue->addActivity("changed $field", $oldValue, $newValue, $issue->id);
-                }
-            }
-        });
+        //     foreach ($changes as $field => $newValue) {
+        //         $oldValue = $original[$field] ?? null;  // Get the old value or null if not set
+        //         // Only log activity if the field has changed
+        //         if ($oldValue !== $newValue) {
+        //             if ($field === 'assigned_to') {
+        //                 // Get the user object based on the ID
+        //                 $newUser = \App\Models\User::find($newValue);
+        //                 $oldUser = \App\Models\User::find($oldValue);
+        //                 $newValue = $newUser ? $newUser->name : 'Unknown User';
+        //                 $oldValue = $oldUser ? $oldUser->name : 'Unknown User';
+        //             }
+        //             $issue->addActivity("changed $field", $oldValue, $newValue, $issue->id);
+        //         }
+        //     }
+        // });
     }
 
     public function getUserForIssueType(string $type)
