@@ -77,12 +77,20 @@ class IssueController extends Controller
             ]);
             return redirect()->route('issue.index')->with('success', 'Issue updated successfully');
         } else {
+            // Check if user is logged in
+            if (Auth::check()) {
+                $user = Auth::user();
+            } else {
+                // If not logged in, create a new user
+
             $user = User::firstorCreate([
                 'email' => $request->email,
             ], [
                 'name' => $request->fullName,
                 'password' => bcrypt('password'),
             ]);
+            }
+            // Define the default owners for each issue type
             
             $owners = [
                 'it_application' => 1,

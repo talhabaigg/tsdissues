@@ -45,7 +45,7 @@
         }
 
         th {
-            background-color: #1763f0;
+            background-color: #008080;
             color: #fff;
         }
 
@@ -56,7 +56,7 @@
         .btn {
             display: inline-block;
             padding: 8px 12px;
-            background-color: #1763f0;
+            background-color: #008080;
             color: #fff !important;
             text-decoration: none;
             border-radius: 4px;
@@ -82,9 +82,28 @@
         <h2>Your Weekly Issues Reminder</h2>
 
         <p>Hello,</p>
-
-        <p>You have <strong>{{ $issueCount }}</strong> company issues to review:</p>
-
+        <p>{{$newIssueCount}} New issue(s) reported last week:</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Issue Name</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($newIssues as $issue)
+                    <tr>
+                        <td>{{ $issue->title }}</td>
+                        <td>{{ $issue->status }}</td>
+                        <td><a href="{{ route('issue.show', $issue->id) }}" class="btn">View</a></td>
+                    </tr>
+                @endforeach
+            </tbody>
+            </table>
+            <br>
+        <p><strong>{{ $issueCount }}</strong> company issue(s) from previous weeks to review:</p>
+ 
         <table>
             <thead>
                 <tr>
@@ -103,10 +122,8 @@
                 @endforeach
             </tbody>
         </table>
-
-        <div class="footer">
-            <p><strong>Sent from TSD Issues log</strong></p>
-        </div>
+<br>
+        <a href="{{ route('issue.index') }}" class="btn">Go to Issues log</a>
     </div>
 
 </body>
