@@ -93,11 +93,11 @@ class IssueController extends Controller
             // Define the default owners for each issue type
             
             $owners = [
-                'it_application' => 1,
-                'warehouse_operations' => 2,
-                'safety' => 1,
-                'it_hardware' => 1,
-                'product_quality' => 1,
+                'it_application' => 3,
+                'warehouse_operations' => 4,
+                'safety' => 5,
+                'it_hardware' => 3,
+                'product_quality' => 4,
             ];
             $ownerId = $owners[$request->type] ?? 1; 
             // If no ID, create a new issue

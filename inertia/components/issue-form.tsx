@@ -45,7 +45,7 @@ const IssueForm = ({ issue, loggedIn }:  IssueFormProps) => {
   const issueTypes = [
     { value: "product_quality", label: "Product Quality" },
     { value: "it_hardware", label: "IT Hardware" },
-    { value: "it_software", label: "IT Applications" },
+    { value: "it_application", label: "IT Applications" },
     { value: "warehouse_operations", label: "Warehouse Operations" },
     { value: "safety", label: "Safety" },
   ];
