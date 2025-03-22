@@ -6,6 +6,7 @@ import { Paperclip } from "lucide-react";
 import { useForm } from "@inertiajs/react";
 import { toast } from "sonner";
 import CommentList from "~/pages/issue/partials/comment-list";
+import { usePage } from "@inertiajs/react";
 
 interface IssueCommentBoxProps {
   issueId: number;
@@ -25,7 +26,7 @@ const IssueCommentBox = ({
     text: "",
     file: null,
   });
-
+  const { user } = usePage().props.auth;
   useEffect(() => {
     if (form.data.text !== "") {
       form.post("/issue-comments");
@@ -38,7 +39,7 @@ const IssueCommentBox = ({
     const comment = {
       id: comments.length + 1,
       issue_id: issueId,
-      creator: { id: 1, name: "Talha Baig" },
+      creator: { id: user.id, name: user.name },
       text: newComment,
       file,
       created_at: new Date().toISOString(),
