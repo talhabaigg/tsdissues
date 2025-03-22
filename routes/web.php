@@ -32,11 +32,14 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/users', [UserController::class, 'index'])->name('users.index');
-    Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
-    Route::post('/users', [UserController::class, 'store'])->name('users.store');
-    Route::post('/update-role', [UserController::class, 'updateRole'])->name('users.updateRole');
+    Route::middleware('role:admin')->group(function () {
+        Route::get('/users', [UserController::class, 'index'])->name('users.index');
+        Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+        Route::post('/users', [UserController::class, 'store'])->name('users.store');
+        Route::post('/update-role', [UserController::class, 'updateRole'])->name('users.updateRole');
+    });
 });
+    
 Route::resource('issue', IssueController::class);
 Route::post('/issue/store', [IssueController::class, 'store'])->name('issue.store');
 
@@ -49,32 +52,3 @@ Route::get('/api/latest-comments', [IssueCommentController::class, 'latest'])->n
 Route::get('/get-users', [UserController::class, 'getUsers'])->name('users.getUsers');
 
 require __DIR__ . '/auth.php';
-
-
-// Route::get('/dashboard', function () {
-//     $existingActivities = IssueActivity::with(['issue', 'user'])
-//         ->latest()
-//         ->take(5)
-//         ->get();
-//     $existingAssignees = User::whereHas('issues', function ($query) {
-//         $query->where('status', 'active'); // Only include users with active issues
-//     })
-//         ->withCount([
-//             'issues' => function ($query) {
-//                 $query->where('status', 'active'); // Count only issues with active status
-//             }
-//         ])
-//         ->orderByDesc('issues_count') // Sort users by issue count in descending order
-//         ->take(5) // Limit to the top 5 users
-//         ->get();
-//     $existingIssuesByDepartment = Issue::where('status', 'active')
-//         ->get()
-//         ->countBy('type')
-//         ->toArray();
-
-//     return Inertia::render('dashboard', [
-//         'existingActivities' => $existingActivities,
-//         'existingAssignees' => $existingAssignees,
-//         'existingIssuesByDepartment' => $existingIssuesByDepartment,
-//     ]);
-// })->middleware(['auth', 'verified'])->name('dashboard');

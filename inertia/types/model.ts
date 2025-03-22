@@ -35,6 +35,7 @@ export type IssueComment = {
     creator?: User;
 };
 export type User = {
+    isAdmin: any;
     id: number;
     name: string;
     email: string;

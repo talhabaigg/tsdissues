@@ -1,8 +1,9 @@
 "use client";
 
 import { BadgeCheck, ChevronsUpDown, LogOut, User } from "lucide-react";
-import { Link } from "@inertiajs/react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { route } from "ziggy-js";
+import { Link, usePage } from "@inertiajs/react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,6 +23,7 @@ import {
 export function NavUser({
   user,
 }: {
+
   user: {
     name: string;
     email: string;
@@ -29,6 +31,8 @@ export function NavUser({
   };
 }) {
   const { isMobile } = useSidebar();
+   const { auth } = usePage().props;
+   const isAdmin: boolean = Boolean(auth.user.isAdmin); 
   const initial = user.name
     .split(" ")
     .map((n) => n[0])
@@ -84,14 +88,20 @@ export function NavUser({
                 </DropdownMenuItem>
               </Link>
             </DropdownMenuGroup>
-            <DropdownMenuGroup>
-              <Link href={route("users.index")}>
-                <DropdownMenuItem>
-                  <User />
-                  Manage users
-                </DropdownMenuItem>
-              </Link>
-            </DropdownMenuGroup>
+            {isAdmin && (
+              <>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <Link href={route("users.index")}>
+                    <DropdownMenuItem>
+                      <User />
+                      Manage users
+                    </DropdownMenuItem>
+                  </Link>
+                </DropdownMenuGroup>
+              </>
+            )}
+           
             <DropdownMenuSeparator />
             <Link href={route("logout")} method="post">
               <DropdownMenuItem>

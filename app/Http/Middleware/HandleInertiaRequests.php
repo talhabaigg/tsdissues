@@ -30,10 +30,17 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $user = $request->user()->load('roles');
         return [
             ...parent::share($request),
             'auth' => [
-                'user' => $request->user(),
+                'user' => $user ? [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'roles' => $user->roles->pluck('name'), // Get role names
+                    'isAdmin' => $user->roles->contains('name', 'admin'), // Check if user has the 'admin' role
+                ] : null,
             ],
             'roles' => [
                 'admin' => $request->user()?->hasRole('admin'),

@@ -21,6 +21,9 @@ import { Breadcrumbs } from "~/components/custom-breadcrumbs"; // Import Breadcr
 function Layout({ children }: { children: React.ReactNode }) {
   const { url } = usePage(); // Get the current page's URL
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const { auth } = usePage().props;
+  const isAdmin: boolean = Boolean(auth.user.isAdmin); // Ensure isAdmin is explicitly a boolean
+
   const [sidebarOpen, setSidebarOpen] = useState(
     () => localStorage.getItem("sidebar:state") === "true",
   );
