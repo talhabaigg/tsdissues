@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card } from "~/components/ui/card";
 import { FilePreview } from "~/components/comment-file-preview";
-import ExtendedAvatar from "~/components/user-avatar-extended";
-import DateLabelAgo from "~/components/date-label-ago";
-import { formatDistanceToNow } from "date-fns";
 import SmallAvatar from "~/components/user-avatar-small";
+import { usePage, useForm } from "@inertiajs/react";
+import { formatDistanceToNow } from "date-fns";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
 type User = {
   id: number;
   name: string;
@@ -24,9 +25,44 @@ type Comment = {
 };
 
 const CommentCard = ({ comment }: { comment: Comment }) => {
+  const { user } = usePage().props.auth; // Get the current user from Inertia props
   const timeAgo = formatDistanceToNow(new Date(comment.created_at), {
     addSuffix: true,
   });
+
+  const [isEditing, setIsEditing] = useState(false); // Toggle edit mode
+  const { data, setData, put, processing, errors } = useForm({
+    text: comment.text,
+    comment_id: comment.id,
+  });
+
+  // Handle text change
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setData("text", e.target.value);
+  };
+
+  // Handle save comment update
+  const handleSave = () => {
+    put(`/issue-comments/${data.comment_id}`, {
+      onSuccess: (response) => {
+        // Optimistically update the text if needed (optional)
+        comment.text = data.text; // Update the comment text in the current component's state
+        setIsEditing(false); // Exit edit mode after successful update
+      },
+      onError: (error) => {
+        console.error("Error updating comment:", error); // Handle error
+      },
+    });
+  };
+
+  // Handle Enter key press to trigger save
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      // Prevent default Enter behavior (new line) and trigger save
+      e.preventDefault();
+      handleSave();
+    }
+  };
 
   return (
     <Card className="space-y-2 p-2 mb-2">
@@ -39,10 +75,36 @@ const CommentCard = ({ comment }: { comment: Comment }) => {
         </div>
       </div>
 
-      <div className="flex items-start gap-2 pb-2">
+      <div className="flex items-start gap-2">
         <div className="flex-1 ml-10">
-          {/* Comment Text */}
-          <p>{comment.text}</p>
+          {/* Edit or View Comment Text */}
+          {isEditing ? (
+            <div>
+              <Input  value={data.text}
+                onChange={handleTextChange}
+                onKeyDown={handleKeyPress} // Bind the Enter key/>
+               />
+              {errors.text && <p className="text-red-500 text-sm">{errors.text}</p>}
+              <div className="flex justify-end gap-2 mt-2">
+                <Button
+                  onClick={() => setIsEditing(false)} // Cancel edit
+                  variant="link"
+                >
+                  Cancel
+                </Button>
+                <Button 
+                  onClick={handleSave} // Save updated comment
+                  
+                  disabled={processing}
+                >
+                  {processing ? "Saving..." : "Save"}
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <p>{comment.text}</p>
+          )}
+
           {/* File Preview (if file exists) */}
           {comment.file && (
             <div className="mt-2">
@@ -51,6 +113,13 @@ const CommentCard = ({ comment }: { comment: Comment }) => {
           )}
         </div>
       </div>
+
+      {/* Edit Button (only show if the user is the comment creator or has permission) */}
+      {comment.creator.id === user?.id && !isEditing && (
+        <div className="flex justify-end">
+          <Button  onClick={() => setIsEditing(true)} variant="link">Edit</Button>
+        </div>
+      )}
     </Card>
   );
 };

@@ -46,6 +46,7 @@ Route::post('/issue/store', [IssueController::class, 'store'])->name('issue.stor
 // web.php
 Route::post('/issues/{id}/update-status', [IssueController::class, 'updateStatus'])->name('issues.updateStatus');
 Route::post('/issue-comments', [IssueCommentController::class, 'store'])->name('issue-comments.store');
+Route::put('/issue-comments/{id}', [IssueCommentController::class, 'update'])->name('issue-comments.update');
 Route::get('/issue-comments/{issueId}', [IssueCommentController::class, 'getCommentsByIssueId'])->name('issue-comments.getCommentsByIssueId');
 Route::get('/api/latest-comments', [IssueCommentController::class, 'latest'])->name('api.latestComments');
 

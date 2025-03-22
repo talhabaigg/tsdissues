@@ -54,6 +54,23 @@ class IssueCommentController extends Controller
         return;
     }
 
+    public function update(Request $request, $id): void
+    {
+        // Find the issue comment by ID
+        $issueComment = IssueComment::find($id);
 
+        // Validate the input text field
+        $validated = $request->validate([
+            'text' => 'required|string|max:50',
+        ]);
+
+        // Update the comment's text
+        if ($issueComment) {
+            // Update the comment and return the updated comment
+            $issueComment->update($validated); 
+            return ; // Return the updated comment
+        }
+        return ;
+    }
 
 }
