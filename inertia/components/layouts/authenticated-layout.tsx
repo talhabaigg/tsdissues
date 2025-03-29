@@ -17,13 +17,14 @@ import {
 } from "~/components/ui/sheet";
 import ThemeToggle from "../widgets/theme-toggle";
 import { Breadcrumbs } from "~/components/custom-breadcrumbs"; // Import Breadcrumbs component
+import { toast } from "sonner";
 
 function Layout({ children }: { children: React.ReactNode }) {
   const { url } = usePage(); // Get the current page's URL
   const [isDarkMode, setIsDarkMode] = useState(false);
   const { auth } = usePage().props;
   const isAdmin: boolean = Boolean(auth.user.isAdmin); // Ensure isAdmin is explicitly a boolean
-
+  const { flash } = usePage<{ flash?: { success?: string; error?: string } }>().props;
   const [sidebarOpen, setSidebarOpen] = useState(
     () => localStorage.getItem("sidebar:state") === "true",
   );
@@ -38,7 +39,15 @@ function Layout({ children }: { children: React.ReactNode }) {
       document.body.classList.remove("dark");
     }
   }, []);
-
+  useEffect(() => {
+    if (flash?.success) {
+      toast.success(flash.success);
+    }
+    if (flash?.error) {
+      toast.error(flash.error);
+    }
+  }, [flash]);
+  
   const handleSidebarStateChange = (state: boolean) => {
     setSidebarOpen(state);
     localStorage.setItem("sidebar:state", String(state));

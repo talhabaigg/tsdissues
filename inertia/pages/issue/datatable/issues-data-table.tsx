@@ -21,6 +21,7 @@ interface Issue {
   title: string;
   priority: string;
   status: string;
+  due_date: string;
   description: string;
   file: string;
   comments: string;
@@ -50,6 +51,7 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
     assigned_to: "",
     priority: "",
     title: "",
+    due_date: "",
   });
 
   useEffect(() => {
@@ -57,7 +59,8 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
       form.data.status !== "" ||
       form.data.assigned_to !== "" ||
       form.data.priority !== "" ||
-      form.data.title !== ""
+      form.data.title !== "" ||
+      form.data.due_date !== ""
     ) {
       // Only run if status is not empty
       const issueId = selectedRow?.id; // Assume selectedRow contains the issueId
@@ -68,12 +71,13 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
   }, [form.data.status, selectedRow]);
 
   const handleStatusChange = (
-    issueId: number,
-    newStatus?: string,
-    newAssignee?: string,
-    newPriority?: string,
-    newTitle?: string,
-  ) => {
+      issueId: number,
+      newStatus?: string,
+      newAssignee?: string,
+      newPriority?: string,
+      newTitle?: string,
+      newDueDate?: string,
+    ) => {
     // Set form data for both status and assigned_to
     // @ts-ignore
     form.setData({
@@ -85,6 +89,8 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
       priority: newPriority ?? rowData.priority,
       // @ts-ignore
       title: newTitle ?? rowData.title,
+      // @ts-ignore
+      due_date: newDueDate ?? rowData.due_date,
     });
 
     // Update the selected row (optional, based on your app's logic)
@@ -186,6 +192,19 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
       cellRenderer: (props: { value: string }) => <div>{props.value}</div>,
     },
     {
+      headerName: "Due At",
+      field: "due_date",
+      editable: isAdmin,
+     
+      cellRenderer: CreatedAtCellRenderer,
+      onCellValueChanged: (event: { data: { id: any }; newValue: any }) => {
+        const issueId = event.data.id; // Get the issue ID
+        const newDueDate = event.newValue; // Get the new due date
+
+        handleStatusChange(issueId, undefined, undefined, undefined, undefined, newDueDate);
+      }
+    },
+    {
       headerName: "Owner",
       field: "owner_id",
       cellClass: "text-center",
@@ -256,6 +275,7 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
     title: issue.title,
     priority: issue.priority,
     status: issue.status,
+    due_date: issue.due_date,
     description: issue.description,
     file: issue.file,
     comments: issue.comments,

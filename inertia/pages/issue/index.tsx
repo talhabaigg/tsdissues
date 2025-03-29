@@ -39,6 +39,7 @@ interface Issue {
   file: string;
   priority: string;
   status: string;
+  due_date: string;
   assigned_to: string;
   created_by: string;
   creator: { name: string };
@@ -70,7 +71,8 @@ export default function Dashboard() {
   const [filteredIssues, setFilteredIssues] = useState<Issue[]>(issues.data);
   const [searchQuery, setSearchQuery] = useState(""); // New state for search query
   const moveForm = useForm({ status: "" });
-  const isAdmin = auth.user?.roles?.some((role) => role.name === "admin");
+  const isAdmin = auth.user?.isAdmin;
+
   const typeList = [
     { value: "it_hardware", label: "IT Hardware" },
     { value: "product_quality", label: "Product Quality" },
@@ -152,6 +154,7 @@ export default function Dashboard() {
     title: issue.title,
     priority: issue.priority,
     status: issue.status,
+    due_date: issue.due_date,
     description: issue.description,
     file: issue.file,
     comments: issue.comments,

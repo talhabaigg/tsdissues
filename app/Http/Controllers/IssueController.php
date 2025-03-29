@@ -176,7 +176,16 @@ class IssueController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $user = Auth::user();
+
+        if (!$user->isAdmin()) {
+            return redirect()->route('issue.index')->with('error', 'You are not authorized to perform this action.');
+        }
+      
+        $issue = Issue::findOrFail($id);
+        $issue->delete();
+
+        return redirect()->route('issue.index')->with('success', 'Issue deleted successfully');
     }
 
     public function updateStatus(Request $request, $id): void
@@ -186,8 +195,9 @@ class IssueController extends Controller
             'assigned_to' => 'nullable', // Validate if user exists
             'priority' => 'nullable',
             'title' => 'nullable',
+            'due_date' => 'nullable',
         ]);
-
+        // dd($request->all());
 
         $issue = Issue::findOrFail($id);
         $previousAssignee = $issue->assigned_to;

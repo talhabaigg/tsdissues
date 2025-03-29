@@ -5,9 +5,11 @@ namespace App\Models;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\IssueLogActivity;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Issue extends Model
 {
+    use SoftDeletes;
     use IssueLogActivity;
     protected $fillable = [
         'type',
@@ -20,7 +22,7 @@ class Issue extends Model
         'created_by',
         'owner_id',
         'updated_by',
-
+        'due_date',
     ];
 
 

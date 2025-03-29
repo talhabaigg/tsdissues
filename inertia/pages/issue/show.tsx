@@ -7,94 +7,113 @@ import {
   CardDescription,
   CardHeader,
 } from "~/components/ui/card";
-import { Head } from "@inertiajs/react";
-import IssueForm from "~/components/issue-form";
+import { Archive } from 'lucide-react';
+import { Head, useForm } from "@inertiajs/react";
+import IssueCommentBox from "~/components/issue-comment-box";
+import { FilePreview } from "~/components/comment-file-preview";
 import {
   Table,
-  TableCaption,
-  TableHeader,
+  TableBody,
   TableRow,
   TableHead,
-  TableBody,
   TableCell,
 } from "~/components/ui/table";
-import { FilePreview } from "~/components/comment-file-preview";
-import IssueSheetTabs from "./partials/sheet-tabs";
-import IssueCommentBox from "~/components/issue-comment-box";
-export default function show({ issue }) {
+import { Button } from "~/components/ui/button";
+import { Dialog, DialogTrigger, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from "~/components/ui/dialog";
+import { useState } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
+export default function Show({ issue }) {
+  const { delete: destroy, processing } = useForm();
+  const [open, setOpen] = useState(false);
+
+  const handleDelete = () => {
+    destroy(route("issue.destroy", { id: issue.id }), {
+      onSuccess: () => setOpen(false),
+    });
+  };
+
   return (
     <AuthenticatedLayout>
       <Head title={issue.title} />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="">
+        <Card>
           <CardHeader>
             <CardTitle>{issue.title}</CardTitle>
-            <CardDescription></CardDescription>
+            <CardDescription>
+              <Dialog open={open} onOpenChange={setOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="destructive" size="sm"> <Archive />Archive</Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Archive Issue</DialogTitle>
+                    <DialogDescription>
+                      Are you sure you want to archive this issue? This action cannot be undone.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <DialogFooter className="flex flex-row justify-between">
+                    <Button variant="secondary" className="p-2 m-1 w-1/2" onClick={() => setOpen(false)}>Cancel</Button>
+                    <Button variant="destructive" className="p-2 m-1 w-1/2" onClick={handleDelete} disabled={processing}>
+                      {processing ? "Archiving..." : "Confirm"}
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <Table>
               <TableBody>
                 <TableRow>
-                  <TableHead className="">Description</TableHead>
-                  <TableCell className="font-medium">
-                    {issue.description}
-                  </TableCell>
+                  <TableHead>Description</TableHead>
+                  <TableCell>{issue.description}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableHead className="">Type</TableHead>
-                  <TableCell className="font-medium">{issue.type}</TableCell>
+                  <TableHead>Type</TableHead>
+                  <TableCell>{issue.type}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableHead className="">Status</TableHead>
-                  <TableCell className="font-medium">{issue.status}</TableCell>
+                  <TableHead>Status</TableHead>
+                  <TableCell>{issue.status}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableHead className="">Priority</TableHead>
-                  <TableCell className="font-medium">
-                    {issue.priority}
-                  </TableCell>
+                  <TableHead>Priority</TableHead>
+                  <TableCell>{issue.priority}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableHead className="">Creator</TableHead>
-                  <TableCell className="font-medium">
-                    {issue.creator.name}
-                  </TableCell>
+                  <TableHead>Creator</TableHead>
+                  <TableCell>{issue.creator.name}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableHead className="">Owner</TableHead>
-                  <TableCell className="font-medium">
-                    {issue.owner?.name || "Unassigned"}
-                  </TableCell>
+                  <TableHead>Owner</TableHead>
+                  <TableCell>{issue.owner?.name || "Unassigned"}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableHead className="">Assigned to</TableHead>
-                  <TableCell className="font-medium">
-                    {issue.assignee?.name || "Unassigned"}
-                  </TableCell>
+                  <TableHead>Assigned to</TableHead>
+                  <TableCell>{issue.assignee?.name || "Unassigned"}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableHead className="">File</TableHead>
-                  <TableCell className="font-medium">
-
-                    {issue.file ? (
-                     <FilePreview file={issue.file} />
-                    ) : (
-                      "No file attached"
-                    )}
+                  <TableHead>File</TableHead>
+                  <TableCell>
+                    {issue.file ? <FilePreview file={issue.file} /> : "No file attached"}
                   </TableCell>
                 </TableRow>
               </TableBody>
             </Table>
           </CardContent>
         </Card>
-        <Card className="grid col-span-2">
+        <Card className="col-span-2">
           <CardHeader>Comments</CardHeader>
           <CardContent>
-            <IssueCommentBox
-              issueId={issue ? issue.id : 0}
-              // @ts-ignore
-              existingComments={issue ? issue.comments : []}
-            />
+            <IssueCommentBox issueId={issue.id} existingComments={issue.comments || []} />
           </CardContent>
         </Card>
       </div>
