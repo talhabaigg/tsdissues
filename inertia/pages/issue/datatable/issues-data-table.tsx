@@ -14,6 +14,7 @@ import IdCellRenderer from "./cell-renderers/id-renderer";
 import TypeCellRenderer from "./cell-renderers/type-cell-renderer";
 import PriorityCellRenderer from "./cell-renderers/priority-cell-renderer";
 import CreatedAtCellRenderer from "./cell-renderers/created-at-cell-renderer";
+import DueDateCellRenderer from "./cell-renderers/due-date-cell-renderer";
 
 interface Issue {
   id: number;
@@ -192,11 +193,11 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
       cellRenderer: (props: { value: string }) => <div>{props.value}</div>,
     },
     {
-      headerName: "Due At",
+      headerName: "Due date",
       field: "due_date",
       editable: isAdmin,
      
-      cellRenderer: CreatedAtCellRenderer,
+      cellRenderer: DueDateCellRenderer,
       onCellValueChanged: (event: { data: { id: any }; newValue: any }) => {
         const issueId = event.data.id; // Get the issue ID
         const newDueDate = event.newValue; // Get the new due date
