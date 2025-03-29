@@ -10,14 +10,19 @@ class IssueReminder extends Mailable
     public $issues;
     public $newIssueCount;
     public $newIssues;
+    public $deletedIssues;
+    public $deletedIssueCount;
 
-    public function __construct($issueCount, $issues, $newIssueCount, $newIssues)
+    public function __construct($issueCount, $issues, $newIssueCount, $newIssues, $deletedIssues, $deletedIssueCount)
     {
         $this->issueCount = $issueCount;
         $this->issues = $issues;
         $this->newIssueCount = $newIssueCount;
         $this->newIssues = $newIssues;
+        $this->deletedIssues = $deletedIssues;
+        $this->deletedIssueCount = $deletedIssueCount;
     }
+ 
 
     public function build()
     {
@@ -27,7 +32,9 @@ class IssueReminder extends Mailable
                         'issueCount' => $this->issueCount,
                         'issues' => $this->issues,
                         'newIssueCount' => $this->newIssueCount,
-                        'newIssues' => $this->newIssues
+                        'newIssues' => $this->newIssues,
+                        'deletedIssues' => $this->deletedIssues,
+                        'deletedIssueCount' => $this->deletedIssueCount,
                     ]);
     }
 }

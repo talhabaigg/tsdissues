@@ -196,7 +196,6 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
       headerName: "Due date",
       field: "due_date",
       editable: isAdmin,
-     
       cellRenderer: DueDateCellRenderer,
       onCellValueChanged: (event: { data: { id: any }; newValue: any }) => {
         const issueId = event.data.id; // Get the issue ID

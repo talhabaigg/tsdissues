@@ -82,6 +82,7 @@
         <h2>Your Weekly Issues Reminder</h2>
 
         <p>Hello,</p>
+        @if ($newIssueCount > 0) 
         <p>{{$newIssueCount}} New issue(s) reported last week:</p>
         <table>
             <thead>
@@ -101,7 +102,9 @@
                 @endforeach
             </tbody>
             </table>
+            @endif
             <br>
+            @if ($issueCount > 0)
         <p><strong>{{ $issueCount }}</strong> company issue(s) from previous weeks to review:</p>
  
         <table>
@@ -122,7 +125,33 @@
                 @endforeach
             </tbody>
         </table>
+        @endif
 <br>
+
+@if ($deletedIssueCount > 0)
+        <p>Additionally, {{ $deletedIssueCount }} company issue(s) were archived this week:</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Issue Name</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($deletedIssues as $issue)
+                    <tr>
+                        <td>{{ $issue->title }}</td>
+                        <td>{{ $issue->status }}</td>
+                        <td><a href="{{ route('issue.show', $issue->id) }}" class="btn">View</a></td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+        <br>
+@endif
+
+
         <a href="{{ route('issue.index') }}" class="btn">Go to Issues log</a>
     </div>
 

@@ -30,10 +30,13 @@ class SendWeeklyIssueNotifications extends Command
             ->whereNotIn('id', $newIssues->pluck('id')) // Exclude new issues
             ->get();
             $issueCount = $issues->count();
+            $deletedIssues = $owner->issues()->onlyTrashed()->where('deleted_at', '>=', now()->subWeek())->get();
+            $deletedIssueCount = $deletedIssues->count();
+            $allIssues = $issues->merge($newIssues)->merge($deletedIssues);
+            $allIssueCount = $allIssues->count();
+            if ($allIssueCount > 0 || $newIssueCount > 0) {
 
-            if ($issueCount > 0) {
-
-                Mail::to($owner->email)->send(new IssueReminder($issueCount, $issues, $newIssueCount, $newIssues));
+                Mail::to($owner->email)->send(new IssueReminder($issueCount, $issues, $newIssueCount, $newIssues, $deletedIssues, $deletedIssueCount));
             }
         }
 
