@@ -195,7 +195,7 @@ class IssueController extends Controller
             'assigned_to' => 'nullable', // Validate if user exists
             'priority' => 'nullable',
             'title' => 'nullable',
-            'due_date' => 'nullable',
+            'due_date' => 'nullable|date',
         ]);
         // dd($request->all());
 
