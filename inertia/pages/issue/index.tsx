@@ -101,13 +101,13 @@ export default function Dashboard() {
         ? issue.priority === selectedPriority
         : true;
       const matchesCreator = selectedCreator
-        ? issue.creator.name === selectedCreator
+        ? issue?.creator?.name === selectedCreator
         : true;
       const matchesAssignee = selectedAssignee
-        ? issue.assignee.name === selectedAssignee
+        ? issue?.assignee?.name === selectedAssignee
         : true;
       const matchesOwner = selectedOwner
-        ? issue.owner.name === selectedOwner
+        ? issue?.owner?.name === selectedOwner
         : true;
       const matchesTitle = issue.title
         .toLowerCase()
@@ -147,6 +147,10 @@ export default function Dashboard() {
     setSelectedOwner("");
     setSearchQuery(""); // Clear search query
     fetchIssues(); // Refetch issues to reset filters
+  };
+  const resetArrangements = () => {
+    localStorage.removeItem("gridState");
+    window.location.reload();
   };
   const rowData = (issue: Issue) => ({
     id: issue.id,
@@ -257,7 +261,7 @@ export default function Dashboard() {
                 <SelectGroup>
                   <SelectLabel>Creator</SelectLabel>
                   {[
-                    ...new Set(issues.data.map((issue) => issue.creator.name)),
+                    ...new Set(issues.data.map((issue) => issue?.creator?.name)),
                   ].map((creatorName, index) => (
                     <SelectItem key={index} value={creatorName}>
                       {creatorName}
@@ -274,7 +278,7 @@ export default function Dashboard() {
                 <SelectGroup>
                   <SelectLabel>Owner</SelectLabel>
                   {[
-                    ...new Set(issues.data.map((issue) => issue.owner.name)),
+                    ...new Set(issues.data.map((issue) => issue?.owner?.name)),
                   ].map((ownerName, index) => (
                     <SelectItem key={index} value={ownerName}>
                       {ownerName}
@@ -294,7 +298,7 @@ export default function Dashboard() {
                 <SelectGroup>
                   <SelectLabel>Assigned</SelectLabel>
                   {[
-                    ...new Set(issues.data.map((issue) => issue.assignee.name)),
+                    ...new Set(issues.data.map((issue) => issue?.assignee?.name)),
                   ].map((assigneeName, index) => (
                     <SelectItem key={index} value={assigneeName}>
                       {assigneeName}
@@ -320,6 +324,9 @@ export default function Dashboard() {
           />
           <Button variant="link" onClick={clearFilters}>
             Clear filters
+          </Button>
+          <Button variant="button" onClick={resetArrangements}>
+            Reset arrangements
           </Button>
         </div>
         <TabsContent value="table" className="w-full">

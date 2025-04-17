@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS
 import "ag-grid-community/styles/ag-theme-alpine.css"; // Optional Theme
@@ -117,12 +117,11 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
       headerName: "Name",
       field: "title",
       flex: 8,
-      resizable: false,
       autoHeight: true,
       editable: isAdmin,
       cellClass: "font-bold",
       hide: false,
-      minWidth: 700,
+      width: 700,
       singleClickEdit: true,
       wrapText: true,
       
@@ -294,13 +293,50 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
     updater: issue.updater,
   }));
 
+  const gridRef = useRef(null);
+
+  // On grid ready, try restoring previous state if available
+  const onGridReady = (e: any) => {
+    if (window.colState) {
+      e.api.applyColumnState({
+        state: window.colState,
+        applyOrder: true,
+      });
+      console.log("Restored column state from memory");
+    } else {
+      const saved = localStorage.getItem("gridState");
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          e.api.applyColumnState({
+            state: parsed,
+            applyOrder: true,
+          });
+          console.log("Restored column state from localStorage");
+        } catch (err) {
+          console.error("Failed to parse saved column state", err);
+        }
+      }
+    }
+  };
+
+  // Save current column state to window + localStorage
+  const saveMovedState = useCallback(() => {
+    if (!gridRef.current?.api) return;
+
+    const state = gridRef.current.api.getColumnState();
+    window.colState = state;
+    localStorage.setItem("gridState", JSON.stringify(state));
+    console.log("Column state saved to memory and localStorage");
+  }, []);
+
   return (
     <div
       className={`${mode ? "ag-theme-quartz-dark" : "ag-theme-quartz"}`}
       style={{ height: 750, width: "100%" }}
     >
       <AgGridReact
-      
+        ref={gridRef}
         suppressAutoSize={true}
         columnDefs={columnDefs}
         rowData={rowData}
@@ -310,8 +346,11 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
           minWidth: 150,
           flex: 4,
           hide: window.innerWidth <= 768,
-          resizable: false, // Allow resizing columns
+          resizable: true, // Allow resizing columns
         }}
+        onGridReady={onGridReady}
+        onColumnMoved={saveMovedState}
+        onColumnResized={saveMovedState}
       />
     </div>
   );
