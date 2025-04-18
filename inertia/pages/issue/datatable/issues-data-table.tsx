@@ -16,6 +16,8 @@ import PriorityCellRenderer from "./cell-renderers/priority-cell-renderer";
 import CreatedAtCellRenderer from "./cell-renderers/created-at-cell-renderer";
 import DueDateCellRenderer from "./cell-renderers/due-date-cell-renderer";
 
+declare let window: any;
+
 interface Issue {
   id: number;
   type: string;
@@ -98,8 +100,7 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
     setSelectedRow({ id: issueId });
   };
 
-  // AG Grid column definitions
-  const columnDefs: ColDef<Issue>[] = [
+  const [columnDefs, setColumnDefs] = useState<ColDef[]>([
     // {
     //   headerName: "ID",
     //   field: "id",
@@ -122,6 +123,8 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
       cellClass: "font-bold",
       hide: false,
       width: 700,
+      minWidth: 150,
+      resizable: true,
       singleClickEdit: true,
       wrapText: true,
       
@@ -135,6 +138,8 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
       headerName: "Action",
       hide: false,
       maxWidth: 120,
+      minWidth: 150,
+      resizable: true,
       cellRenderer: (params: any) => (
         <IdCellRenderer value={params.value} data={params.data} />
       ),
@@ -145,12 +150,16 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
       field: "type",
       filter: false,
       cellClass: "text-left",
+      minWidth: 150,
+      resizable: true,
       cellRenderer: TypeCellRenderer,
     },
     {
       headerName: "Priority",
       field: "priority",
       filter: false,
+      minWidth: 150,
+      resizable: true,
       editable: isAdmin,
       cellClass: "text-left",
       cellEditor: "agSelectCellEditor",
@@ -176,6 +185,8 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
       field: "status",
       hide: false,
       filter: false,
+      minWidth: 150,
+      resizable: true,
       editable: isAdmin,
       cellClass: "text-left",
       cellEditor: "agSelectCellEditor",
@@ -194,6 +205,8 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
     {
       headerName: "Due date",
       field: "due_date",
+      minWidth: 150,
+      resizable: true,
       editable: isAdmin,
       cellClass: "text-left",
       singleClickEdit: true,
@@ -212,6 +225,8 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
       field: "owner_id",
       cellClass: "text-center",
       singleClickEdit: true,
+      minWidth: 150,
+      resizable: true,
       editable: false,
       hide: window.innerWidth <= 768,
       cellEditor: ComboboxEditor,
@@ -234,6 +249,8 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
       cellClass: "text-center",
       singleClickEdit: true,
       hide: window.innerWidth <= 768,
+      minWidth: 150,
+      resizable: true,
       editable: isAdmin,
       cellEditor: ComboboxEditor,
       onCellValueChanged: (event: {
@@ -253,6 +270,8 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
       headerName: "Created by",
       // @ts-ignore
       field: "created_by",
+      minWidth: 150,
+      resizable: true,
       hide: window.innerWidth <= 768,
       cellRenderer: (props: { value: string | undefined }) => (
         <ExtendedAvatar userFullName={props.value} />
@@ -261,16 +280,20 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
     {
       headerName: "Created At",
       field: "created_at",
+      minWidth: 150,
+      resizable: true,
       hide: window.innerWidth <= 768,
       cellRenderer: CreatedAtCellRenderer,
     },
     {
       headerName: "Last update",
       field: "updated_at",
+      minWidth: 150,
+      resizable: true,
 
       cellRenderer: CreatedAtCellRenderer,
     },
-  ];
+  ]);
 
   const rowData = issues.map((issue) => ({
     id: issue.id,
@@ -295,39 +318,21 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
 
   const gridRef = useRef(null);
 
-  // On grid ready, try restoring previous state if available
-  const onGridReady = (e: any) => {
-    if (window.colState) {
-      e.api.applyColumnState({
-        state: window.colState,
-        applyOrder: true,
-      });
-      console.log("Restored column state from memory");
-    } else {
-      const saved = localStorage.getItem("gridState");
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          e.api.applyColumnState({
-            state: parsed,
-            applyOrder: true,
-          });
-          console.log("Restored column state from localStorage");
-        } catch (err) {
-          console.error("Failed to parse saved column state", err);
-        }
-      }
-    }
-  };
+  const onGridReady = useCallback(() => {
+    const savedState = window.localStorage.getItem("gridState");
+    window.colState = savedState ? JSON.parse(savedState) : gridRef.current!.api.getColumnState();
 
-  // Save current column state to window + localStorage
+    gridRef.current!.api.applyColumnState({
+      state: window.colState,
+      applyOrder: true,
+    });
+  }, []);  
+
   const saveMovedState = useCallback(() => {
-    if (!gridRef.current?.api) return;
-
-    const state = gridRef.current.api.getColumnState();
-    window.colState = state;
-    localStorage.setItem("gridState", JSON.stringify(state));
-    console.log("Column state saved to memory and localStorage");
+    if (gridRef.current) {
+      window.colState = gridRef.current.api.getColumnState();
+      window.localStorage.setItem("gridState", JSON.stringify(window.colState));
+    }
   }, []);
 
   return (
@@ -342,12 +347,6 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
         rowData={rowData}
         pagination={true}
         paginationPageSize={20}
-        defaultColDef={{
-          minWidth: 150,
-          flex: 4,
-          hide: window.innerWidth <= 768,
-          resizable: true, // Allow resizing columns
-        }}
         onGridReady={onGridReady}
         onColumnMoved={saveMovedState}
         onColumnResized={saveMovedState}

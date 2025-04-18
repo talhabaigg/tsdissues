@@ -62,6 +62,7 @@ export default function Dashboard() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [selectedRow, setSelectedRow] = useState<Issue | null>(null);
   const [open, setOpen] = React.useState(false);
+  const [selectedTitle, setSelectedTitle] = useState("");
   const [selectedType, setSelectedType] = useState<string[]>([]);
   const [selectedPriority, setSelectedPriority] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
@@ -72,6 +73,54 @@ export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState(""); // New state for search query
   const moveForm = useForm({ status: "" });
   const isAdmin = auth.user?.isAdmin;
+
+  const [loadingFilters, setLoadingFilters] = useState(true);
+  useEffect(() => {
+    const savedFilters = localStorage.getItem("issueTableFilters");
+    if (savedFilters) {
+      const {
+        selectedTitle,
+        selectedType,
+        selectedPriority,
+        selectedStatus,
+        selectedCreator,
+        selectedAssignee,
+        selectedOwner,
+      } = JSON.parse(savedFilters);
+  
+      if (selectedTitle) setSelectedTitle(selectedTitle);
+      if (selectedType) setSelectedType(selectedType);
+      if (selectedPriority) setSelectedPriority(selectedPriority);
+      if (selectedStatus) setSelectedStatus(selectedStatus);
+      if (selectedCreator) setSelectedCreator(selectedCreator);
+      if (selectedAssignee) setSelectedAssignee(selectedAssignee);
+      if (selectedOwner) setSelectedOwner(selectedOwner);
+    }
+    setLoadingFilters(false);
+  }, []);
+  
+  useEffect(() => {
+    const filters = {
+      selectedTitle,
+      selectedType,
+      selectedPriority,
+      selectedStatus,
+      selectedCreator,
+      selectedAssignee,
+      selectedOwner,
+    };
+  
+    localStorage.setItem("issueTableFilters", JSON.stringify(filters));
+  }, [
+    selectedTitle,
+    selectedType,
+    selectedPriority,
+    selectedStatus,
+    selectedCreator,
+    selectedAssignee,
+    selectedOwner,
+  ]);
+  
 
   const typeList = [
     { value: "it_hardware", label: "IT Hardware" },
@@ -88,6 +137,9 @@ export default function Dashboard() {
   // Fetch and filter issues based on selected filters and search query
   const fetchIssues = () => {
     const newFilteredIssues = issues.data.filter((issue) => {
+      const matchesTitle = issue.title
+        .toLowerCase()
+        .includes(selectedTitle.toLowerCase()); // Match title with search query
       const matchesType =
         selectedType.length > 0
           ? selectedType.includes(issue.type) // Check if the issue's type is in the selected types
@@ -109,11 +161,9 @@ export default function Dashboard() {
       const matchesOwner = selectedOwner
         ? issue?.owner?.name === selectedOwner
         : true;
-      const matchesTitle = issue.title
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase()); // Match title with search query
 
       return (
+        matchesTitle &&
         matchesType &&
         matchesPriority &&
         matchesStatus &&
@@ -130,6 +180,7 @@ export default function Dashboard() {
     fetchIssues(); // Call fetch function whenever any filter or search changes
   }, [
     issues.data,
+    selectedTitle,
     selectedType,
     selectedPriority,
     selectedStatus,
@@ -139,6 +190,7 @@ export default function Dashboard() {
     searchQuery, // Add search query to dependencies
   ]);
   const clearFilters = () => {
+    setSelectedTitle("");
     setSelectedType([]);
     setSelectedPriority("");
     setSelectedStatus([]);
@@ -147,6 +199,7 @@ export default function Dashboard() {
     setSelectedOwner("");
     setSearchQuery(""); // Clear search query
     fetchIssues(); // Refetch issues to reset filters
+    localStorage.removeItem("issueTableFilters");
   };
   const resetArrangements = () => {
     localStorage.removeItem("gridState");
@@ -217,6 +270,7 @@ export default function Dashboard() {
       <Tabs defaultValue="table" className="w-full">
         <div className="flex justify-between">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 xlg:grid-cols-8  gap-2">
+          {!loadingFilters && (
             <MultiSelect
               options={typeList}
               onValueChange={setSelectedType}
@@ -226,17 +280,18 @@ export default function Dashboard() {
               animation={2}
               maxCount={2}
               className="col-span-1 sm:col-span-2"
-            />
+            />)}
+            {!loadingFilters && (
             <MultiSelect
               options={statusList}
               onValueChange={setSelectedStatus}
-              defaultValue={selectedType}
+              defaultValue={selectedStatus}
               placeholder="Filter by status"
               variant="inverted"
               animation={2}
               maxCount={2}
               className="col-span-1 sm:col-span-2"
-            />
+            />)}
             <Select
               value={selectedPriority}
               onValueChange={setSelectedPriority}
@@ -261,7 +316,11 @@ export default function Dashboard() {
                 <SelectGroup>
                   <SelectLabel>Creator</SelectLabel>
                   {[
-                    ...new Set(issues.data.map((issue) => issue?.creator?.name)),
+                    ...new Set(
+                      issues.data
+                        .map((issue) => issue?.creator?.name)
+                        .filter((name): name is string => !!name) // ✅ removes null/undefined
+                    ),
                   ].map((creatorName, index) => (
                     <SelectItem key={index} value={creatorName}>
                       {creatorName}
@@ -278,7 +337,11 @@ export default function Dashboard() {
                 <SelectGroup>
                   <SelectLabel>Owner</SelectLabel>
                   {[
-                    ...new Set(issues.data.map((issue) => issue?.owner?.name)),
+                    ...new Set(
+                      issues.data
+                        .map((issue) => issue?.owner?.name)
+                        .filter((name): name is string => !!name) // ✅ filter out undefined/null
+                    ),
                   ].map((ownerName, index) => (
                     <SelectItem key={index} value={ownerName}>
                       {ownerName}
@@ -298,7 +361,11 @@ export default function Dashboard() {
                 <SelectGroup>
                   <SelectLabel>Assigned</SelectLabel>
                   {[
-                    ...new Set(issues.data.map((issue) => issue?.assignee?.name)),
+                    ...new Set(
+                      issues.data
+                        .map((issue) => issue?.assignee?.name)
+                        .filter((name): name is string => !!name) // ✅ remove undefined/null
+                    ),
                   ].map((assigneeName, index) => (
                     <SelectItem key={index} value={assigneeName}>
                       {assigneeName}
@@ -319,13 +386,13 @@ export default function Dashboard() {
             type="text"
             placeholder="Search by title"
             className="w-64 my-2"
-            value={searchQuery} // Set input value to searchQuery state
-            onChange={(e) => setSearchQuery(e.target.value)} // Update search query on input change
+            value={selectedTitle} // Set input value to searchQuery state
+            onChange={(e) => setSelectedTitle(e.target.value)} // Update search query on input change
           />
           <Button variant="link" onClick={clearFilters}>
             Clear filters
           </Button>
-          <Button variant="button" onClick={resetArrangements}>
+          <Button variant="link" onClick={resetArrangements}>
             Reset arrangements
           </Button>
         </div>
