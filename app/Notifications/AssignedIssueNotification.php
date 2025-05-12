@@ -40,7 +40,7 @@ class AssignedIssueNotification extends Notification implements ShouldQueue
             ->greeting('Hello ' . $notifiable->name . ',')
             ->line('You have been assigned to the issue: ')
             ->line($this->issue->title)
-            ->action('View Issue', url('/issues/' . $this->issue->id))
+            ->action('View Issue', url('/issue/' . $this->issue->id))
             ->line('Thank you!');
     }
 
