@@ -34,7 +34,7 @@ const IssueCommentBox = ({
   }, [form.data.text]);
 
   const handleAddComment = () => {
-    if (newComment.trim() === "" || newComment.length > 50) return;
+    if (newComment.trim() === "" || newComment.length > 200) return;
     const comment = {
       id: comments.length + 1,
       issue_id: issueId,
@@ -78,7 +78,7 @@ const IssueCommentBox = ({
             onKeyDown={(e) => e.key === "Enter" && handleAddComment()}
           />
           <div className="text-sm text-right text-gray-500">
-            {newComment.length}/50 characters
+            {newComment.length}/200 characters
           </div>
           {/* File Input and Upload Button */}
           <div className="flex items-center justify-end gap-2">
@@ -99,7 +99,7 @@ const IssueCommentBox = ({
 
             <Button
               onClick={handleAddComment}
-              disabled={newComment.length > 50 || newComment.trim() === ""}
+              disabled={newComment.length > 200 || newComment.trim() === ""}
             >
               Post
             </Button>

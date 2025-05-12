@@ -17,7 +17,7 @@ class IssueCommentController extends Controller
     {
         $validated = $request->validate([
             'issue_id' => 'required|exists:issues,id',
-            'text' => 'required|string|max:50',
+            'text' => 'required|string|max:200',
             'file' => 'nullable|file|mimes:jpg,png,pdf,mp4|max:20480', // Adjust based on your file types
         ]);
 
