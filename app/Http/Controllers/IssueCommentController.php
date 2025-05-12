@@ -67,10 +67,10 @@ class IssueCommentController extends Controller
         // Update the comment's text
         if ($issueComment) {
             // Update the comment and return the updated comment
-            $issueComment->update($validated); 
-            return ; // Return the updated comment
+            $issueComment->update($validated);
+            return; // Return the updated comment
         }
-        return ;
+        return;
     }
 
 }
