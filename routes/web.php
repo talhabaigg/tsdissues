@@ -39,6 +39,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/update-role', [UserController::class, 'updateRole'])->name('users.updateRole');
     });
     Route::resource('issue', IssueController::class);
+    Route::get('/issues/{id}', [IssueController::class, 'show'])->name('issue.show');
 });
 
 
