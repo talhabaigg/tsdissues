@@ -28,7 +28,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script: |
-            cd /var/www/tsdissues.telp.com.au
+            cd /var/www/dev.tsdissues.telp.com.au
             sudo git pull origin main
             echo "Installing dependencies..."
             sudo composer install --no-scripts --no-progress --prefer-dist
