@@ -44,7 +44,12 @@ interface IssueTableProps {
   isAdmin: boolean;
 }
 
-const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmin }) => {
+const IssueTable: React.FC<IssueTableProps> = ({
+  issues,
+  onOpenRow,
+  mode,
+  isAdmin,
+}) => {
   const [selectedRow, setSelectedRow] = useState<{ id: number } | null>(null);
 
   // console.log("mode", mode);
@@ -74,13 +79,13 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
   }, [form.data.status, selectedRow]);
 
   const handleStatusChange = (
-      issueId: number,
-      newStatus?: string,
-      newAssignee?: string,
-      newPriority?: string,
-      newTitle?: string,
-      newDueDate?: string,
-    ) => {
+    issueId: number,
+    newStatus?: string,
+    newAssignee?: string,
+    newPriority?: string,
+    newTitle?: string,
+    newDueDate?: string,
+  ) => {
     // Set form data for both status and assigned_to
     // @ts-ignore
     form.setData({
@@ -127,7 +132,7 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
       resizable: true,
       singleClickEdit: true,
       wrapText: true,
-      
+
       onCellValueChanged: (event: any) => {
         const issueId = event.data.id; // Get the issue ID
         const newTitle = event.newValue; // Get the new title
@@ -144,7 +149,7 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
         <IdCellRenderer value={params.value} data={params.data} />
       ),
     },
-    
+
     {
       headerName: "Type",
       field: "type",
@@ -211,14 +216,21 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
       cellClass: "text-left",
       singleClickEdit: true,
       cellEditor: "agDateCellEditor",
-      cellDataType: 'date',
+      cellDataType: "date",
       cellRenderer: DueDateCellRenderer,
       onCellValueChanged: (event: { data: { id: any }; newValue: any }) => {
         const issueId = event.data.id; // Get the issue ID
         const newDueDate = event.newValue; // Get the new due date
 
-        handleStatusChange(issueId, undefined, undefined, undefined, undefined, newDueDate);
-      }
+        handleStatusChange(
+          issueId,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          newDueDate,
+        );
+      },
     },
     {
       headerName: "Owner",
@@ -320,13 +332,15 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
 
   const onGridReady = useCallback(() => {
     const savedState = window.localStorage.getItem("gridState");
-    window.colState = savedState ? JSON.parse(savedState) : gridRef.current!.api.getColumnState();
+    window.colState = savedState
+      ? JSON.parse(savedState)
+      : gridRef.current!.api.getColumnState();
 
     gridRef.current!.api.applyColumnState({
       state: window.colState,
       applyOrder: true,
     });
-  }, []);  
+  }, []);
 
   const saveMovedState = useCallback(() => {
     if (gridRef.current) {

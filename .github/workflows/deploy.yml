@@ -1,0 +1,46 @@
+name: CI Deployment to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Check SSH key secret is set
+        run: |
+          if [ -z "${{ secrets.EC2_SSH_KEY }}" ]; then
+            echo "SSH key secret is empty!"
+            exit 1
+          else
+            echo "SSH key secret found."
+          fi
+      - name: SSH and Deploy
+        uses: appleboy/ssh-action@v0.1.3
+        with:
+          host: 54.253.85.48
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: |
+            cd /var/www/tsdissues.telp.com.au
+            git pull origin main
+            echo "Installing dependencies..."
+            sudo composer install --no-scripts --no-progress --prefer-dist
+            echo "Running migrations..."
+            sudo php artisan migrate --force
+            echo "Clearing and caching..."
+            sudo php artisan cache:clear
+            sudo php artisan config:cache
+            sudo php artisan route:cache
+            sudo php artisan view:cache
+            sudo php artisan optimize
+            sudo npm install --force
+            echo "Building assets..."
+            sudo npm run build
+            echo "Deployment complete."
