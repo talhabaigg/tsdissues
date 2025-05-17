@@ -10,6 +10,7 @@ import { Head, Link } from "@inertiajs/react";
 import { useForm } from "@inertiajs/react";
 import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
+import { Trash2 } from "lucide-react";
 interface Role {
   name: string;
 }
@@ -80,6 +81,34 @@ const UsersTable: React.FC<UserTableProps> = ({ users, roles }) => {
       onCellValueChanged: (params) => {
         const selectedRole = params.newValue; // The role selected from the dropdown
         handleRoleUpdate(params.data.id, selectedRole); // Update the role in the grid
+      },
+    },
+    {
+      headerName: "Action",
+
+      cellRenderer: (params: any) => {
+        const { delete: destroy } = useForm();
+
+        const handleDelete = () => {
+          if (confirm("Are you sure you want to delete this user?")) {
+            destroy(`/users/${params.data.id}`, {
+              preserveScroll: true,
+              onSuccess: () => {
+                toast.success("User deleted successfully");
+                params.api.applyTransaction({ remove: [params.data] });
+              },
+              onError: () => {
+                toast.error("An error occurred while deleting the user");
+              },
+            });
+          }
+        };
+
+        return (
+          <Button onClick={handleDelete} variant="outline">
+            <Trash2 />
+          </Button>
+        );
       },
     },
   ];

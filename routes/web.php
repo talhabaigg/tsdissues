@@ -37,6 +37,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
         Route::post('/users', [UserController::class, 'store'])->name('users.store');
         Route::post('/update-role', [UserController::class, 'updateRole'])->name('users.updateRole');
+        Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
     });
     Route::resource('issue', IssueController::class);
     Route::get('/issues/{id}', [IssueController::class, 'show'])->name('issue.show');

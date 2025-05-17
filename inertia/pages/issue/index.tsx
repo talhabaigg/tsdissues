@@ -87,7 +87,7 @@ export default function Dashboard() {
         selectedAssignee,
         selectedOwner,
       } = JSON.parse(savedFilters);
-  
+
       if (selectedTitle) setSelectedTitle(selectedTitle);
       if (selectedType) setSelectedType(selectedType);
       if (selectedPriority) setSelectedPriority(selectedPriority);
@@ -98,7 +98,7 @@ export default function Dashboard() {
     }
     setLoadingFilters(false);
   }, []);
-  
+
   useEffect(() => {
     const filters = {
       selectedTitle,
@@ -109,7 +109,7 @@ export default function Dashboard() {
       selectedAssignee,
       selectedOwner,
     };
-  
+
     localStorage.setItem("issueTableFilters", JSON.stringify(filters));
   }, [
     selectedTitle,
@@ -120,7 +120,6 @@ export default function Dashboard() {
     selectedAssignee,
     selectedOwner,
   ]);
-  
 
   const typeList = [
     { value: "it_hardware", label: "IT Hardware" },
@@ -270,28 +269,30 @@ export default function Dashboard() {
       <Tabs defaultValue="table" className="w-full">
         <div className="flex justify-between">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 xlg:grid-cols-8  gap-2">
-          {!loadingFilters && (
-            <MultiSelect
-              options={typeList}
-              onValueChange={setSelectedType}
-              defaultValue={selectedType}
-              placeholder="Filter by type"
-              variant="inverted"
-              animation={2}
-              maxCount={2}
-              className="col-span-1 sm:col-span-2"
-            />)}
             {!loadingFilters && (
-            <MultiSelect
-              options={statusList}
-              onValueChange={setSelectedStatus}
-              defaultValue={selectedStatus}
-              placeholder="Filter by status"
-              variant="inverted"
-              animation={2}
-              maxCount={2}
-              className="col-span-1 sm:col-span-2"
-            />)}
+              <MultiSelect
+                options={typeList}
+                onValueChange={setSelectedType}
+                defaultValue={selectedType}
+                placeholder="Filter by type"
+                variant="inverted"
+                animation={2}
+                maxCount={2}
+                className="col-span-1 sm:col-span-2"
+              />
+            )}
+            {!loadingFilters && (
+              <MultiSelect
+                options={statusList}
+                onValueChange={setSelectedStatus}
+                defaultValue={selectedStatus}
+                placeholder="Filter by status"
+                variant="inverted"
+                animation={2}
+                maxCount={2}
+                className="col-span-1 sm:col-span-2"
+              />
+            )}
             <Select
               value={selectedPriority}
               onValueChange={setSelectedPriority}
@@ -319,7 +320,7 @@ export default function Dashboard() {
                     ...new Set(
                       issues.data
                         .map((issue) => issue?.creator?.name)
-                        .filter((name): name is string => !!name) // ✅ removes null/undefined
+                        .filter((name): name is string => !!name), // ✅ removes null/undefined
                     ),
                   ].map((creatorName, index) => (
                     <SelectItem key={index} value={creatorName}>
@@ -340,7 +341,7 @@ export default function Dashboard() {
                     ...new Set(
                       issues.data
                         .map((issue) => issue?.owner?.name)
-                        .filter((name): name is string => !!name) // ✅ filter out undefined/null
+                        .filter((name): name is string => !!name), // ✅ filter out undefined/null
                     ),
                   ].map((ownerName, index) => (
                     <SelectItem key={index} value={ownerName}>
@@ -364,7 +365,7 @@ export default function Dashboard() {
                     ...new Set(
                       issues.data
                         .map((issue) => issue?.assignee?.name)
-                        .filter((name): name is string => !!name) // ✅ remove undefined/null
+                        .filter((name): name is string => !!name), // ✅ remove undefined/null
                     ),
                   ].map((assigneeName, index) => (
                     <SelectItem key={index} value={assigneeName}>
@@ -393,7 +394,7 @@ export default function Dashboard() {
             Clear filters
           </Button>
           <Button variant="link" onClick={resetArrangements}>
-            Reset arrangements
+            Reset Column Settings
           </Button>
         </div>
         <TabsContent value="table" className="w-full">
