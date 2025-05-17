@@ -38,9 +38,11 @@ Route::middleware('auth')->group(function () {
         Route::post('/users', [UserController::class, 'store'])->name('users.store');
         Route::post('/update-role', [UserController::class, 'updateRole'])->name('users.updateRole');
     });
+    Route::resource('issue', IssueController::class);
+    Route::get('/issues/{id}', [IssueController::class, 'show'])->name('issue.show');
 });
-    
-Route::resource('issue', IssueController::class);
+
+
 Route::post('/issue/store', [IssueController::class, 'store'])->name('issue.store');
 
 // web.php
