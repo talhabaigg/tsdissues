@@ -29,7 +29,7 @@ jobs:
           port: 22
           script: |
             cd /var/www/tsdissues.telp.com.au
-            git pull origin main
+            sudo git pull origin main
             echo "Installing dependencies..."
             sudo composer install --no-scripts --no-progress --prefer-dist
             echo "Running migrations..."
