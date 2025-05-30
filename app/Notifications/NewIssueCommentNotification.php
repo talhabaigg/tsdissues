@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use App\Models\IssueComment;
+use App\Mail\CommentNotification;
 
 class NewIssueCommentNotification extends Notification implements ShouldQueue
 {
@@ -35,15 +36,8 @@ class NewIssueCommentNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        $mail = (new MailMessage)
-            ->subject('💬 New Comment on Issue: ' . $this->comment->issue->title)
-            ->greeting('Hello ' . $notifiable->name . ',')
-            ->line('A new comment has been added to the issue **' . $this->comment->issue->title) // Fixed "commented by"
-            ->line('📝 **Commenter:** ' . $this->comment->creator->name)
-            ->line('💬 **Comment:** ' . $this->comment->text)
-            ->action('🔍 View Issue', url('/issues/' . $this->comment->issue_id))
-            ->line('Thank you!');
-        return $mail;
+        return (new CommentNotification($this->comment))
+            ->to($notifiable->email);
     }
 
     /**
