@@ -13,7 +13,7 @@ export default defineConfig({
           'app/Http/Requests/**/*.php',
           'routes/**/*.php'
       ],
-      command: 'sudo echo "Files changed, reloading..."',
+      command: 'php artisan view:clear',
     }),
     laravel({
       input: 'inertia/app.tsx',
