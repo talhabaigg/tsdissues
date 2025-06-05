@@ -5,7 +5,6 @@ import IssueFormModal from "~/components/issue-form-modal";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { KanbanBoard } from "~/components/KanbanBoard";
 import { MultiSelect } from "~/components/multi-select";
-import { Cat, Dog, Fish, Rabbit, Turtle } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -17,19 +16,11 @@ import React, { useEffect, useState } from "react";
 import IssueFormQR from "~/components/issue-form-guest-qr";
 import { Task } from "~/components/TaskCard";
 import IssueSheetTabs from "./partials/sheet-tabs";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui/select";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
-import { set } from "date-fns";
-import { match } from "assert";
+import { SearchSelect } from "~/components/search-select";
+import { useMemo } from "react";
+import { PageProps } from "~/types";
 
 interface Issue {
   id: number;
@@ -49,16 +40,33 @@ interface Issue {
   comments: string;
   activities: any[];
   assignee: { name: string };
+  owner?: { name: string };
+}
+interface User {
+  id: number;
+  name: string;
+  isAdmin?: boolean;
 }
 
-interface IssuesProps {
-  issues: {
-    data: Issue[];
-  };
+declare module "@inertiajs/react" {
+  interface PageProps {
+    auth: {
+      user: User | null;
+    };
+    issues: {
+      data: Issue[];
+      meta: {
+        total: number;
+        per_page: number;
+        current_page: number;
+        last_page: number;
+      };
+    };
+  }
 }
-
 export default function Dashboard() {
-  const { issues, auth } = usePage().props;
+  const { auth } = usePage().props as PageProps;
+  const issues = usePage().props.issues;
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [selectedRow, setSelectedRow] = useState<Issue | null>(null);
   const [open, setOpen] = React.useState(false);
@@ -69,9 +77,9 @@ export default function Dashboard() {
   const [selectedCreator, setSelectedCreator] = useState("");
   const [selectedAssignee, setSelectedAssignee] = useState("");
   const [selectedOwner, setSelectedOwner] = useState("");
-  const [filteredIssues, setFilteredIssues] = useState<Issue[]>(issues.data);
+  // const [filteredIssues, setFilteredIssues] = useState<Issue[]>(issues.data);
   const [searchQuery, setSearchQuery] = useState(""); // New state for search query
-  const moveForm = useForm({ status: "" });
+  const moveForm = useForm<{ status: string }>({ status: "" });
   const isAdmin = auth.user?.isAdmin;
 
   const [loadingFilters, setLoadingFilters] = useState(true);
@@ -134,49 +142,19 @@ export default function Dashboard() {
     { value: "resolved", label: "Resolved" },
   ];
   // Fetch and filter issues based on selected filters and search query
-  const fetchIssues = () => {
-    const newFilteredIssues = issues.data.filter((issue) => {
-      const matchesTitle = issue.title
-        .toLowerCase()
-        .includes(selectedTitle.toLowerCase()); // Match title with search query
-      const matchesType =
-        selectedType.length > 0
-          ? selectedType.includes(issue.type) // Check if the issue's type is in the selected types
-          : true;
-      const matchesStatus =
-        selectedStatus.length > 0
-          ? selectedStatus.includes(issue.status) // Check if the issue's status is in the selected statuses
-          : true;
-
-      const matchesPriority = selectedPriority
-        ? issue.priority === selectedPriority
-        : true;
-      const matchesCreator = selectedCreator
-        ? issue?.creator?.name === selectedCreator
-        : true;
-      const matchesAssignee = selectedAssignee
-        ? issue?.assignee?.name === selectedAssignee
-        : true;
-      const matchesOwner = selectedOwner
-        ? issue?.owner?.name === selectedOwner
-        : true;
-
+  const filteredIssues: Issue[] = useMemo(() => {
+    return issues.data.filter((issue: Issue) => {
       return (
-        matchesTitle &&
-        matchesType &&
-        matchesPriority &&
-        matchesStatus &&
-        matchesCreator &&
-        matchesAssignee &&
-        matchesOwner &&
-        matchesTitle // Include title match in filter
+        issue.title.toLowerCase().includes(selectedTitle.toLowerCase()) &&
+        (selectedType.length === 0 || selectedType.includes(issue.type)) &&
+        (selectedStatus.length === 0 ||
+          selectedStatus.includes(issue.status)) &&
+        (!selectedPriority || issue.priority === selectedPriority) &&
+        (!selectedCreator || issue.creator?.name === selectedCreator) &&
+        (!selectedAssignee || issue.assignee?.name === selectedAssignee) &&
+        (!selectedOwner || issue.owner?.name === selectedOwner)
       );
     });
-    setFilteredIssues(newFilteredIssues);
-  };
-
-  useEffect(() => {
-    fetchIssues(); // Call fetch function whenever any filter or search changes
   }, [
     issues.data,
     selectedTitle,
@@ -186,8 +164,8 @@ export default function Dashboard() {
     selectedCreator,
     selectedAssignee,
     selectedOwner,
-    searchQuery, // Add search query to dependencies
   ]);
+
   const clearFilters = () => {
     setSelectedTitle("");
     setSelectedType([]);
@@ -222,6 +200,8 @@ export default function Dashboard() {
     updated_at: issue.updated_at,
     creator: issue.creator,
     updater: issue.updater,
+    assignee: issue.assignee, // Add this line to include the assignee property
+    owner: issue.owner, // Optionally include owner if needed by Issue type
   });
 
   const taskHandlers = {
@@ -230,10 +210,10 @@ export default function Dashboard() {
       moveForm.post(`/issues/${task.id}/update-status`);
     },
 
-    customClickHandler: (id: any) => {
+    customClickHandler: (id: number) => {
       fetch(route("issue.show", id))
         .then((response) => response.json())
-        .then((data) => {
+        .then((data: Issue) => {
           const formattedData = rowData(data);
           onOpenRow(formattedData);
         })
@@ -248,7 +228,7 @@ export default function Dashboard() {
     setIsDarkMode(savedTheme === "dark");
   }, []);
 
-  const onOpenRow = (rowData) => {
+  const onOpenRow = (rowData: Issue) => {
     setSelectedRow(rowData);
     setOpen(true);
   };
@@ -293,88 +273,63 @@ export default function Dashboard() {
                 className="col-span-1 sm:col-span-2"
               />
             )}
-            <Select
-              value={selectedPriority}
-              onValueChange={setSelectedPriority}
-            >
-              <SelectTrigger className="w-[250px] sm:w-[180px]">
-                <SelectValue placeholder="Filter by priority" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Priority</SelectLabel>
-                  <SelectItem value="critical">Critical</SelectItem>
-                  <SelectItem value="normal">Normal</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
 
-            <Select value={selectedCreator} onValueChange={setSelectedCreator}>
-              <SelectTrigger className="w-[250px] sm:w-[180px]">
-                <SelectValue placeholder="Filter by creator" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Creator</SelectLabel>
-                  {[
-                    ...new Set(
-                      issues.data
-                        .map((issue) => issue?.creator?.name)
-                        .filter((name): name is string => !!name), // ✅ removes null/undefined
-                    ),
-                  ].map((creatorName, index) => (
-                    <SelectItem key={index} value={creatorName}>
-                      {creatorName}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            <Select value={selectedOwner} onValueChange={setSelectedOwner}>
-              <SelectTrigger className="w-[250px] sm:w-[180px]">
-                <SelectValue placeholder="Filter by owner" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Owner</SelectLabel>
-                  {[
-                    ...new Set(
-                      issues.data
-                        .map((issue) => issue?.owner?.name)
-                        .filter((name): name is string => !!name), // ✅ filter out undefined/null
-                    ),
-                  ].map((ownerName, index) => (
-                    <SelectItem key={index} value={ownerName}>
-                      {ownerName}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            <Select
-              value={selectedAssignee}
+            <SearchSelect
+              options={[
+                { value: "critical", label: "Critical" },
+                { value: "normal", label: "Normal" },
+              ]}
+              optionName="Priority"
+              selectedOption={selectedPriority}
+              onValueChange={setSelectedPriority}
+            />
+
+            <SearchSelect
+              options={[
+                ...new Set(
+                  issues.data
+                    .map((issue: Issue) => issue?.creator?.name)
+                    .filter((name: string): name is string => !!name),
+                ),
+              ].map((creatorName) => ({
+                value: String(creatorName),
+                label: String(creatorName),
+              }))}
+              optionName="Creator"
+              selectedOption={selectedCreator}
+              onValueChange={setSelectedCreator}
+            />
+
+            <SearchSelect
+              options={[
+                ...new Set(
+                  issues.data
+                    .map((issue) => issue?.owner?.name)
+                    .filter((name): name is string => !!name),
+                ),
+              ].map((ownerName) => ({
+                value: String(ownerName),
+                label: String(ownerName),
+              }))}
+              optionName="Owner"
+              selectedOption={selectedOwner}
+              onValueChange={setSelectedOwner}
+            />
+            <SearchSelect
+              options={[
+                ...new Set(
+                  issues.data
+                    .map((issue) => issue?.assignee?.name)
+                    .filter((name): name is string => !!name),
+                ),
+              ].map((assigneeName) => ({
+                value: String(assigneeName),
+                label: String(assigneeName),
+              }))}
+              optionName="Assignee"
+              selectedOption={selectedAssignee}
               onValueChange={setSelectedAssignee}
-            >
-              <SelectTrigger className="w-[250px] sm:w-[180px]">
-                <SelectValue placeholder="Filter by assigned" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Assigned</SelectLabel>
-                  {[
-                    ...new Set(
-                      issues.data
-                        .map((issue) => issue?.assignee?.name)
-                        .filter((name): name is string => !!name), // ✅ remove undefined/null
-                    ),
-                  ].map((assigneeName, index) => (
-                    <SelectItem key={index} value={assigneeName}>
-                      {assigneeName}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            />
           </div>
 
           <div className="flex flex-col sm:flex-row  gap-2">

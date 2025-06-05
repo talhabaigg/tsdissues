@@ -21,7 +21,11 @@ const IssueCommentBox = ({
   const [newComment, setNewComment] = useState("");
   const [file, setFile] = useState<File | null>(null);
 
-  const form = useForm({
+  const form = useForm<{
+    issue_id: number;
+    text: string;
+    file: File | null;
+  }>({
     issue_id: issueId,
     text: "",
     file: null,

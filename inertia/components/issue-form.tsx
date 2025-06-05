@@ -27,7 +27,7 @@ interface IssueFormProps {
   issue: Issue | null;
   loggedIn: boolean; // Add this prop to indicate if the user is logged in
 }
-const IssueForm = ({ issue, loggedIn }:  IssueFormProps) => {
+const IssueForm = ({ issue, loggedIn }: IssueFormProps) => {
   // Determine if the form is in "edit" or "create" mode
   const isEditing = !!issue;
 
@@ -38,7 +38,7 @@ const IssueForm = ({ issue, loggedIn }:  IssueFormProps) => {
     priority: isEditing ? issue.priority : "",
     description: isEditing ? issue.description : "",
     file: isEditing ? issue.file : "", // No pre-filled attachments for editing (can handle as needed)
-     fullName: "",
+    fullName: "",
     email: "",
   });
 
@@ -58,11 +58,11 @@ const IssueForm = ({ issue, loggedIn }:  IssueFormProps) => {
   // State to track whether the checkbox is checked
   const [isChecked, setIsChecked] = useState(false);
 
-  const handleFileChange = (e) => {
+  const handleFileChange = (e: any) => {
     setData("file", e.target.files[0]);
   };
 
-  const submit = (e) => {
+  const submit = (e: any) => {
     e.preventDefault();
     if (!isChecked) {
       alert("You must confirm the checkbox before submitting.");
@@ -73,14 +73,14 @@ const IssueForm = ({ issue, loggedIn }:  IssueFormProps) => {
     // Use PUT for editing, POST for creating
   };
 
-  const handleCheckboxChange = (e) => {
+  const handleCheckboxChange = (e: any) => {
     setIsChecked(e.target.checked); // Update the checkbox state
   };
 
   return (
     <form onSubmit={submit} className="space-y-4">
       {/* Issue Type */}
-      
+
       <div>
         <Label htmlFor="type">Issue Type</Label>
         <Select
@@ -164,8 +164,8 @@ const IssueForm = ({ issue, loggedIn }:  IssueFormProps) => {
         />
         {errors.file && <div className="text-red-600">{errors.file}</div>}
       </div>
-{/* Display Full Name and Email if not logged in */}
-{!loggedIn && (
+      {/* Display Full Name and Email if not logged in */}
+      {!loggedIn && (
         <>
           <div>
             <Label htmlFor="fullName">Full Name</Label>
@@ -205,7 +205,8 @@ const IssueForm = ({ issue, loggedIn }:  IssueFormProps) => {
           onChange={handleCheckboxChange}
         />
         <Label htmlFor="terms">
-        I confirm, this is a public company issue, not a confidential issue that should be handled with a manager.
+          I confirm, this is a public company issue, not a confidential issue
+          that should be handled with a manager.
         </Label>
       </div>
 

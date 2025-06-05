@@ -18,13 +18,25 @@ import {
 import ThemeToggle from "../widgets/theme-toggle";
 import { Breadcrumbs } from "~/components/custom-breadcrumbs"; // Import Breadcrumbs component
 import { toast } from "sonner";
-
+declare module "@inertiajs/react" {
+  interface PageProps {
+    auth: {
+      user: Record<string | symbol, unknown> | null;
+    };
+    flash?: {
+      success?: string;
+      error?: string;
+    };
+  }
+}
 function Layout({ children }: { children: React.ReactNode }) {
   const { url } = usePage(); // Get the current page's URL
   const [isDarkMode, setIsDarkMode] = useState(false);
   const { auth } = usePage().props;
   const isAdmin: boolean = Boolean(auth.user.isAdmin); // Ensure isAdmin is explicitly a boolean
-  const { flash } = usePage<{ flash?: { success?: string; error?: string } }>().props;
+  const { flash } = usePage().props as {
+    flash?: { success?: string; error?: string };
+  };
   const [sidebarOpen, setSidebarOpen] = useState(
     () => localStorage.getItem("sidebar:state") === "true",
   );
@@ -47,7 +59,7 @@ function Layout({ children }: { children: React.ReactNode }) {
       toast.error(flash.error);
     }
   }, [flash]);
-  
+
   const handleSidebarStateChange = (state: boolean) => {
     setSidebarOpen(state);
     localStorage.setItem("sidebar:state", String(state));
@@ -120,7 +132,7 @@ function Layout({ children }: { children: React.ReactNode }) {
                 </SheetHeader>
               </SheetContent>
             </Sheet>
-            <ThemeToggle />
+            {/* <ThemeToggle /> */}
           </div>
         </header>
         {children}

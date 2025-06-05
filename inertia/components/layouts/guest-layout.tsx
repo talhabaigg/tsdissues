@@ -1,4 +1,4 @@
-import ApplicationLogo from "~/components/application-logo";
+import ApplicationLogo from "~/components/app-logo";
 import { Card, CardContent } from "~/components/ui/card";
 import { Link } from "@inertiajs/react";
 import { PropsWithChildren } from "react";

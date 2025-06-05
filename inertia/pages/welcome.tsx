@@ -4,8 +4,7 @@ import IssueForm from "~/components/issue-form";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { useEffect, useState } from "react";
 import { Skeleton } from "~/components/ui/skeleton";
-import ApplicationLogo from "~/components/application-logo";
-
+import ApplicationLogo from "~/components/app-logo";
 
 export default function Welcome({
   auth,

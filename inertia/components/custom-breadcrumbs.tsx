@@ -29,7 +29,9 @@ export function Breadcrumbs({ breadcrumbs }: BreadcrumbsProps) {
               <BreadcrumbPage>{breadcrumb.label}</BreadcrumbPage>
             ) : (
               <BreadcrumbLink>
-                <Link href={route(breadcrumb.route)}>{breadcrumb.label}</Link>
+                <Link href={route(breadcrumb.route as any)}>
+                  {breadcrumb.label}
+                </Link>
               </BreadcrumbLink>
             )}
             {index < breadcrumbs.length - 1 && <BreadcrumbSeparator />}

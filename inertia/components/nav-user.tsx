@@ -23,7 +23,6 @@ import {
 export function NavUser({
   user,
 }: {
-
   user: {
     name: string;
     email: string;
@@ -31,8 +30,8 @@ export function NavUser({
   };
 }) {
   const { isMobile } = useSidebar();
-   const { auth } = usePage().props;
-   const isAdmin: boolean = Boolean(auth.user.isAdmin); 
+  const { auth } = usePage().props;
+  const isAdmin: boolean = Boolean(auth.user.isAdmin);
   const initial = user.name
     .split(" ")
     .map((n) => n[0])
@@ -101,7 +100,7 @@ export function NavUser({
                 </DropdownMenuGroup>
               </>
             )}
-           
+
             <DropdownMenuSeparator />
             <Link href={route("logout")} method="post">
               <DropdownMenuItem>

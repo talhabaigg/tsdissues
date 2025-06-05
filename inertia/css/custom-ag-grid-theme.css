@@ -13,10 +13,11 @@
 
 
 .ag-theme-quartz-dark {
-  --ag-cell-horizontal-border: var(--ag-row-border-width)
-  var(--ag-row-border-style) var(--ag-row-border-color); /* Add left and right borders to each cell and use row border's properties  */
---ag-header-column-separator-display: block;
---ag-odd-row-background-color: #151c22f5;
+  --ag-cell-horizontal-border: var(--ag-row-border-width) var(--ag-row-border-style) var(--ag-row-border-color); /* Add left and right borders to each cell and use row border's properties */
+  --ag-header-column-separator-display: block;
+  --ag-foreground-color: #ffffff;
+  --ag-background-color: #000000;
+  --ag-odd-row-background-color: #151c22f5;
 }
 /*  */
 
