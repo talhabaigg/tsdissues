@@ -5,6 +5,7 @@ import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { useEffect, useState } from "react";
 import { Skeleton } from "~/components/ui/skeleton";
 import ApplicationLogo from "~/components/app-logo";
+import AppLogoIcon from "~/components/app-logo-icon";
 
 export default function Welcome({
   auth,
@@ -36,7 +37,7 @@ export default function Welcome({
       >
         <header className="grid grid-cols-2 items-center gap-2 py-10 lg:grid-cols-3 bg-gray-50 px-6">
           <div className="flex lg:col-start-2 lg:justify-center ">
-            <ApplicationLogo className="w-16 h-16" />
+            <AppLogoIcon className="h-12" />
           </div>
           <nav className="-mx-3 flex flex-1 justify-end space-x-3">
             {auth.user ? (
