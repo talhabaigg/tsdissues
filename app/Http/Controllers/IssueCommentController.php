@@ -43,9 +43,10 @@ class IssueCommentController extends Controller
         $issue = Issue::with('owner')->find($validated['issue_id']); // Ensure owner relation is loaded
         $commenterId = auth()->id();
         $owner = $issue->owner; // Owner is stored in `$issue->owner`
+        $creator = $issue->creator;
         $assignee = $issue->assigned_to ? User::find($issue->assigned_to) : null; // Get assignee if set
 
-        $recipients = collect([$owner, $assignee])
+        $recipients = collect([$owner, $assignee, $creator])
             ->filter(fn($user) => $user && $user->id !== $commenterId) // Remove nulls and commenter
             ->unique('id'); // Ensure unique recipients
 
