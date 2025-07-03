@@ -16,28 +16,41 @@ class IssueController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-{
-    $user = Auth::user();
+    {
+        $user = Auth::user();
 
-    // Fetch issues based on role
-    $issuesQuery = Issue::with([
-        'user', 'owner', 'assignee', 'creator', 'updater', 'comments.creator', 'activities.user'
-    ])
-    ->orderBy('status', 'asc')
-    ->orderBy('created_at', 'desc');
+        $issuesQuery = Issue::query();
 
-    // If user is not an admin, restrict to only their created issues
-    if (!$user->isAdmin()) {
-        $issuesQuery->where('created_by', $user->id);
+        // Include soft deleted records if requested
+        if (request('with_trashed') === 'true') {
+            $issuesQuery->withTrashed();
+        }
+
+        $issuesQuery->with([
+            'user',
+            'owner',
+            'assignee',
+            'creator',
+            'updater',
+            'comments.creator',
+            'activities.user'
+        ])
+            ->orderBy('status', 'asc')
+            ->orderBy('created_at', 'desc');
+
+        // Apply user-specific filter
+        if (!$user->isAdmin()) {
+            $issuesQuery->where('created_by', $user->id);
+        }
+
+        $issues = $issuesQuery->paginate(1000);
+
+        // Pass data to the Inertia view
+        return Inertia::render('issue/index', [
+            'issues' => $issues,
+            'withTrashed' => request('with_trashed') === 'true',
+        ]);
     }
-
-    $issues = $issuesQuery->paginate(1000); // Adjust pagination as needed
-
-    // Pass data to the Inertia view
-    return Inertia::render('issue/index', [
-        'issues' => $issues,
-    ]);
-}
 
     /**
      * Show the form for creating a new resource.
@@ -62,8 +75,8 @@ class IssueController extends Controller
             'fullName' => 'nullable|string',
             'email' => 'nullable|email',
         ]);
-        
-        
+
+
         // Log the validated data
         \Log::info('Validated Issue Data:', $validated);
 
@@ -83,15 +96,15 @@ class IssueController extends Controller
             } else {
                 // If not logged in, create a new user
 
-            $user = User::firstorCreate([
-                'email' => $request->email,
-            ], [
-                'name' => $request->fullName,
-                'password' => bcrypt('password'),
-            ]);
+                $user = User::firstorCreate([
+                    'email' => $request->email,
+                ], [
+                    'name' => $request->fullName,
+                    'password' => bcrypt('password'),
+                ]);
             }
             // Define the default owners for each issue type
-            
+
             $owners = [
                 'it_application' => 3,
                 'warehouse_operations' => 4,
@@ -99,7 +112,7 @@ class IssueController extends Controller
                 'it_hardware' => 3,
                 'product_quality' => 4,
             ];
-            $ownerId = $owners[$request->type] ?? 1; 
+            $ownerId = $owners[$request->type] ?? 1;
             // If no ID, create a new issue
             $issue = Issue::create([
                 'type' => $request->type,
@@ -112,7 +125,7 @@ class IssueController extends Controller
                 'assigned_to' => $ownerId,
                 'updated_by' => $user->id,
             ]);
-            
+
             if ($request->hasFile('file')) {
                 $file = $request->file('file');
                 $originalFilename = $file->getClientOriginalName(); // Get the original file name
@@ -181,7 +194,7 @@ class IssueController extends Controller
         if (!$user->isAdmin()) {
             return redirect()->route('issue.index')->with('error', 'You are not authorized to perform this action.');
         }
-      
+
         $issue = Issue::findOrFail($id);
         $issue->delete();
 

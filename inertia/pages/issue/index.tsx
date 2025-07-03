@@ -21,6 +21,10 @@ import { Button } from "~/components/ui/button";
 import { SearchSelect } from "~/components/search-select";
 import { useMemo } from "react";
 import { PageProps } from "~/types";
+import { router } from "@inertiajs/react";
+import { Label } from "~/components/ui/label";
+import { Checkbox } from "~/components/ui/checkbox";
+import { Trash } from "lucide-react";
 
 interface Issue {
   id: number;
@@ -81,7 +85,29 @@ export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState(""); // New state for search query
   const moveForm = useForm<{ status: string }>({ status: "" });
   const isAdmin = auth.user?.isAdmin;
+  const [withTrashed, setWithTrashed] = useState(false);
+  useEffect(() => {
+    const saved = localStorage.getItem("withTrashed");
+    if (saved === "true") setWithTrashed(true);
+  }, []);
 
+  const toggleWithTrashed = () => {
+    const newVal = !withTrashed;
+    setWithTrashed(newVal);
+    localStorage.setItem("withTrashed", newVal.toString());
+    fetchIssues(newVal);
+  };
+  const fetchIssues = (includeTrashed = withTrashed) => {
+    router.visit(route("issue.index"), {
+      preserveScroll: true,
+      preserveState: true,
+      replace: true,
+      only: ["issues"],
+      data: {
+        with_trashed: includeTrashed ? "true" : undefined,
+      },
+    });
+  };
   const [loadingFilters, setLoadingFilters] = useState(true);
   useEffect(() => {
     const savedFilters = localStorage.getItem("issueTableFilters");
@@ -337,19 +363,35 @@ export default function Dashboard() {
             <IssueFormModal loggedIn={true} />
           </div>
         </div>
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-2 items-center flex-col sm:flex-row ">
           <Input
             type="text"
             placeholder="Search by title"
-            className="w-64 my-2"
+            className="sm:w-64 my-2 w-full"
             value={selectedTitle} // Set input value to searchQuery state
             onChange={(e) => setSelectedTitle(e.target.value)} // Update search query on input change
           />
-          <Button variant="link" onClick={clearFilters}>
+          <Button
+            variant="link"
+            onClick={clearFilters}
+            className="mr-auto sm:mr-0"
+          >
             Clear filters
           </Button>
-          <Button variant="link" onClick={resetArrangements}>
+          <Button
+            variant="link"
+            onClick={resetArrangements}
+            className="mr-auto sm:mr-0"
+          >
             Reset Column Settings
+          </Button>
+          <Button variant="outline" className="mr-auto sm:ml-auto sm:mr-0">
+            <Checkbox
+              id="withTrashed"
+              checked={withTrashed}
+              onCheckedChange={toggleWithTrashed}
+            />
+            <Label htmlFor="withTrashed">Show archived</Label>
           </Button>
         </div>
         <TabsContent value="table" className="w-full">
