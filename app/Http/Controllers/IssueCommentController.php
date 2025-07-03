@@ -62,7 +62,7 @@ class IssueCommentController extends Controller
 
         // Validate the input text field
         $validated = $request->validate([
-            'text' => 'required|string|max:50',
+            'text' => 'required|string|max:200',
         ]);
 
         // Update the comment's text
