@@ -5,6 +5,7 @@ export type Issue = {
     description?: string;
     priority: string;
     status: string;
+    due_date?: string;
     assigned_to?: string;
     confirmation?: any;
     created_by: number;
@@ -14,6 +15,7 @@ export type Issue = {
     updated_at?: string;
     assignee?: User;
     user?: User;
+    owner?: User;
     updater?: User;
     creator?: User;
     comments?: IssueComment[];

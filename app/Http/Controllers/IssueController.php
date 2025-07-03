@@ -46,7 +46,7 @@ class IssueController extends Controller
         $issues = $issuesQuery->paginate(1000);
 
         // Pass data to the Inertia view
-        return Inertia::render('issue/index', [
+        return Inertia::render('issue/index2', [
             'issues' => $issues,
             'withTrashed' => request('with_trashed') === 'true',
         ]);
