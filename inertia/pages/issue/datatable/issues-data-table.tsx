@@ -31,8 +31,8 @@ interface Issue {
   activities: string;
   owner?: { name: string };
   assignee?: { name: string };
-  creator: { name: string };
-  updater: { name: string };
+  creator?: { name: string };
+  updater?: { name: string };
   created_at: string;
   updated_at: string;
 }
