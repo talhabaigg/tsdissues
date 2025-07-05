@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\IssueCategoryController;
 use App\Models\User;
 use Inertia\Inertia;
 use App\Models\Issue;
@@ -38,6 +39,11 @@ Route::middleware('auth')->group(function () {
         Route::post('/users', [UserController::class, 'store'])->name('users.store');
         Route::post('/update-role', [UserController::class, 'updateRole'])->name('users.updateRole');
         Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+
+        Route::get('/issue-categories', [IssueCategoryController::class, 'index'])->name('issue-categories.index');
+        Route::post('/issue-categories', [IssueCategoryController::class, 'store'])->name('issue-categories.store');
+        Route::put('/issue-categories/{issueCategory}', [IssueCategoryController::class, 'update'])->name('issue-categories.update');
+        Route::delete('/issue-categories/{issueCategory}', [IssueCategoryController::class, 'destroy'])->name('issue-categories.destroy');
     });
     Route::resource('issue', IssueController::class);
     Route::get('/issues/{id}', [IssueController::class, 'show'])->name('issue.show');
@@ -52,6 +58,7 @@ Route::post('/issue-comments', [IssueCommentController::class, 'store'])->name('
 Route::put('/issue-comments/{id}', [IssueCommentController::class, 'update'])->name('issue-comments.update');
 Route::get('/issue-comments/{issueId}', [IssueCommentController::class, 'getCommentsByIssueId'])->name('issue-comments.getCommentsByIssueId');
 Route::get('/api/latest-comments', [IssueCommentController::class, 'latest'])->name('api.latestComments');
+Route::get('/issue-categories/retrieve', [IssueCategoryController::class, 'retrieveCategory'])->name('issue-categories.retrieve');
 
 Route::get('/get-users', [UserController::class, 'getUsers'])->name('users.getUsers');
 

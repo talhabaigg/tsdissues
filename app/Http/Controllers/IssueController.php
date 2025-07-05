@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\IssueCategory;
 use Inertia\Inertia;
 use App\Models\Issue;
 use Illuminate\Http\Request;
@@ -37,7 +38,7 @@ class IssueController extends Controller
         ])
             ->orderBy('status', 'asc')
             ->orderBy('created_at', 'desc');
-
+        $issue_types = IssueCategory::all();
         // Apply user-specific filter
         if (!$user->isAdmin()) {
             $issuesQuery->where('created_by', $user->id);
@@ -49,6 +50,7 @@ class IssueController extends Controller
         return Inertia::render('issue/index2', [
             'issues' => $issues,
             'withTrashed' => request('with_trashed') === 'true',
+            'issue_types' => $issue_types,
         ]);
     }
 
@@ -105,14 +107,9 @@ class IssueController extends Controller
             }
             // Define the default owners for each issue type
 
-            $owners = [
-                'it_application' => 3,
-                'warehouse_operations' => 4,
-                'safety' => 5,
-                'it_hardware' => 3,
-                'product_quality' => 4,
-            ];
-            $ownerId = $owners[$request->type] ?? 1;
+            $ownerForCategory = IssueCategory::where('name', $request->type)->value('user_id');
+
+            $ownerId = $ownerForCategory ?? null;
             // If no ID, create a new issue
             $issue = Issue::create([
                 'type' => $request->type,

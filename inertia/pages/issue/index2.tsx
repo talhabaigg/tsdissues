@@ -16,23 +16,20 @@ interface IssueIndexProps {
     data: Issue[];
   };
   withTrashed?: boolean;
+  issue_types: IssueCategory[];
 }
-
-const typeList = [
-  { value: "it_hardware", label: "IT Hardware" },
-  { value: "product_quality", label: "Product Quality" },
-  { value: "it_applications", label: "IT Applications" },
-  { value: "warehouse_operations", label: "Warehouse Operations" },
-  { value: "safety", label: "Safety" },
-];
 
 const statusList = [
   { value: "active", label: "Active" },
   { value: "pending", label: "Pending" },
   { value: "resolved", label: "Resolved" },
 ];
+interface IssueCategory {
+  id: number;
+  name: string;
+}
 
-export default function IssueIndex({ issues }: IssueIndexProps) {
+export default function IssueIndex({ issues, issue_types }: IssueIndexProps) {
   const [filters, setFilters] = useState({
     selectedTitle: "",
     selectedType: [] as string[],
@@ -44,7 +41,10 @@ export default function IssueIndex({ issues }: IssueIndexProps) {
   });
 
   const [loadingFilters, setLoadingFilters] = useState(true);
-
+  const typeList = issue_types.map((type: IssueCategory) => ({
+    value: type.name,
+    label: type.name,
+  }));
   useEffect(() => {
     try {
       const saved = localStorage.getItem("issueTableFilters");

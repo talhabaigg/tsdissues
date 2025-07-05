@@ -51,12 +51,18 @@ class User extends Authenticatable
     /**
      * Get the issues for the user.
      */
-    public function issues() {
+    public function issues()
+    {
         return $this->hasMany(Issue::class, 'owner_id');
     }
 
     public function isAdmin()
     {
         return $this->hasRole('admin');
+    }
+
+    public function issueCategories()
+    {
+        return $this->hasMany(IssueCategory::class);
     }
 }

@@ -26,8 +26,18 @@ export type RouteParams = {
         issue: string;
     };
     "issues.updateStatus": {
-        id: string;
+        id: number;
     };
+
+    "issue-categories.index": {};
+    "issue-categories.store": {};
+    "issue-categories.update": {
+        id: number;
+    };
+    "issue-categories.destroy": {
+        id: number;
+    };
+    "issue-categories.retrieve": {};
     "login": {};
     "logout": {};
     "password.update": {};
