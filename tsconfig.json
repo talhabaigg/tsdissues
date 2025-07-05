@@ -1,21 +1,28 @@
 {
-    "compilerOptions": {
-        "allowJs": true,
-        "module": "ESNext",
-        "moduleResolution": "bundler",
-        "jsx": "react-jsx",
-        "strict": true,
-        "isolatedModules": true,
-        "target": "ESNext",
-        "esModuleInterop": true,
-        "forceConsistentCasingInFileNames": true,
-        "skipLibCheck": true,
-        "noEmit": true,
-        "baseUrl": ".",
-        "paths": {
-            "~/*": ["inertia/*"],
-            "ziggy-js": ["vendor/tightenco/ziggy"]
-        }
-    },
-    "include": ["inertia/**/*.ts", "inertia/**/*.tsx", "inertia/**/*.d.ts", "inertia/app.tsx", "inertia/bootstrap.ts", "inertia/ssr.tsx"]
+  "compilerOptions": {
+    "allowJs": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "isolatedModules": true,
+    "target": "ESNext",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["inertia/*"],
+      "ziggy-js": ["vendor/tightenco/ziggy"]
+    }
+  },
+  "include": [
+    "inertia/**/*.ts",
+    "inertia/**/*.tsx",
+    "inertia/**/*.d.ts",
+    "inertia/app.tsx",
+    "inertia/bootstrap.ts",
+    "inertia/ssr.tsx"
+  ]
 }

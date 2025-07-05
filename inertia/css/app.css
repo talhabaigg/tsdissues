@@ -5,7 +5,7 @@
 @layer base {
   :root {
     --font-sans: "Inter", sans-serif;
-    
+
     --background: 0 0% 100%;
     --foreground: 224 71.4% 4.1%;
 
@@ -65,7 +65,7 @@
   }
 
   .dark {
-     --background: 0 0% 0%;
+    --background: 0 0% 0%;
     --foreground: 210 20% 98%;
 
     --muted: 215 27.9% 16.9%;
@@ -80,7 +80,7 @@
     --border: 215 27.9% 16.9%;
     --input: 215 27.9% 16.9%;
 
-    --card:  0 0% 0%;
+    --card: 0 0% 0%;
     --card-foreground: 210 20% 98%;
 
     --primary: 210 20% 98%;
@@ -122,8 +122,6 @@
 
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
-
-  
 }
 
 @layer base {
@@ -136,5 +134,4 @@
       "rlig" 1,
       "calt" 1;
   }
- 
 }

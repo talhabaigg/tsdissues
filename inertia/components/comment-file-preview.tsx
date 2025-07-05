@@ -8,8 +8,8 @@ const FilePreview = ({ file }: { file: File | string }) => {
     const fileUrl = isFullUrl
       ? file
       : file instanceof File
-      ? URL.createObjectURL(file) // For file objects, create a temporary URL
-      : `${window.location.origin}/storage/${file}`; // Assuming file path
+        ? URL.createObjectURL(file) // For file objects, create a temporary URL
+        : `${window.location.origin}/storage/${file}`; // Assuming file path
 
     const isFileObject = file instanceof File;
     const fileType = isFileObject

@@ -3,17 +3,17 @@
 .ag-theme-quartz {
   --ag-header-cell-background: rgb(206, 218, 250);
   --ag-cell-horizontal-border: var(--ag-row-border-width)
-  var(--ag-row-border-style) var(--ag-row-border-color); /* Add left and right borders to each cell and use row border's properties  */
---ag-header-column-separator-display: block;
---ag-header-cell-background: #4CAF50;
---ag-odd-row-background-color: #f3f4f5f5;
---ag-header-background-color: #d6e0f55b;
---ag-header-cell-text-color: #000000;
+    var(--ag-row-border-style) var(--ag-row-border-color); /* Add left and right borders to each cell and use row border's properties  */
+  --ag-header-column-separator-display: block;
+  --ag-header-cell-background: #4caf50;
+  --ag-odd-row-background-color: #f3f4f5f5;
+  --ag-header-background-color: #d6e0f55b;
+  --ag-header-cell-text-color: #000000;
 }
 
-
 .ag-theme-quartz-dark {
-  --ag-cell-horizontal-border: var(--ag-row-border-width) var(--ag-row-border-style) var(--ag-row-border-color); /* Add left and right borders to each cell and use row border's properties */
+  --ag-cell-horizontal-border: var(--ag-row-border-width)
+    var(--ag-row-border-style) var(--ag-row-border-color); /* Add left and right borders to each cell and use row border's properties */
   --ag-header-column-separator-display: block;
   --ag-foreground-color: #ffffff;
   --ag-background-color: #000000;

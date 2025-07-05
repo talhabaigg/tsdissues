@@ -1,4 +1,8 @@
-const CreatedAtCellRenderer = ({ value }: { value: string | number | Date }) => {
+const CreatedAtCellRenderer = ({
+  value,
+}: {
+  value: string | number | Date;
+}) => {
   const date = new Date(value);
 
   // Format the date and time
@@ -6,10 +10,10 @@ const CreatedAtCellRenderer = ({ value }: { value: string | number | Date }) => 
     day: "2-digit",
     month: "short",
     year: "numeric",
-    hour: "2-digit",        // 24-hour format
-    minute: "2-digit",      // 2 digits for minutes
-    second: "2-digit",      // 2 digits for seconds
-    hour12: false,          // 24-hour clock, set true for 12-hour clock
+    hour: "2-digit", // 24-hour format
+    minute: "2-digit", // 2 digits for minutes
+    second: "2-digit", // 2 digits for seconds
+    hour12: false, // 24-hour clock, set true for 12-hour clock
   }).format(date);
 
   // Split the formatted string for further customization
