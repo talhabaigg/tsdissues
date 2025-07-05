@@ -7,7 +7,7 @@
 --ag-header-column-separator-display: block;
 --ag-header-cell-background: #4CAF50;
 --ag-odd-row-background-color: #f3f4f5f5;
---ag-header-background-color: #d6e0f5;
+--ag-header-background-color: #d6e0f55b;
 --ag-header-cell-text-color: #000000;
 }
 
@@ -22,6 +22,5 @@
 /*  */
 
 .ag-theme-quartz .ag-row .ag-cell:first-child {
-  background-color: #d6e0f5 !important; /* Blue background for the first column */
-  border-left: 2px solid #003a79; 
+  background-color: #d6e0f55b !important; /* Blue background for the first column */
 }

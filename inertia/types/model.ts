@@ -9,6 +9,7 @@ export type Issue = {
     assigned_to?: string;
     confirmation?: any;
     created_by: number;
+    owner_id : number | null;
     updated_by: number;
     deleted_at?: string;
     created_at?: string;

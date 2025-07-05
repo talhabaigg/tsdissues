@@ -181,7 +181,21 @@ class IssueController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $issue = Issue::findOrFail($id);
+        $validated = $request->validate([
+            'title' => 'nullable|string',
+            'type' => 'nullable|string',
+            'priority' => 'nullable|string',
+            'status' => 'nullable|string',
+            'assigned_to' => 'nullable', // Validate if user exists
+            'due_date' => 'nullable|date',
+        ]);
+        $assignedUser = User::find($validated['assigned_to'] ?? null);
+        $validated['assigned_to'] = $assignedUser ? $assignedUser->id : null;
+        $issue->update($validated);
+
+
+        return redirect()->back()->with('success', 'Issue updated successfully');
     }
 
     /**

@@ -5,15 +5,18 @@ import DueDateCellRenderer from "../../datatable/cell-renderers/due-date-cell-re
 import PriorityCellRenderer from "../../datatable/cell-renderers/priority-cell-renderer";
 import TypeCellRenderer from "../../datatable/cell-renderers/type-cell-renderer";
 import CreatedAtCellRenderer from "../../datatable/cell-renderers/created-at-cell-renderer";
-
-export const colDefs = [
-  { field: "title" as const },
+import { ColDef } from "ag-grid-community";
+import { DatePicker } from "~/components/date-picker";
+export const colDefs: ColDef[] = [
+  {
+    field: "title",
+    headerName: "Title",
+    flex: 8,
+  },
   {
     headerName: "Action",
-    hide: false,
-    maxWidth: 120,
     minWidth: 150,
-    resizable: true,
+    cellClass: "text-center",
     cellRenderer: (params: any) => (
       <IdCellRenderer value={params.value} data={params.data} />
     ),
@@ -21,19 +24,12 @@ export const colDefs = [
   {
     headerName: "Type",
     field: "type",
-    filter: false,
-    cellClass: "text-left",
-    minWidth: 150,
-    resizable: true,
     cellRenderer: TypeCellRenderer,
   },
   {
     headerName: "Priority",
     field: "priority",
-    filter: false,
     minWidth: 150,
-    resizable: true,
-    cellClass: "text-left",
     cellEditor: "agSelectCellEditor",
     singleClickEdit: true,
     cellEditorParams: {
@@ -43,37 +39,24 @@ export const colDefs = [
   {
     headerName: "Status",
     field: "status",
-    hide: false,
-    filter: false,
-    minWidth: 150,
-    resizable: true,
-    cellClass: "text-left",
     cellEditor: "agSelectCellEditor",
     singleClickEdit: true,
     cellEditorParams: {
       values: ["active", "resolved", "pending"],
     },
-
-    cellRenderer: (props: { value: string }) => <div>{props.value}</div>,
   },
   {
     headerName: "Due date",
     field: "due_date",
-    minWidth: 150,
-    resizable: true,
-    cellClass: "text-left",
     singleClickEdit: true,
-    cellEditor: "agDateCellEditor",
     cellDataType: "date",
     cellRenderer: DueDateCellRenderer,
+    cellEditor: DatePicker,
   },
   {
     headerName: "Owner",
     field: "owner_id",
-    cellClass: "text-center",
     singleClickEdit: true,
-    minWidth: 150,
-    resizable: true,
     editable: false,
     hide: window.innerWidth <= 768,
     cellEditor: ComboboxEditor,
@@ -84,12 +67,9 @@ export const colDefs = [
   {
     headerName: "Assigned to",
     field: "assigned_to",
-    cellClass: "text-center",
+
     singleClickEdit: true,
     hide: window.innerWidth <= 768,
-    minWidth: 150,
-    resizable: true,
-
     cellEditor: ComboboxEditor,
 
     cellRenderer: (props: { value: string | undefined }) => (
@@ -98,6 +78,7 @@ export const colDefs = [
   },
   {
     headerName: "Created by",
+    // @ts-ignore
     field: "created_by",
     minWidth: 150,
     resizable: true,
