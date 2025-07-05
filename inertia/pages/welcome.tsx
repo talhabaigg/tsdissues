@@ -7,15 +7,28 @@ import { Skeleton } from "~/components/ui/skeleton";
 import ApplicationLogo from "~/components/app-logo";
 import AppLogoIcon from "~/components/app-logo-icon";
 
+interface WelcomePageProps {
+  flash: {
+    success?: string;
+  };
+  isLoggedIn: boolean;
+  auth: {
+    user?: {
+      id: number;
+      name: string;
+      email: string;
+    };
+  };
+  laravelVersion: string;
+  phpVersion: string;
+}
 export default function Welcome({
+  flash,
+  isLoggedIn,
   auth,
   laravelVersion,
   phpVersion,
-}: PageProps<{ laravelVersion: string; phpVersion: string }>) {
-  const { props } = usePage();
-  const { flash = {} } = props as unknown as { flash: { success?: string } }; // Add a default value for flash
-  const { isLoggedIn } = props as { isLoggedIn: boolean };
-  console.log(isLoggedIn);
+}: WelcomePageProps) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {

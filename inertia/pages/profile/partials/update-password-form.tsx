@@ -107,7 +107,7 @@ export default function UpdatePasswordForm() {
           </div>
 
           <div className="flex items-center gap-4">
-            <Button loading={processing}>Save</Button>
+            <Button disabled={processing}>Save</Button>
           </div>
         </form>
       </CardContent>

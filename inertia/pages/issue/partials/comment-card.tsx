@@ -82,8 +82,8 @@ const CommentCard = ({ comment }: { comment: Comment }) => {
             <div>
               <Input
                 value={data.text}
-                onChange={handleTextChange}
-                onKeyDown={handleKeyPress} // Bind the Enter key/>
+                onChange={(e) => setData("text", e.target.value)} // Handle text change
+                onKeyDown={handleKeyPress} // Bind the Enter key
               />
               {errors.text && (
                 <p className="text-red-500 text-sm">{errors.text}</p>

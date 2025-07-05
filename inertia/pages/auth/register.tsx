@@ -91,7 +91,7 @@ export default function Register() {
             <Link href={route("login")}>Already registered?</Link>
           </Button>
 
-          <Button className="ml-4" loading={processing}>
+          <Button className="ml-4" disabled={processing}>
             Register
           </Button>
         </div>

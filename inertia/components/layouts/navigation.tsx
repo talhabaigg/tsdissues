@@ -5,10 +5,9 @@ import {
   NavigationMenuList,
 } from "~/components/ui/navigation-menu";
 import { cn } from "~/lib/utils";
-import { NavigationLink } from "./authenticated-layout";
 
 type Props = {
-  links: NavigationLink[];
+  links: { href: string; label: string; current?: boolean }[];
 };
 
 export function Navigation({ links }: Props) {

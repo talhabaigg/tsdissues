@@ -65,8 +65,10 @@ export default function UpdateProfileInformation() {
               required
               autoFocus
               autoComplete="name"
-              error={errors.name}
             />
+            {errors.name && (
+              <Label className="text-red-500 text-sm">{errors.name}</Label>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -104,7 +106,7 @@ export default function UpdateProfileInformation() {
           )}
 
           <div className="flex items-center gap-4">
-            <Button loading={processing}>Save</Button>
+            <Button disabled={processing}>Save</Button>
           </div>
         </form>
       </CardContent>

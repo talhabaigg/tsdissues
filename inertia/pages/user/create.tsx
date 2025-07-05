@@ -93,8 +93,8 @@ export default function CreateUser() {
               </Button>
             </Link>
 
-            <Button className="ml-4" loading={processing}>
-              Create user
+            <Button className="ml-4" disabled={processing}>
+              {processing ? "Creating..." : "Create user"}
             </Button>
           </div>
         </form>

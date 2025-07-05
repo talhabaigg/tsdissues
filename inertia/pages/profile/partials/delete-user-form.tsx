@@ -100,9 +100,11 @@ export default function DeleteUserForm() {
                   value={data.password}
                   onChange={(e) => setData("password", e.target.value)}
                   placeholder="Password"
-                  error={errors.password}
                   autoFocus
                 />
+                {errors.password && (
+                  <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+                )}
               </div>
 
               <div className="flex justify-end gap-4">
@@ -112,7 +114,7 @@ export default function DeleteUserForm() {
                 <Button
                   type="submit"
                   variant="destructive"
-                  loading={processing}
+                  disabled={processing}
                 >
                   Delete Account
                 </Button>

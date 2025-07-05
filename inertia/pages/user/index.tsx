@@ -56,7 +56,7 @@ const UsersTable: React.FC<UserTableProps> = ({ users, roles }) => {
     });
   };
 
-  const columnDefs: ColDef<User>[] = [
+  const columnDefs: ColDef<RowData>[] = [
     {
       headerName: "Name",
       field: "name",
@@ -113,7 +113,15 @@ const UsersTable: React.FC<UserTableProps> = ({ users, roles }) => {
     },
   ];
 
-  const rowData = users.map((user) => ({
+  interface RowData {
+    id: number;
+    name: string;
+    email: string;
+    roles: string; // Displaying only the first role name
+    created_at: string;
+    updated_at: string;
+  }
+  const rowData: RowData[] = users.map((user) => ({
     id: user.id,
     name: user.name,
     email: user.email,
@@ -135,7 +143,7 @@ const UsersTable: React.FC<UserTableProps> = ({ users, roles }) => {
         className={`${isDarkMode ? "ag-theme-quartz-dark" : "ag-theme-quartz"}`}
         style={{ height: 750, width: "100%" }}
       >
-        <AgGridReact
+        <AgGridReact<RowData>
           suppressAutoSize={true}
           columnDefs={columnDefs}
           rowData={rowData}

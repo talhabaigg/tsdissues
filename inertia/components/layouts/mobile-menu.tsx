@@ -6,7 +6,6 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "~/components/ui/drawer";
-import { NavigationLink } from "./authenticated-layout";
 
 function MobileMenuButton({
   children,
@@ -29,7 +28,7 @@ function MobileMenuButton({
 }
 
 type MobileMenuProps = {
-  links: NavigationLink[];
+  links: { href: string; label: string; current?: boolean }[];
   toggle: () => void;
   show: boolean;
 };

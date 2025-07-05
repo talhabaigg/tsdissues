@@ -38,6 +38,13 @@ export type RouteParams = {
         id: number;
     };
     "issue-categories.retrieve": {};
+    "users.index": {};
+    "users.create": {};
+    "users.store": {};
+    "users.show": {
+        user: string;
+    };
+    "users.getUsers": {};
     "login": {};
     "logout": {};
     "password.update": {};
