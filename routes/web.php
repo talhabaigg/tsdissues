@@ -44,6 +44,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/issue-categories', [IssueCategoryController::class, 'store'])->name('issue-categories.store');
         Route::put('/issue-categories/{issueCategory}', [IssueCategoryController::class, 'update'])->name('issue-categories.update');
         Route::delete('/issue-categories/{issueCategory}', [IssueCategoryController::class, 'destroy'])->name('issue-categories.destroy');
+
+        Route::get('/issue/{id}/restore', [IssueController::class, 'restore'])->name('issue.restore');
     });
     Route::resource('issue', IssueController::class);
     Route::get('/issues/{id}', [IssueController::class, 'show'])->name('issue.show');

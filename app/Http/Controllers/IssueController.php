@@ -151,7 +151,7 @@ class IssueController extends Controller
      */
     public function show(string $id)
     {
-        $issue = Issue::with(
+        $issue = Issue::withTrashed()->with(
             'user',
             'assignee',
             'owner',
@@ -210,6 +210,20 @@ class IssueController extends Controller
         $issue->delete();
 
         return redirect()->route('issue.index')->with('success', 'Issue deleted successfully');
+    }
+
+    public function restore(string $id)
+    {
+        $user = Auth::user();
+
+        if (!$user->isAdmin()) {
+            return redirect()->route('issue.index')->with('error', 'You are not authorized to perform this action.');
+        }
+
+        $issue = Issue::withTrashed()->findOrFail($id);
+        $issue->restore();
+
+        return redirect()->route('issue.index')->with('success', 'Issue restored successfully');
     }
 
     public function updateStatus(Request $request, $id): void

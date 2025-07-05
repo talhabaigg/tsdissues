@@ -25,6 +25,7 @@ interface IssueRowData {
   created_by: string | null;
   created_at?: string;
   updated_at?: string;
+  deleted_at?: string | null;
 }
 export default function IssueDataTable({ issues }: IssueDataTableProps) {
   const [rowData, setRowData] = useState<IssueRowData[]>(
@@ -42,6 +43,7 @@ export default function IssueDataTable({ issues }: IssueDataTableProps) {
       created_by: issue.creator?.name || "N/A",
       created_at: issue.created_at,
       updated_at: issue.updated_at,
+      deleted_at: issue.deleted_at || null,
     })),
   );
   useEffect(() => {
@@ -60,6 +62,7 @@ export default function IssueDataTable({ issues }: IssueDataTableProps) {
         created_by: issue.creator?.name || "N/A",
         created_at: issue.created_at,
         updated_at: issue.updated_at,
+        deleted_at: issue.deleted_at || null,
       })),
     );
   }, [issues]);

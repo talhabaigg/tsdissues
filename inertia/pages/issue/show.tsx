@@ -7,8 +7,8 @@ import {
   CardDescription,
   CardHeader,
 } from "~/components/ui/card";
-import { Archive } from 'lucide-react';
-import { Head, useForm } from "@inertiajs/react";
+import { Archive, RefreshCcw, RefreshCw, RotateCw } from "lucide-react";
+import { Head, Link, useForm } from "@inertiajs/react";
 import IssueCommentBox from "~/components/issue-comment-box";
 import { FilePreview } from "~/components/comment-file-preview";
 import {
@@ -19,7 +19,15 @@ import {
   TableCell,
 } from "~/components/ui/table";
 import { Button } from "~/components/ui/button";
-import { Dialog, DialogTrigger, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from "~/components/ui/dialog";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "~/components/ui/dialog";
 import { useState } from "react";
 import {
   DropdownMenu,
@@ -28,7 +36,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 
 export default function Show({ issue }) {
   const { delete: destroy, processing } = useForm();
@@ -46,28 +54,64 @@ export default function Show({ issue }) {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>
           <CardHeader>
-            <CardTitle>{issue.title}</CardTitle>
-            <CardDescription>
-              <Dialog open={open} onOpenChange={setOpen}>
-                <DialogTrigger asChild>
-                  <Button variant="destructive" size="sm"> <Archive />Archive</Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Archive Issue</DialogTitle>
-                    <DialogDescription>
-                      Are you sure you want to archive this issue? This action cannot be undone.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <DialogFooter className="flex flex-row justify-between">
-                    <Button variant="secondary" className="p-2 m-1 w-1/2" onClick={() => setOpen(false)}>Cancel</Button>
-                    <Button variant="destructive" className="p-2 m-1 w-1/2" onClick={handleDelete} disabled={processing}>
-                      {processing ? "Archiving..." : "Confirm"}
+            <CardTitle className="flex items-center justify-between">
+              <div>{issue.title} </div>
+
+              <span>
+                {" "}
+                {issue.deleted_at ? (
+                  <Link href={route("issue.restore", { id: issue.id })}>
+                    <Button className="max-w-48" variant="secondary" size="sm">
+                      <RotateCw />
+                      Restore
                     </Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
-            </CardDescription>
+                  </Link>
+                ) : (
+                  <Dialog open={open} onOpenChange={setOpen}>
+                    <DialogTrigger asChild>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        className="max-w-48"
+                      >
+                        {" "}
+                        <Archive />
+                        Archive
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Archive Issue</DialogTitle>
+                        <DialogDescription>
+                          Are you sure you want to archive this issue? This
+                          action cannot be undone.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <DialogFooter className="flex flex-row justify-between">
+                        <Button
+                          variant="secondary"
+                          className="p-2 m-1 w-1/2"
+                          onClick={() => setOpen(false)}
+                        >
+                          Cancel
+                        </Button>
+
+                        <Button
+                          variant="destructive"
+                          className="p-2 m-1 w-1/2"
+                          onClick={handleDelete}
+                          disabled={processing}
+                        >
+                          {processing ? "Archiving..." : "Confirm"}
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                )}
+              </span>
+            </CardTitle>
+
+            <CardDescription></CardDescription>
           </CardHeader>
           <CardContent>
             <Table>
@@ -90,7 +134,7 @@ export default function Show({ issue }) {
                 </TableRow>
                 <TableRow>
                   <TableHead>Creator</TableHead>
-                  <TableCell>{issue.creator.name}</TableCell>
+                  <TableCell>{issue.creator?.name}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableHead>Owner</TableHead>
@@ -103,7 +147,11 @@ export default function Show({ issue }) {
                 <TableRow>
                   <TableHead>File</TableHead>
                   <TableCell>
-                    {issue.file ? <FilePreview file={issue.file} /> : "No file attached"}
+                    {issue.file ? (
+                      <FilePreview file={issue.file} />
+                    ) : (
+                      "No file attached"
+                    )}
                   </TableCell>
                 </TableRow>
               </TableBody>
@@ -113,7 +161,10 @@ export default function Show({ issue }) {
         <Card className="col-span-2">
           <CardHeader>Comments</CardHeader>
           <CardContent>
-            <IssueCommentBox issueId={issue.id} existingComments={issue.comments || []} />
+            <IssueCommentBox
+              issueId={issue.id}
+              existingComments={issue.comments || []}
+            />
           </CardContent>
         </Card>
       </div>

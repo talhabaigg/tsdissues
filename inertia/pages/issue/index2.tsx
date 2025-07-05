@@ -1,4 +1,4 @@
-import { Head } from "@inertiajs/react";
+import { Head, router } from "@inertiajs/react";
 import AuthenticatedLayout from "~/components/layouts/authenticated-layout";
 import IssueDataTable from "./index-partials/datatable/datatable";
 import { useEffect, useMemo, useState } from "react";
@@ -10,6 +10,8 @@ import { Input } from "~/components/ui/input";
 import { Search } from "lucide-react";
 import IssueFormQR from "~/components/issue-form-guest-qr";
 import IssueFormModal from "~/components/issue-form-modal";
+import { Checkbox } from "~/components/ui/checkbox";
+import { Label } from "~/components/ui/label";
 
 interface IssueIndexProps {
   issues: {
@@ -39,7 +41,28 @@ export default function IssueIndex({ issues, issue_types }: IssueIndexProps) {
     selectedAssignee: "",
     selectedOwner: "",
   });
-
+  const [withTrashed, setWithTrashed] = useState(false);
+  useEffect(() => {
+    const saved = localStorage.getItem("withTrashed");
+    if (saved === "true") setWithTrashed(true);
+  }, []);
+  const toggleWithTrashed = () => {
+    const newVal = !withTrashed;
+    setWithTrashed(newVal);
+    localStorage.setItem("withTrashed", newVal.toString());
+    fetchIssues(newVal);
+  };
+  const fetchIssues = (includeTrashed = withTrashed) => {
+    router.visit(route("issue.index"), {
+      preserveScroll: true,
+      preserveState: true,
+      replace: true,
+      only: ["issues"],
+      data: {
+        with_trashed: includeTrashed ? "true" : undefined,
+      },
+    });
+  };
   const [loadingFilters, setLoadingFilters] = useState(true);
   const typeList = issue_types.map((type: IssueCategory) => ({
     value: type.name,
@@ -247,6 +270,14 @@ export default function IssueIndex({ issues, issue_types }: IssueIndexProps) {
               className="mr-auto sm:mr-0 w-full sm:w-auto"
             >
               Reset Settings
+            </Button>
+            <Button variant="outline" className="mr-auto sm:ml-auto sm:mr-0">
+              <Checkbox
+                id="withTrashed"
+                checked={withTrashed}
+                onCheckedChange={toggleWithTrashed}
+              />
+              <Label htmlFor="withTrashed">Show archived</Label>
             </Button>
           </div>
         </div>
