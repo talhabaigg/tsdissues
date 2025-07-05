@@ -155,6 +155,9 @@ export default function IssueDataTable({ issues }: IssueDataTableProps) {
         suppressAutoSize={true}
         columnDefs={colDefs}
         rowData={rowData}
+        getRowClass={(params) =>
+          params.data.deleted_at ? "ag-row-deleted" : ""
+        }
         pagination={true}
         paginationPageSize={20}
         defaultColDef={defaultColDef}

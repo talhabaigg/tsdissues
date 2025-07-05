@@ -21,6 +21,13 @@
 }
 /*  */
 
-.ag-theme-quartz .ag-row .ag-cell:first-child {
-  background-color: #d6e0f55b !important; /* Blue background for the first column */
+/* 🔴 Deleted rows - override all cell background */
+.ag-row.ag-row-deleted .ag-cell {
+  background-color: #ffe5e5 !important;
+  opacity: 0.8;
+}
+
+/* 🔵 First column background - only for non-deleted rows */
+.ag-theme-quartz .ag-row:not(.ag-row-deleted) .ag-cell:first-child {
+  background-color: #d6e0f55b !important;
 }
