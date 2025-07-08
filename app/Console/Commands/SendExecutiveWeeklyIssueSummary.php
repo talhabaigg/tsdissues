@@ -44,7 +44,7 @@ class SendExecutiveWeeklyIssueSummary extends Command
                 'active' => $issuesOfType->where('status', 'active')->count(),
             ];
         });
-        $user = $users->where('email', 'automation@tankstreamdesign.com')->first();
+        // $user = $users->where('email', 'automation@tankstreamdesign.com')->first();
         Mail::to($user->email)->send(new \App\Mail\ExecutiveWeeklyIssueSummary($issues, $newIssueCount, $newIssues));
         $this->info('Weekly issue notifications sent.');
     }
