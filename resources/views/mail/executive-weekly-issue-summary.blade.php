@@ -84,7 +84,7 @@
     <div class="container">
         <h2>Weekly Issues Summary - {{ date('d/m/Y') }}</h2>
 
-        <p>Hello,</p>
+
         @if (count($issues) > 0)
 
             <table class="styled-table">
@@ -108,7 +108,7 @@
         @endif
         <br>
         @if ($newIssueCount > 0)
-            <p>{{$newIssueCount}} New issue(s) reported last week:</p>
+            <p>{{ $newIssueCount }} New issue(s) reported last week:</p>
             <table>
                 <thead>
                     <tr>
