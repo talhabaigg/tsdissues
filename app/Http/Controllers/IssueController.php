@@ -185,8 +185,10 @@ class IssueController extends Controller
             'priority' => 'nullable|string',
             'status' => 'nullable|string',
             'assigned_to' => 'nullable', // Validate if user exists
+            'owner_id' => 'nullable', // Validate if user exists
             'due_date' => 'nullable|date',
         ]);
+
         $assignedUser = User::find($validated['assigned_to'] ?? null);
         $validated['assigned_to'] = $assignedUser ? $assignedUser->id : null;
         $issue->update($validated);

@@ -7,10 +7,12 @@ import TypeCellRenderer from "../../datatable/cell-renderers/type-cell-renderer"
 import CreatedAtCellRenderer from "../../datatable/cell-renderers/created-at-cell-renderer";
 import { ColDef } from "ag-grid-community";
 import { DatePicker } from "~/components/date-picker";
-export const colDefs: ColDef[] = [
+import { TypeSelectEditor } from "../typeSelector";
+export const getColDefs = (isAdmin: boolean): ColDef[] => [
   {
     field: "title",
     headerName: "Title",
+    editable: isAdmin,
     flex: 8,
   },
   {
@@ -24,12 +26,15 @@ export const colDefs: ColDef[] = [
   {
     headerName: "Type",
     field: "type",
+    editable: isAdmin,
+    cellEditor: TypeSelectEditor,
     cellRenderer: TypeCellRenderer,
   },
   {
     headerName: "Priority",
     field: "priority",
     minWidth: 150,
+    editable: isAdmin,
     cellEditor: "agSelectCellEditor",
     singleClickEdit: true,
     cellEditorParams: {
@@ -39,6 +44,7 @@ export const colDefs: ColDef[] = [
   {
     headerName: "Status",
     field: "status",
+    editable: isAdmin,
     cellEditor: "agSelectCellEditor",
     singleClickEdit: true,
     cellEditorParams: {
@@ -49,6 +55,7 @@ export const colDefs: ColDef[] = [
     headerName: "Due date",
     field: "due_date",
     singleClickEdit: true,
+    editable: isAdmin,
     cellDataType: "date",
     cellRenderer: DueDateCellRenderer,
     cellEditor: DatePicker,
@@ -57,7 +64,7 @@ export const colDefs: ColDef[] = [
     headerName: "Owner",
     field: "owner_id",
     singleClickEdit: true,
-    editable: false,
+    editable: isAdmin,
     hide: window.innerWidth <= 768,
     cellEditor: ComboboxEditor,
     cellRenderer: (props: { value: string | undefined }) => (
@@ -67,7 +74,7 @@ export const colDefs: ColDef[] = [
   {
     headerName: "Assigned to",
     field: "assigned_to",
-
+    editable: isAdmin,
     singleClickEdit: true,
     hide: window.innerWidth <= 768,
     cellEditor: ComboboxEditor,

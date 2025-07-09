@@ -1,4 +1,4 @@
-import { Head, router } from "@inertiajs/react";
+import { Head, router, usePage } from "@inertiajs/react";
 import AuthenticatedLayout from "~/components/layouts/authenticated-layout";
 import IssueDataTable from "./index-partials/datatable/datatable";
 import { useEffect, useMemo, useState } from "react";
@@ -135,6 +135,8 @@ export default function IssueIndex({ issues, issue_types }: IssueIndexProps) {
       selectedOwner: "",
     });
   };
+  const { auth } = usePage().props as any;
+  const isAdmin = auth?.user?.isAdmin;
 
   return (
     <AuthenticatedLayout>
@@ -288,7 +290,7 @@ export default function IssueIndex({ issues, issue_types }: IssueIndexProps) {
       </div>
       <div className="max-w-96 mx-auto sm:max-w-full sm:mx-0">
         {" "}
-        <IssueDataTable issues={filteredIssues} />
+        <IssueDataTable issues={filteredIssues} isAdmin={isAdmin} />
       </div>
     </AuthenticatedLayout>
   );
